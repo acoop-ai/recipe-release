@@ -979,6 +979,29 @@
       font-weight: bold;
     }
 
+    /* 取り消しトースト（通常トーストの少し上に出し、重ならないようにする） */
+    .undo-toast {
+      bottom: 5.5rem;
+    }
+    .undo-toast .toast-icon {
+      color: #fbbf24;
+    }
+    #undo-toast-btn {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 0.4rem;
+      transition: var(--transition-smooth);
+    }
+    #undo-toast-btn:hover {
+      background: var(--accent-hover);
+    }
+
     /* 設定ボタンホバー */
     .settings-btn:hover {
       background: rgba(16, 185, 129, 0.1) !important;
@@ -1401,6 +1424,13 @@
     <span id="toast-text">メッセージ</span>
   </div>
 
+  <!-- 取り消しトースト（チェックを外した直後だけ表示し、誤操作に気付いて戻せるようにする） -->
+  <div id="undo-toast" class="toast undo-toast">
+    <span class="toast-icon">↩</span>
+    <span id="undo-toast-text">を外しました</span>
+    <button id="undo-toast-btn" type="button">元に戻す</button>
+  </div>
+
   <!-- =========================================================
        5. クライアントサイド アプリケーション・ロジック (JavaScript)
        ========================================================= -->
@@ -1416,6 +1446,8 @@
     var activeSort = 'code';
     var userEmail = '';
     var isAdmin = false;
+    var lastToggle = null;       // 直前に「外した」1件（{code, name}）。元に戻す操作の対象
+    var undoToastTimer = null;
 
     // DOM\u53c2\u7167
     var recipeGrid = document.getElementById('recipe-grid');
@@ -2067,16 +2099,23 @@
         renderRecipeGrid();
       });
 
+      // \u53d6\u308a\u6d88\u3057\u30c8\u30fc\u30b9\u30c8\u306e\u300c\u5143\u306b\u623b\u3059\u300d\u30dc\u30bf\u30f3
+      document.getElementById('undo-toast-btn').addEventListener('click', undoLastToggle_);
+
       // \u3059\u3079\u3066\u9078\u629e\u30fb\u3059\u3079\u3066\u89e3\u9664
       document.getElementById('select-all-btn').addEventListener('click', function() {
         uncheckedCodes = [];
         saveUserPreferencesDebounced();
+        lastToggle = null;
+        hideUndoToast_();   // \u4e00\u62ec\u64cd\u4f5c\u3067\u72b6\u6cc1\u304c\u5909\u308f\u308b\u305f\u3081\u30011\u4ef6\u5206\u306e\u53d6\u308a\u6d88\u3057\u6848\u5185\u306f\u5f15\u3063\u8fbc\u3081\u308b
         renderRecipeGrid();
         showToast('\u3059\u3079\u3066\u306e\u30ec\u30b7\u30d4\u3092\u9078\u629e\uff08\u512a\u5148\u5316\uff09\u3057\u307e\u3057\u305f\u3002');
       });
       document.getElementById('deselect-all-btn').addEventListener('click', function() {
         uncheckedCodes = allRecipes.map(function(r) { return String(r.Code); });
         saveUserPreferencesDebounced();
+        lastToggle = null;
+        hideUndoToast_();
         renderRecipeGrid();
         showToast('\u3059\u3079\u3066\u306e\u30ec\u30b7\u30d4\u306e\u9078\u629e\u3092\u89e3\u9664\u3057\u307e\u3057\u305f\u3002');
       });
@@ -2255,6 +2294,81 @@
     }
 
     /**
+     * \u4e26\u3073\u66ff\u3048/\u518d\u63cf\u753b\u3092 FLIP \u6cd5\u3067\u306a\u3081\u3089\u304b\u306b\u30a2\u30cb\u30e1\u30fc\u30b7\u30e7\u30f3\u3059\u308b\u3002
+     * \u64cd\u4f5c\u3057\u305f\u672c\u4eba\u306e\u30ab\u30fc\u30c9\u3060\u3051\u5c11\u3057\u5f3e\u3080\u30fb\u50be\u304f\u6f14\u51fa\u3092\u8db3\u3057\u3001\u3069\u308c\u304c\u3069\u3061\u3089\u3078\u52d5\u3044\u305f\u304b
+     * \u4e00\u76ee\u3067\u5206\u304b\u308b\u3088\u3046\u306b\u3059\u308b\uff08\u8aa4\u64cd\u4f5c\u306b\u6c17\u4ed8\u304d\u3084\u3059\u304f\u3059\u308b\u305f\u3081\u306e\u4ed5\u639b\u3051\u3002\u90fd\u5ea6\u78ba\u8a8d\u306e\u4ee3\u308f\u308a\uff09\u3002
+     */
+    function flipAnimateGrid_(renderFn, toggledCode, direction) {
+      var oldRects = {};
+      Array.prototype.forEach.call(recipeGrid.children, function(card) {
+        var code = card.dataset.code;
+        if (code) oldRects[code] = card.getBoundingClientRect();
+      });
+
+      renderFn();
+
+      Array.prototype.forEach.call(recipeGrid.children, function(card) {
+        var code = card.dataset.code;
+        var oldRect = code ? oldRects[code] : null;
+        if (!oldRect) return;   // \u65b0\u3057\u304f\u8868\u793a\u3055\u308c\u305f\uff08\u4eca\u56de\u306e\u30b1\u30fc\u30b9\u3067\u306f\u767a\u751f\u3057\u306a\u3044\uff09
+        var newRect = card.getBoundingClientRect();
+        var dx = oldRect.left - newRect.left;
+        var dy = oldRect.top - newRect.top;
+        var isTarget = (code === toggledCode);
+        if (dx === 0 && dy === 0 && !isTarget) return;
+
+        var extra = isTarget
+          ? ' scale(1.045) rotate(' + (direction === 'demote' ? '-2.4deg' : '2deg') + ')'
+          : '';
+        card.style.transition = 'none';
+        card.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)' + extra;
+        if (isTarget) {
+          card.style.position = 'relative';
+          card.style.zIndex = '5';
+          card.style.boxShadow = '0 12px 26px -6px rgba(0,0,0,0.28)';
+        }
+        void card.offsetHeight;   // \u5f37\u5236\u30ea\u30d5\u30ed\u30fc\u3067\u3053\u3053\u307e\u3067\u306e\u30b9\u30bf\u30a4\u30eb\u3092\u78ba\u5b9a\u3055\u305b\u308b
+        card.style.transition = 'transform 380ms cubic-bezier(0.22, 1, 0.36, 1)' +
+          (isTarget ? ', box-shadow 380ms ease' : '');
+        card.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
+
+        card.addEventListener('transitionend', function te(ev) {
+          if (ev.target !== card) return;
+          card.style.transition = '';
+          card.style.transform = '';
+          card.style.position = '';
+          card.style.zIndex = '';
+          card.style.boxShadow = '';
+          card.removeEventListener('transitionend', te);
+        });
+      });
+    }
+
+    /** \u300c\u5916\u3059\u300d\u64cd\u4f5c\u3092\u53d6\u308a\u6d88\u305b\u308b\u65e8\u306e\u30c8\u30fc\u30b9\u30c8\u3092\u51fa\u3059\uff08\u4e00\u5b9a\u6642\u9593\u3067\u81ea\u52d5\u7684\u306b\u6d88\u3048\u308b\uff09\u3002 */
+    function showUndoToast_(recipeName) {
+      var toast = document.getElementById('undo-toast');
+      document.getElementById('undo-toast-text').textContent = '\u300c' + recipeName + '\u300d\u3092\u5916\u3057\u307e\u3057\u305f';
+      toast.classList.add('active');
+      clearTimeout(undoToastTimer);
+      undoToastTimer = setTimeout(function() { toast.classList.remove('active'); }, 8000);
+    }
+    function hideUndoToast_() {
+      document.getElementById('undo-toast').classList.remove('active');
+      clearTimeout(undoToastTimer);
+    }
+    /** \u76f4\u524d\u306e\u300c\u5916\u3059\u300d\u64cd\u4f5c\u3092\u53d6\u308a\u6d88\u3057\u3001\u518d\u3073\u30c1\u30a7\u30c3\u30af\u3092\u5165\u308c\u305f\u72b6\u614b\u306b\u623b\u3059\u3002 */
+    function undoLastToggle_() {
+      if (!lastToggle) return;
+      var codeStr = lastToggle.code;
+      var idx = uncheckedCodes.indexOf(codeStr);
+      if (idx !== -1) uncheckedCodes.splice(idx, 1);
+      saveUserPreferencesDebounced();
+      lastToggle = null;
+      hideUndoToast_();
+      flipAnimateGrid_(renderRecipeGrid, codeStr, 'restore');
+    }
+
+    /**
      * \u691c\u7d22\u3068\u30d5\u30a3\u30eb\u30bf\u306b\u57fa\u3065\u3044\u3066\u30ec\u30b7\u30d4\u30ab\u30fc\u30c9\u3092\u63cf\u753b\u3059\u308b
      */
     function renderRecipeGrid() {
@@ -2311,7 +2425,8 @@
       recipeGrid.innerHTML = '';
       filtered.forEach(function(r) {
         var card = document.createElement('div');
-        
+        card.dataset.code = String(r.Code);   // 並び替えアニメーション（FLIP）でカードを追跡するための紐付け
+
         var isChecked = uncheckedCodes.indexOf(String(r.Code)) === -1;
         card.className = 'recipe-card' + (isChecked ? '' : ' demoted');
         
@@ -2358,17 +2473,27 @@
               if (idx !== -1) {
                 uncheckedCodes.splice(idx, 1);
               }
-              card.classList.remove('demoted');
             } else {
               if (idx === -1) {
                 uncheckedCodes.push(codeStr);
               }
-              card.classList.add('demoted');
             }
             saveUserPreferencesDebounced();
-            
-            // 並び順変更をなめらかに反映するため、少しディレイを入れて再描画
-            setTimeout(renderRecipeGrid, 150);
+
+            if (chk.checked) {
+              // 直前に外した本人が今チェックを戻した場合は、取り消し通知を引っ込める
+              if (lastToggle && lastToggle.code === codeStr) {
+                lastToggle = null;
+                hideUndoToast_();
+              }
+            } else {
+              // 「外す」操作だけ、あとから元に戻せるようにする（都度確認はしない代わりの安全策）
+              lastToggle = { code: codeStr, name: r.Name };
+              showUndoToast_(r.Name);
+            }
+
+            // カードが移動する様子が見えるよう、位置をなめらかにアニメーションしながら再描画
+            flipAnimateGrid_(renderRecipeGrid, codeStr, chk.checked ? 'restore' : 'demote');
           });
         }
         card.addEventListener('click', function() { openModal(r); });
