@@ -1308,9 +1308,43 @@
           <h2 id="modal-recipe-name" class="modal-title">商品名</h2>
         </div>
         <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <!-- 削除は本部（データ管理の権限がある人）にだけ出す -->
+          <!-- 編集・削除は本部（データ管理の権限がある人）にだけ出す -->
+          <button id="recipe-edit-btn" style="display: none; background: none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">✏️ 情報を修正</button>
           <button id="recipe-delete-btn" style="display: none; background: none; border: 1px solid #fecaca; color: #b91c1c; padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">🗑 このレシピを削除</button>
           <button id="modal-close" class="close-btn">✕</button>
+        </div>
+      </div>
+
+      <!-- 情報修正（AIの読み取り間違いをPDFを再アップロードせずその場で直す） -->
+      <div id="recipe-edit-panel" style="display: none; background: rgba(16, 185, 129, 0.04); border-bottom: 1px solid var(--border-color); padding: 0.9rem 1.5rem;">
+        <div style="font-size: 0.88rem; color: var(--text-primary); font-weight: 700; margin-bottom: 0.6rem;">商品名・カテゴリ・金額を修正</div>
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 0.6rem; margin-bottom: 0.7rem;">
+          <label style="font-size: 0.72rem; color: var(--text-secondary);">商品名
+            <input type="text" id="edit-name" style="width: 100%; margin-top: 0.2rem; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 6px; font-size: 0.85rem;">
+          </label>
+          <label style="font-size: 0.72rem; color: var(--text-secondary);">カテゴリ
+            <select id="edit-category" style="width: 100%; margin-top: 0.2rem; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 6px; font-size: 0.85rem;">
+              <option value="惣菜">惣菜</option>
+              <option value="米飯">米飯</option>
+              <option value="寿司">寿司</option>
+            </select>
+          </label>
+          <label style="font-size: 0.72rem; color: var(--text-secondary);">値入率(%)
+            <input type="number" step="0.1" id="edit-margin" style="width: 100%; margin-top: 0.2rem; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 6px; font-size: 0.85rem;">
+          </label>
+          <label style="font-size: 0.72rem; color: var(--text-secondary);">原価(円)
+            <input type="number" step="1" id="edit-cost" style="width: 100%; margin-top: 0.2rem; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 6px; font-size: 0.85rem;">
+          </label>
+          <label style="font-size: 0.72rem; color: var(--text-secondary);">売価(円)
+            <input type="number" step="1" id="edit-selling" style="width: 100%; margin-top: 0.2rem; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 6px; font-size: 0.85rem;">
+          </label>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.7rem;">
+          ※ 商品コードとPDFはここでは変更できません（コード自体が違う場合は、正しいPDFを登録し直してください）。
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="recipe-edit-cancel" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.45rem 1rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer;">やめる</button>
+          <button id="recipe-edit-save" style="background: var(--accent); border: none; color: #fff; padding: 0.45rem 1.2rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer;">保存する</button>
         </div>
       </div>
 
@@ -1327,7 +1361,7 @@
           <button id="recipe-delete-exec" style="background: #dc2626; border: none; color: #fff; padding: 0.45rem 1.2rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer;">削除する</button>
         </div>
       </div>
-      
+
       <div class="modal-tabs">
         <button class="modal-tab-btn active" data-tab="tab-pdf">原本PDF</button>
         <button class="modal-tab-btn" data-tab="tab-details">商品情報・原材料表示</button>
@@ -1681,6 +1715,10 @@
               var gone = MOCK_RECIPES.find(function(r) { return String(r.Code) === String(args[0]); });
               MOCK_RECIPES = MOCK_RECIPES.filter(function(r) { return String(r.Code) !== String(args[0]); });
               return resolve({ success: true, code: args[0], name: gone ? gone.Name : '', movedPdf: false });
+            case 'updateRecipeFields':
+              var target = MOCK_RECIPES.find(function(r) { return String(r.Code) === String(args[0]); });
+              if (target) Object.assign(target, args[1]);
+              return resolve({ success: true, code: args[0] });
             default:
               return resolve(null);
           }
@@ -2261,6 +2299,54 @@
       // 類似レシピ確認モーダルのボタン
       setupSimilarDialogButtons_();
 
+      // レシピ情報の修正（本部のみ・AIの読み取り間違いをPDF再アップロードなしで直す）
+      document.getElementById('recipe-edit-btn').addEventListener('click', function() {
+        if (!activeRecipe) return;
+        document.getElementById('edit-name').value = activeRecipe.Name || '';
+        document.getElementById('edit-category').value =
+          (['惣菜', '米飯', '寿司'].indexOf(activeRecipe.Category) >= 0) ? activeRecipe.Category : '惣菜';
+        document.getElementById('edit-margin').value = activeRecipe.MarginRate != null ? activeRecipe.MarginRate : '';
+        document.getElementById('edit-cost').value = activeRecipe.CostPrice != null ? activeRecipe.CostPrice : '';
+        document.getElementById('edit-selling').value = activeRecipe.SellingPrice != null ? activeRecipe.SellingPrice : '';
+        document.getElementById('recipe-edit-panel').style.display = 'block';
+      });
+      document.getElementById('recipe-edit-cancel').addEventListener('click', function() {
+        document.getElementById('recipe-edit-panel').style.display = 'none';
+      });
+      document.getElementById('recipe-edit-save').addEventListener('click', function() {
+        if (!activeRecipe) return;
+        var name = document.getElementById('edit-name').value.trim();
+        if (!name) { showToast('商品名を入力してください。', true); return; }
+        var fields = {
+          Name: name,
+          Category: document.getElementById('edit-category').value,
+          MarginRate: document.getElementById('edit-margin').value,
+          CostPrice: document.getElementById('edit-cost').value,
+          SellingPrice: document.getElementById('edit-selling').value
+        };
+        var btn = document.getElementById('recipe-edit-save');
+        btn.disabled = true;
+        btn.textContent = '保存中…';
+        gsCall('updateRecipeFields', activeRecipe.Code, fields)
+          .then(function() {
+            // 画面側の状態（詳細モーダル・カード一覧）にも同じ内容を反映する
+            Object.assign(activeRecipe, fields);
+            var inList = allRecipes.find(function(r) { return String(r.Code) === String(activeRecipe.Code); });
+            if (inList) Object.assign(inList, fields);
+            document.getElementById('recipe-edit-panel').style.display = 'none';
+            openModal(activeRecipe);   // コード・名前・タブの表示をまとめて更新
+            renderRecipeGrid();        // カード一覧側の表示も更新
+            showToast('レシピ情報を修正しました。');
+          })
+          .catch(function(err) {
+            showToast('修正できませんでした: ' + (err && err.message || err), true);
+          })
+          .then(function() {
+            btn.disabled = false;
+            btn.textContent = '保存する';
+          });
+      });
+
       // レシピの削除（本部のみ・確認を一段挟む）
       document.getElementById('recipe-delete-btn').addEventListener('click', function() {
         if (!activeRecipe) return;
@@ -2514,7 +2600,9 @@
       document.getElementById('modal-recipe-code').textContent = recipe.Code;
       document.getElementById('modal-recipe-name').textContent = recipe.Name;
 
-      // 削除は本部だけ。開き直すたびに確認欄は畳んでおく
+      // 編集・削除は本部だけ。開き直すたびにパネルは畳んでおく
+      document.getElementById('recipe-edit-btn').style.display = isAdmin ? 'inline-block' : 'none';
+      document.getElementById('recipe-edit-panel').style.display = 'none';
       document.getElementById('recipe-delete-btn').style.display = isAdmin ? 'inline-block' : 'none';
       document.getElementById('recipe-delete-confirm').style.display = 'none';
 
