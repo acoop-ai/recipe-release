@@ -1764,6 +1764,19 @@
       }).then(function (w) {
         isAdmin = !!(w && w.isAdmin);
         document.getElementById('settings-open-btn').style.display = isAdmin ? 'flex' : 'none';
+        // 権限判定の結果を常時見えるようにする（編集/削除ボタンが出ない不具合の切り分け用。
+        // 「本部」と出ているのにボタンが出ない＝ボタン側の問題／「店舗」と出ている＝権限判定側の問題、
+        // とその場で分かるようにする。2026-09-16）
+        var badge = document.getElementById('role-badge');
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.id = 'role-badge';
+          badge.style.cssText = 'font-size:0.68rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:10px;margin-right:0.3rem;';
+          document.getElementById('user-email').insertAdjacentElement('beforebegin', badge);
+        }
+        badge.textContent = isAdmin ? '本部' : '店舗';
+        badge.style.background = isAdmin ? 'rgba(16,185,129,0.12)' : 'rgba(100,116,139,0.12)';
+        badge.style.color = isAdmin ? 'var(--accent)' : 'var(--text-muted)';
         return startApp_();
       }).catch(function (e) {
         if (String(e && e.message) === "domain") return;
