@@ -1100,7 +1100,7 @@
     <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.6rem; background: var(--bg-secondary); border-radius: 10px; padding: 0.55rem 0.9rem; box-shadow: 0 2px 10px -3px rgba(0,0,0,0.05);">
       <div class="header-logo" style="flex-direction: row; align-items: baseline; gap: 0.5rem;">
         <h1 style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.02em; margin-bottom: 0;">RECIPE VIEWER</h1>
-        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted);">build recipe-web-2026-10-02a</span></span>
+        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted);">build recipe-web-2026-10-02b</span></span>
       </div>
       <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
         <div class="status-badge" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(5, 150, 105, 0.06); border: 1px solid var(--border-color); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; color: var(--accent); font-weight: 600;">
@@ -1269,7 +1269,7 @@
   <!-- 詳細モーダル -->
   <!-- 類似レシピ確認モーダル（アップロード時。差し替えるかどうかは人が決める） -->
   <div id="similar-modal" class="modal-overlay">
-    <div class="modal-container" style="max-width: 880px; width: 95%; height: auto; max-height: 90vh; display: flex; flex-direction: column; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+    <div class="modal-container" style="max-width: 1180px; width: 96%; height: auto; max-height: 92vh; display: flex; flex-direction: column; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
       <div class="modal-header" style="padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
         <div class="modal-title-area" style="display: flex; align-items: center; gap: 0.8rem;">
           <span style="font-size: 1.5rem;">🔍</span>
@@ -1309,6 +1309,9 @@
 
         <!-- 差し替え候補（似た名前の既存レシピ） -->
         <div id="similar-list"></div>
+
+        <!-- 見比べる: 今の登録と届いたものを左右に並べる（中身の表とPDF）。上で選んだ候補に合わせて変わる -->
+        <div id="similar-compare" style="margin-top: 1.2rem;"></div>
       </div>
 
       <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; gap: 0.8rem;">
@@ -1687,6 +1690,8 @@
               return resolve({ success: true, email: MOCK_PREF.email });
             case 'getSavedSettings':
               return resolve({ folderId: '\uff08\u30ed\u30fc\u30ab\u30eb\u691c\u8a3c\uff09', hasApiKey: true, build: 'local-mock' });
+            case 'getPdfBase64':
+              return resolve('JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCA1OTUgODQyXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNSAwIFIgPj4gPj4gPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCA0NyA+PgpzdHJlYW0KQlQgL0YxIDM2IFRmIDEwMCA3MDAgVGQgKE1PQ0sgUkVDSVBFIFBERikgVGogRVQKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8IC9UeXBlIC9Gb250IC9TdWJ0eXBlIC9UeXBlMSAvQmFzZUZvbnQgL0hlbHZldGljYSA+PgplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTggMDAwMDAgbiAKMDAwMDAwMDExNSAwMDAwMCBuIAowMDAwMDAwMjQxIDAwMDAwIG4gCjAwMDAwMDAzMzggMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA2IC9Sb290IDEgMCBSID4+CnN0YXJ0eHJlZgo0MDgKJSVFT0YK');   // 試験用の1ページPDF
             case 'getThumbnailsBatch':
               return resolve({});
             case 'getGuide':
@@ -2887,6 +2892,223 @@
     /** \u78ba\u8a8d\u30e2\u30fc\u30c0\u30eb\u306e\u5fdc\u7b54\u5f85\u3061\u3002\u4eba\u304c\u30dc\u30bf\u30f3\u3092\u62bc\u3059\u307e\u3067 resolve \u3055\u308c\u306a\u3044\u3002 */
     var similarResolve = null;
 
+    /* ── 確認画面の「見比べる」: 今の登録と届いたものを左右に並べる（中身の表と、PDFそのもの） ── */
+
+    var cmp_ = { seq: 0, item: null, oldCode: '', page: 1, docs: { old: null, neu: null }, blobs: { old: null, neu: null }, want: { old: '', neu: '' } };
+
+    function cmpText_(v) { return v == null ? '' : String(v).trim(); }
+    function cmpNum_(v, unit) { return (v == null || v === '') ? '' : (Number(v).toLocaleString() + unit); }
+    function cmpDate_(v) {
+      if (!v) return '';
+      var d = new Date(v);
+      if (isNaN(d.getTime())) return String(v).slice(0, 10);
+      return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    }
+    /** 見た目だけの違い（空白・改行）は「同じ」とみなす。 */
+    function cmpSame_(a, b) { return cmpText_(a).replace(/\s+/g, '') === cmpText_(b).replace(/\s+/g, ''); }
+
+    /** 見比べる相手（今の登録）を決める。差し替えを選んでいればその候補、そうでなければ一番似ている候補。 */
+    function cmpPickOld_(item) {
+      var checked = document.querySelector('input[name="sim-choice"]:checked');
+      if (checked && checked.value.indexOf('replace:') === 0) return checked.value.slice('replace:'.length);
+      if (item.exact) return item.exact.code;
+      return (item.candidates && item.candidates.length) ? item.candidates[0].code : '';
+    }
+
+    function cmpRender_() {
+      var item = cmp_.item;
+      if (!item) return;
+      var box = document.getElementById('similar-compare');
+      var p = item.parsed || {};
+      var oldCode = cmpPickOld_(item);
+      var old = oldCode ? (allRecipes || []).find(function (r) { return String(r.Code).trim() === oldCode; }) : null;
+      var oldChanged = oldCode !== cmp_.oldCode;
+      cmp_.oldCode = oldCode;
+      box.textContent = '';
+
+      var title = document.createElement('div');
+      title.style.cssText = 'font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem;';
+      title.textContent = old ? '見比べる（色の付いたところが違います）' : '届いたものの中身';
+      box.appendChild(title);
+
+      // 1) 中身の表
+      var rows = [
+        ['商品コード', old && old.Code, p.code],
+        ['商品名', old && old.Name, p.name],
+        ['カテゴリ', old && old.Category, p.category],
+        ['売価', old && cmpNum_(old.SellingPrice, '円'), cmpNum_(p.selling_price, '円')],
+        ['原価', old && cmpNum_(old.CostPrice, '円'), cmpNum_(p.cost_price, '円')],
+        ['値入率', old && cmpNum_(old.MarginRate, '%'), cmpNum_(p.margin_rate, '%')],
+        ['登録した日', old && cmpDate_(old.UpdatedAt), '（今回届いた版）', true],
+        ['原材料表示', old && old.RawMaterials, p.raw_materials],
+        ['配分表', old && old.RecipeIngredients, p.recipe_ingredients],
+        ['製造工程', old && old.Instructions, p.instructions]
+      ];
+      var table = document.createElement('table');
+      table.style.cssText = 'width: 100%; border-collapse: collapse; font-size: 0.8rem; table-layout: fixed;';
+      function cell(tag, text, css) {
+        var c = document.createElement(tag);
+        c.style.cssText = 'border: 1px solid var(--border-color); padding: 0.35rem 0.5rem; vertical-align: top; text-align: left;' + (css || '');
+        var inner = document.createElement('div');
+        inner.style.cssText = 'max-height: 7.5em; overflow-y: auto; white-space: pre-wrap; word-break: break-all;';
+        inner.textContent = text;
+        c.appendChild(inner);
+        return c;
+      }
+      var head = document.createElement('tr');
+      head.appendChild(cell('th', '', 'width: 6.5em; background: var(--bg-primary);'));
+      if (old) head.appendChild(cell('th', '今の登録', 'background: var(--bg-primary);'));
+      head.appendChild(cell('th', '届いたもの（AIが読んだ内容）', 'background: var(--bg-primary);'));
+      table.appendChild(head);
+      rows.forEach(function (r) {
+        var tr = document.createElement('tr');
+        var diff = old && !r[3] && !cmpSame_(r[1], r[2]);
+        var mark = diff ? 'background: rgba(245, 158, 11, 0.16);' : '';
+        tr.appendChild(cell('th', r[0], 'font-weight: 600; color: var(--text-secondary); background: var(--bg-primary);'));
+        if (old) tr.appendChild(cell('td', cmpText_(r[1]) || '－', mark));
+        tr.appendChild(cell('td', cmpText_(r[2]) || '－', mark));
+        table.appendChild(tr);
+      });
+      box.appendChild(table);
+
+      // 2) PDF を並べる
+      var bar = document.createElement('div');
+      bar.style.cssText = 'display: flex; align-items: center; gap: 0.6rem; margin: 0.8rem 0 0.4rem; font-size: 0.8rem;';
+      var label = document.createElement('b');
+      label.textContent = '原本PDF';
+      bar.appendChild(label);
+      function navBtn(text, delta) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = text;
+        b.style.cssText = 'background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.2rem 0.7rem; font-size: 0.78rem; cursor: pointer;';
+        b.addEventListener('click', function () { cmp_.page = Math.max(1, cmp_.page + delta); cmpDrawAll_(); });
+        return b;
+      }
+      bar.appendChild(navBtn('◀ 前のページ', -1));
+      var pageInfo = document.createElement('span');
+      pageInfo.id = 'cmp-page';
+      pageInfo.style.color = 'var(--text-muted)';
+      bar.appendChild(pageInfo);
+      bar.appendChild(navBtn('次のページ ▶', 1));
+      box.appendChild(bar);
+
+      var grid = document.createElement('div');
+      grid.style.cssText = 'display: grid; gap: 0.8rem; grid-template-columns: ' + (old ? '1fr 1fr' : '1fr') + ';';
+      function pane(side, caption) {
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; background: #525659; min-width: 0;';
+        var capRow = document.createElement('div');
+        capRow.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; color: #fff; font-size: 0.78rem; font-weight: 700;';
+        var cap = document.createElement('span');
+        cap.textContent = caption;
+        var open = document.createElement('button');
+        open.type = 'button';
+        open.textContent = '別タブで開く';
+        open.style.cssText = 'background: #e2e8f0; color: #1e293b; border: none; border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.72rem; cursor: pointer;';
+        open.addEventListener('click', function () {
+          if (!cmp_.blobs[side]) { showToast('PDFを読み込み中です。少し待ってからもう一度押してください', true); return; }
+          var w = window.open(URL.createObjectURL(cmp_.blobs[side]), '_blank');
+          if (!w) showToast('別タブがブラウザに止められました。ポップアップを許可してください', true);
+        });
+        capRow.appendChild(cap); capRow.appendChild(open);
+        var status = document.createElement('div');
+        status.id = 'cmp-status-' + side;
+        status.style.cssText = 'color: #fff; font-size: 0.78rem; padding: 1.5rem 0; text-align: center;';
+        status.textContent = '読み込み中…';
+        var canvas = document.createElement('canvas');
+        canvas.id = 'cmp-canvas-' + side;
+        canvas.style.cssText = 'display: none; width: 100%; height: auto; background: #fff;';
+        [capRow, status, canvas].forEach(function (x) { wrap.appendChild(x); });
+        return wrap;
+      }
+      if (old) grid.appendChild(pane('old', '今の登録のPDF'));
+      grid.appendChild(pane('neu', '届いたPDF'));
+      box.appendChild(grid);
+
+      // 届いたPDFは開いたときに1回だけ読む。今の登録のPDFは、相手が変わったときだけ読み直す
+      if (oldChanged) { cmp_.docs.old = null; cmp_.blobs.old = null; cmp_.want.old = ''; }
+      if (old && !cmp_.docs.old) cmpLoad_('old', old.FileId);
+      if (!cmp_.docs.neu) cmpLoad_('neu', item.pendingId);
+      cmpDrawAll_();
+    }
+
+    function cmpLoad_(side, fileId) {
+      var seq = cmp_.seq;
+      fileId = String(fileId || '');
+      if (!fileId) { cmpStatus_(side, 'PDFがありません'); return; }
+      if (cmp_.want[side] === fileId) return;                    // 同じものを読み込み中なら重ねて読まない
+      cmp_.want[side] = fileId;
+      gsCall('getPdfBase64', fileId).then(function (b64) {
+        var bin = atob(b64), bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        var blob = new Blob([bytes], { type: 'application/pdf' });
+        return pdfjsLib.getDocument({ data: bytes }).promise.then(function (doc) {
+          if (seq !== cmp_.seq || cmp_.want[side] !== fileId) return;   // 別の確認画面・別の相手に変わっていたら捨てる
+          cmp_.docs[side] = doc; cmp_.blobs[side] = blob;
+          cmpDrawAll_();
+        });
+      }).catch(function (e) {
+        if (seq !== cmp_.seq || cmp_.want[side] !== fileId) return;
+        cmp_.want[side] = '';
+        cmpStatus_(side, 'PDFを読み込めませんでした（' + String(e && e.message || e) + '）');
+      });
+    }
+
+    function cmpStatus_(side, text) {
+      var s = document.getElementById('cmp-status-' + side), c = document.getElementById('cmp-canvas-' + side);
+      if (!s) return;
+      s.textContent = text; s.style.display = 'block';
+      if (c) c.style.display = 'none';
+    }
+
+    function cmpDrawAll_() {
+      var max = Math.max(cmp_.docs.old ? cmp_.docs.old.numPages : 1, cmp_.docs.neu ? cmp_.docs.neu.numPages : 1);
+      if (cmp_.page > max) cmp_.page = max;
+      var info = document.getElementById('cmp-page');
+      if (info) info.textContent = cmp_.page + ' / ' + max + ' ページ';
+      cmpDraw_('old'); cmpDraw_('neu');
+    }
+
+    function cmpDraw_(side) {
+      var doc = cmp_.docs[side], canvas = document.getElementById('cmp-canvas-' + side);
+      if (!doc || !canvas) return;
+      if (cmp_.page > doc.numPages) { cmpStatus_(side, 'このページはありません（全 ' + doc.numPages + ' ページ）'); return; }
+      // 同じものを二重に描かない。描くのは裏の紙（別のキャンバス）にして、終わったら表へ写す
+      // （同じキャンバスへ同時に描くと PDF.js が失敗するため。候補の切り替えやページ送りが重なっても崩れない）
+      var key = cmp_.want[side] + ':' + cmp_.page;
+      if (canvas.dataset.drawn === key || canvas.dataset.drawing === key) return;
+      canvas.dataset.drawing = key;
+      var seq = cmp_.seq;
+      doc.getPage(cmp_.page).then(function (page) {
+        if (seq !== cmp_.seq || canvas.dataset.drawing !== key) return;
+        var viewport = page.getViewport({ scale: 1.6 });
+        var off = document.createElement('canvas');
+        off.width = viewport.width; off.height = viewport.height;
+        return page.render({ canvasContext: off.getContext('2d'), viewport: viewport }).promise.then(function () {
+          if (seq !== cmp_.seq || canvas.dataset.drawing !== key) return;
+          canvas.width = off.width; canvas.height = off.height;
+          canvas.getContext('2d').drawImage(off, 0, 0);
+          canvas.dataset.drawn = key;
+          var s = document.getElementById('cmp-status-' + side);
+          if (s && s.parentNode === canvas.parentNode) s.style.display = 'none';
+          canvas.style.display = 'block';
+        });
+      }).catch(function () {
+        if (canvas.dataset.drawing !== key) return;
+        canvas.dataset.drawing = '';
+        cmpStatus_(side, 'PDFを表示できませんでした');
+      });
+    }
+
+    /** 確認画面を開くたびに呼ぶ。 */
+    function cmpOpen_(item) {
+      cmp_.seq++;
+      cmp_.item = item; cmp_.oldCode = ''; cmp_.page = 1;
+      cmp_.docs = { old: null, neu: null }; cmp_.blobs = { old: null, neu: null }; cmp_.want = { old: '', neu: '' };
+      cmpRender_();
+    }
+
     function similarLabel_(item) {
       var score = item.score != null ? '\uff08\u4f3c\u3066\u3044\u308b\u5ea6 ' + Math.round(item.score * 100) + '%\uff09' : '';
       return '\u300c' + escapeHtml_(item.name) + '\u300d \u30b3\u30fc\u30c9 ' + escapeHtml_(item.code) +
@@ -2949,6 +3171,11 @@
           '\u203b \u8ab0\u304c\u30fb\u3044\u3064\u30fb\u4f55\u3092\u5dee\u3057\u66ff\u3048\u305f\u304b\u306f\u300cRecipeHistory\u300d\u30b7\u30fc\u30c8\u306b\u6b8b\u308a\u307e\u3059\u3002</p>';
 
         document.getElementById('similar-list').innerHTML = html;
+        // 選んだ候補に合わせて、下の「見比べる」を描き直す
+        Array.prototype.forEach.call(document.querySelectorAll('input[name="sim-choice"]'), function(r) {
+          r.addEventListener('change', cmpRender_);
+        });
+        cmpOpen_(item);
         document.getElementById('similar-modal').classList.add('active');
       });
     }
@@ -2956,6 +3183,8 @@
     function closeSimilarDialog_() {
       document.getElementById('similar-modal').classList.remove('active');
       similarResolve = null;
+      cmp_.seq++; cmp_.item = null;                       // 読み込み中のPDFは捨てる
+      document.getElementById('similar-compare').textContent = '';
     }
 
     /** \u30e2\u30fc\u30c0\u30eb\u306e\u30dc\u30bf\u30f3\uff08setupEventListeners \u304b\u30891\u5ea6\u3060\u3051\u767b\u9332\u3059\u308b\uff09\u3002 */
