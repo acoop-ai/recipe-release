@@ -1100,7 +1100,7 @@
     <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.6rem; background: var(--bg-secondary); border-radius: 10px; padding: 0.55rem 0.9rem; box-shadow: 0 2px 10px -3px rgba(0,0,0,0.05);">
       <div class="header-logo" style="flex-direction: row; align-items: baseline; gap: 0.5rem;">
         <h1 style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.02em; margin-bottom: 0;">RECIPE VIEWER</h1>
-        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted);">build recipe-web-2026-09-25a</span></span>
+        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted);">build recipe-web-2026-10-02a</span></span>
       </div>
       <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
         <div class="status-badge" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(5, 150, 105, 0.06); border: 1px solid var(--border-color); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; color: var(--accent); font-weight: 600;">
@@ -1184,9 +1184,27 @@
             📥 確定待ち <span id="pending-count" style="font-weight: 800;"></span>
           </div>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem; line-height: 1.5;">
-            Garoon の自動送信ツールから届いたPDFです。<b>まだ登録されていません。</b>
-            1件ずつ内容を確かめて、既存レシピを差し替えるか、新しく登録するかを選んでください。
+            ガルーンから届いたPDFです。<b>まだ登録されていません。</b>
+            行ごとに<b>登録する／不要／保留</b>を選んで、まとめて実行できます。
           </p>
+          <!-- まとめて実行: 行ごとの選択どおりに、確認画面を出さずに順に進める。件数が多いとき用 -->
+          <div id="bulk-box" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.8rem;">
+            <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.5rem;">
+              ・<b>登録する</b>: AIが読んで登録します（1件10〜20秒）。同じ商品コードが既にあれば<b>差し替え</b>、無ければ<b>新規</b>。商品コードはファイル名の先頭の数字です。<br>
+              ・<b>不要</b>: 登録せずに見送ります。ガルーンで中身が更新されるまで、次から届きません。<br>
+              ・<b>保留</b>: 何もしません（確定待ちに残ります）。商品コードが変わったリニューアルなどは、右の「確認して登録」で1件ずつ確かめられます。<br>
+              読み違いは、あとでレシピを開いて「情報を修正」で直せます。差し替えた前のPDFは「_差し替え前」フォルダに残ります。
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+              <button id="bulk-all-add" type="button" style="background:transparent;color:var(--text-secondary);border:1px solid var(--border-color);border-radius:6px;padding:0.4rem 0.8rem;font-size:0.78rem;cursor:pointer;">すべて登録する</button>
+              <button id="bulk-all-hold" type="button" style="background:transparent;color:var(--text-secondary);border:1px solid var(--border-color);border-radius:6px;padding:0.4rem 0.8rem;font-size:0.78rem;cursor:pointer;">すべて保留</button>
+              <button id="bulk-go" type="button" style="background:#b45309;color:#fff;border:none;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:700;cursor:pointer;">この内容でまとめて実行</button>
+              <button id="bulk-stop" type="button" style="display:none;background:transparent;color:#b42318;border:1px solid #b42318;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:700;cursor:pointer;">止める</button>
+              <span id="bulk-status" style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary);"></span>
+            </div>
+            <div id="bulk-bar-wrap" style="display:none; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin-top: 0.6rem;"><div id="bulk-bar" style="height: 100%; width: 0; background: #b45309; transition: width 0.2s;"></div></div>
+            <div id="bulk-result" style="display:none; margin-top: 0.6rem; max-height: 260px; overflow-y: auto; font-size: 0.78rem; line-height: 1.6;"></div>
+          </div>
           <div id="pending-list" style="display: flex; flex-direction: column; gap: 0.4rem;"></div>
         </div>
 
@@ -1646,7 +1664,11 @@
     ];
     var MOCK_PREF = { email: 'local-test@jaz-acoop.co.jp', uncheckedCodes: [], sortOption: 'code' };
     var MOCK_PENDING = [
-      { id: 'mock-p1', name: '9021_にぎり盛合せ春.pdf', createdAt: '2026-09-07 08:40' }
+      { id: 'mock-p1', name: '9021_にぎり盛合せ春.pdf', createdAt: '2026-09-07 08:40', createdMs: 1 },
+      { id: 'mock-p2', name: '9002　特製からあげ（新）.pdf', createdAt: '2026-10-02 16:40', createdMs: 2 },
+      { id: 'mock-p3', name: '9002　からあげ（旧）.pdf', createdAt: '2026-10-02 16:40', createdMs: 3 },
+      { id: 'mock-p4', name: '唐揚弁当（出前館用）.pdf', createdAt: '2026-10-02 16:41', createdMs: 4 },
+      { id: 'mock-p5', name: '9030　<b>海鮮丼</b>.pdf', createdAt: '2026-10-02 16:41', createdMs: 5 }
     ];
 
     function mockCall_(fn, args) {
@@ -1712,6 +1734,17 @@
                                category: (args[1] || {}).category,
                                replacedCode: args[2] === 'replace' ? args[3] : '',
                                replacedName: args[2] === 'replace' ? '\u7279\u88fd\u304b\u3089\u63da\u3052' : '' });
+            case 'autoCommitPending':
+              // 画面の動きを見るための応答。ファイル名の先頭の数字をコードにし、登録済みなら差し替えにする
+              var pend = MOCK_PENDING.find(function(p) { return p.id === args[0]; });
+              var pcode = pendingCode_(pend ? pend.name : '');
+              if (!pcode) return resolve({ success: false, fileName: pend ? pend.name : '', reason: '商品コードがファイル名にもPDFにも見つかりません。' });
+              var hit = MOCK_RECIPES.find(function(r) { return String(r.Code) === pcode; });
+              var pname = pend.name.replace(/[.]pdf$/i, '').replace(/^[0-9]+[ _　]*/, '');
+              MOCK_PENDING = MOCK_PENDING.filter(function(p) { return p.id !== args[0]; });
+              if (hit) hit.Name = pname; else MOCK_RECIPES.push({ Code: pcode, Name: pname, Category: '惣菜', FileId: '' });
+              return resolve({ success: true, fileName: pend.name, code: pcode, name: pname, category: '惣菜',
+                               action: hit ? '差し替え' : '新規', notes: hit ? ['差し替えで商品名が変わりました（前: 特製から揚げ）'] : [] });
             case 'discardPending':
               MOCK_PENDING = MOCK_PENDING.filter(function(p) { return p.id !== args[0]; });
               return resolve({ success: true });
@@ -3041,33 +3074,214 @@
 
     /* \u2500\u2500 Garoon \u304b\u3089\u5c4a\u3044\u305f\u78ba\u5b9a\u5f85\u3061\u306e\u51e6\u7406 \u2500\u2500 */
 
+    /* ── 確定待ち: 行ごとに「登録する／不要／保留」を選び、まとめて実行する ── */
+
+    var pendingItems_ = [];      // いま確定待ちにあるもの
+    var pendingChoice_ = {};     // 行ごとの選択（id → 'add' | 'drop' | 'hold'）。一覧を描き直しても保つ
+    var bulkRunning_ = false, bulkStop_ = false;
+
+    function bulkEl_(id) { return document.getElementById(id); }
+
+    /** ファイル名の先頭の数字＝商品コード（ガルーンの名前の付け方）。無ければ空。 */
+    function pendingCode_(name) {
+      var m = String(name || '').match(/^\s*(\d{4,})/);
+      return m ? m[1] : '';
+    }
+
+    /** 登録済みのレシピを商品コードで引けるようにする。 */
+    function recipeNameByCode_() {
+      var map = {};
+      (allRecipes || []).forEach(function (r) { map[String(r.Code).trim()] = String(r.Name || ''); });
+      return map;
+    }
+
     function loadPendingList() {
       return gsCall('listPending')
         .then(function(list) {
-          list = list || [];
-          var card = document.getElementById('pending-card');
-          var listEl = document.getElementById('pending-list');
-          document.getElementById('pending-count').textContent = list.length + ' \u4ef6';
-          card.style.display = list.length ? 'block' : 'none';
-          if (!list.length) { listEl.innerHTML = ''; return; }
-
-          listEl.innerHTML = list.map(function(p) {
-            return '<div style="display:flex;align-items:center;gap:0.6rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:0.55rem 0.8rem;">' +
-              '<span style="flex:1;font-size:0.83rem;color:var(--text-primary);">' + escapeHtml_(p.name) + '</span>' +
-              '<span style="font-size:0.72rem;color:var(--text-muted);">' + escapeHtml_(p.createdAt) + '</span>' +
-              '<button class="pending-go" data-id="' + escapeHtml_(p.id) + '" data-name="' + escapeHtml_(p.name) + '" ' +
-              'style="background:#b45309;color:#fff;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.78rem;font-weight:700;cursor:pointer;">\u78ba\u8a8d\u3057\u3066\u767b\u9332</button>' +
-              '</div>';
-          }).join('');
-
-          Array.prototype.forEach.call(listEl.querySelectorAll('.pending-go'), function(btn) {
-            btn.addEventListener('click', function() { processPending_(btn.dataset.id, btn.dataset.name); });
-          });
+          pendingItems_ = list || [];
+          renderPending_();
         })
         .catch(function(err) {
-          console.error("\u78ba\u5b9a\u5f85\u3061\u306e\u53d6\u5f97\u306b\u5931\u6557:", err);
+          console.error("確定待ちの取得に失敗:", err);
         });
     }
+
+    function renderPending_() {
+      var list = pendingItems_;
+      var card = bulkEl_('pending-card'), listEl = bulkEl_('pending-list');
+      bulkEl_('pending-count').textContent = list.length + ' 件';
+      // まとめて実行の結果を見ている間は、0件になってもカードを閉じない
+      card.style.display = (list.length || bulkEl_('bulk-result').style.display !== 'none') ? 'block' : 'none';
+      listEl.textContent = '';
+      var names = recipeNameByCode_();
+
+      list.forEach(function (p) {
+        var code = pendingCode_(p.name);
+        var existing = code && (code in names);
+        if (!pendingChoice_[p.id] || (!code && pendingChoice_[p.id] === 'add')) pendingChoice_[p.id] = code ? 'add' : 'hold';
+
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:0.6rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:0.45rem 0.8rem;';
+
+        var sel = document.createElement('select');
+        sel.style.cssText = 'flex:none;font-size:0.78rem;padding:0.25rem 0.3rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);';
+        [['add', '登録する'], ['drop', '不要'], ['hold', '保留']].forEach(function (o) {
+          var opt = document.createElement('option');
+          opt.value = o[0]; opt.textContent = o[1];
+          if (o[0] === 'add' && !code) opt.disabled = true;   // 商品コードが無いものは、まとめては登録できない
+          sel.appendChild(opt);
+        });
+        sel.value = pendingChoice_[p.id];
+        sel.addEventListener('change', function () { pendingChoice_[p.id] = sel.value; paint(); bulkRefresh_(); });
+
+        var tag = document.createElement('span');
+        tag.style.cssText = 'flex:none;font-size:0.7rem;font-weight:700;border-radius:4px;padding:0 0.4rem;' +
+          (!code ? 'background:#f1f5f9;color:#64748b;' : existing ? 'background:#fff7e6;color:#8a5300;' : 'background:#e6f6f4;color:#0f766e;');
+        tag.textContent = !code ? 'コードなし' : existing ? '差し替え' : '新規';
+
+        var nameEl = document.createElement('span');
+        nameEl.style.cssText = 'flex:1;font-size:0.83rem;color:var(--text-primary);word-break:break-all;';
+        nameEl.textContent = p.name;
+        if (existing) {
+          var now = document.createElement('div');
+          now.style.cssText = 'font-size:0.72rem;color:var(--text-muted);';
+          now.textContent = '今の登録: ' + names[code];
+          nameEl.appendChild(now);
+        }
+
+        var dateEl = document.createElement('span');
+        dateEl.style.cssText = 'flex:none;font-size:0.72rem;color:var(--text-muted);';
+        dateEl.textContent = p.createdAt;
+
+        var go = document.createElement('button');
+        go.type = 'button';
+        go.style.cssText = 'flex:none;background:transparent;color:#b45309;border:1px solid #b45309;border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem;font-weight:700;cursor:pointer;';
+        go.textContent = '確認して登録';
+        go.title = '似た名前の候補を見て、1件だけ個別に登録します';
+        go.addEventListener('click', function () { processPending_(p.id, p.name); });
+
+        function paint() { row.style.opacity = pendingChoice_[p.id] === 'add' ? '1' : '0.55'; }
+        paint();
+        [sel, tag, nameEl, dateEl, go].forEach(function (x) { row.appendChild(x); });
+        listEl.appendChild(row);
+      });
+      bulkRefresh_();
+    }
+
+    /** まとめて実行のボタンに、いまの選択の件数を出す。 */
+    function bulkRefresh_() {
+      if (bulkRunning_) return;
+      var add = 0, drop = 0;
+      pendingItems_.forEach(function (p) { var c = pendingChoice_[p.id]; if (c === 'add') add++; else if (c === 'drop') drop++; });
+      var go = bulkEl_('bulk-go');
+      go.textContent = 'この内容でまとめて実行（登録 ' + add + '件・不要 ' + drop + '件）';
+      go.disabled = !(add + drop);
+      go.style.opacity = go.disabled ? '0.5' : '1';
+      go.style.cursor = go.disabled ? 'default' : 'pointer';
+      bulkEl_('bulk-box').style.display = pendingItems_.length || bulkEl_('bulk-result').style.display !== 'none' ? 'block' : 'none';
+      ['bulk-all-add', 'bulk-all-hold', 'bulk-go'].forEach(function (id) { bulkEl_(id).style.display = pendingItems_.length ? 'inline-block' : 'none'; });
+    }
+
+    function bulkRow_(mark, color, text, notes) {
+      var row = document.createElement('div');
+      row.style.cssText = 'padding: 2px 0; border-bottom: 1px solid var(--border-color);';
+      var head = document.createElement('span');
+      head.style.cssText = 'font-weight: 700; color: ' + color + '; margin-right: 0.4rem;';
+      head.textContent = mark;
+      row.appendChild(head);
+      row.appendChild(document.createTextNode(text));
+      (notes || []).forEach(function (n) {
+        var tag = document.createElement('div');
+        tag.style.cssText = 'color: #b45309; padding-left: 1.2rem;';
+        tag.textContent = '⚠ ' + n;
+        row.appendChild(tag);
+      });
+      return row;
+    }
+
+    async function bulkRun_() {
+      if (bulkRunning_) return;
+      var drops = pendingItems_.filter(function (p) { return pendingChoice_[p.id] === 'drop'; });
+      // 同じ商品コードの版が2つ届いていたら、新しい版が後から登録されて残るように、届いた順の逆（古い版から）で進める
+      var adds = pendingItems_.filter(function (p) { return pendingChoice_[p.id] === 'add'; })
+        .sort(function (a, b) { return (b.createdMs || 0) - (a.createdMs || 0); });
+      var jobs = drops.map(function (p) { return { kind: 'drop', item: p }; })
+        .concat(adds.map(function (p) { return { kind: 'add', item: p }; }));
+      if (!jobs.length) return;
+
+      bulkRunning_ = true; bulkStop_ = false;
+      var resultEl = bulkEl_('bulk-result'), statusEl = bulkEl_('bulk-status'), listEl = bulkEl_('pending-list');
+      resultEl.textContent = '';
+      resultEl.style.display = 'block';
+      bulkEl_('bulk-bar-wrap').style.display = 'block';
+      bulkEl_('bulk-bar').style.width = '0';
+      ['bulk-all-add', 'bulk-all-hold', 'bulk-go'].forEach(function (id) { bulkEl_(id).style.display = 'none'; });
+      bulkEl_('bulk-stop').style.display = 'inline-block';
+      listEl.style.pointerEvents = 'none';
+      listEl.style.opacity = '0.5';
+
+      var added = 0, replaced = 0, dropped = 0, left = 0, flagged = 0, started = Date.now();
+      for (var i = 0; i < jobs.length; i++) {
+        if (bulkStop_) break;
+        var job = jobs[i], it = job.item;
+        var rest = i ? Math.ceil((Date.now() - started) / i * (jobs.length - i) / 1000) : 0;
+        statusEl.textContent = '実行しています… ' + (i + 1) + ' / ' + jobs.length +
+          (rest ? '（あと約' + (rest > 90 ? Math.ceil(rest / 60) + '分' : rest + '秒') + '）' : '');
+        try {
+          if (job.kind === 'drop') {
+            await gsCall('discardPending', it.id);
+            dropped++;
+            delete pendingChoice_[it.id];
+            resultEl.appendChild(bulkRow_('－ 不要', 'var(--text-muted)', it.name));
+          } else {
+            var res = await gsCall('autoCommitPending', it.id);
+            if (res && res.success) {
+              if (res.action === '差し替え') replaced++; else added++;
+              delete pendingChoice_[it.id];
+              var hasNotes = res.notes && res.notes.length;
+              if (hasNotes) flagged++;
+              var row = bulkRow_(res.action === '差し替え' ? '↻ 差し替え' : '✓ 新規', '#10b981',
+                res.code + ' ' + res.name + '（' + res.category + '）', res.notes);
+              // 見直しの印が付いたものは上に集める（あとで探さなくて済むように）
+              if (hasNotes) resultEl.insertBefore(row, resultEl.firstChild); else resultEl.appendChild(row);
+            } else {
+              left++;
+              pendingChoice_[it.id] = 'hold';
+              resultEl.insertBefore(bulkRow_('－ 残しました', '#b45309', it.name, [(res && res.reason) || '登録できませんでした']), resultEl.firstChild);
+            }
+          }
+        } catch (e) {
+          left++;
+          resultEl.insertBefore(bulkRow_('✗ 失敗', '#ef4444', it.name, [String(e && e.message || e) + '（確定待ちに残っています）']), resultEl.firstChild);
+        }
+        bulkEl_('bulk-bar').style.width = Math.round((i + 1) / jobs.length * 100) + '%';
+      }
+
+      bulkRunning_ = false;
+      bulkEl_('bulk-stop').style.display = 'none';
+      bulkEl_('bulk-bar-wrap').style.display = 'none';
+      listEl.style.pointerEvents = '';
+      listEl.style.opacity = '';
+      statusEl.textContent = (bulkStop_ ? '止めました' : '終わりました') + ': 新規 ' + added + '件 ／ 差し替え ' + replaced + '件' +
+        (dropped ? ' ／ 不要 ' + dropped + '件' : '') + (left ? ' ／ 確定待ちに残り ' + left + '件' : '') +
+        (flagged ? ' ／ ⚠ 見直し ' + flagged + '件（下の一覧の上のほう）' : '');
+      if (added || replaced) await loadRecipes();
+      loadPendingList();
+    }
+
+    (function () {
+      function setAll(choice) {
+        pendingItems_.forEach(function (p) { pendingChoice_[p.id] = (choice === 'add' && !pendingCode_(p.name)) ? 'hold' : choice; });
+        renderPending_();
+      }
+      bulkEl_('bulk-all-add').addEventListener('click', function () { setAll('add'); });
+      bulkEl_('bulk-all-hold').addEventListener('click', function () { setAll('hold'); });
+      bulkEl_('bulk-go').addEventListener('click', bulkRun_);
+      bulkEl_('bulk-stop').addEventListener('click', function () {
+        bulkStop_ = true;
+        bulkEl_('bulk-status').textContent = 'いまの1件が終わったら止まります…';
+      });
+    })();
 
     async function processPending_(pendingId, fileName) {
       var statusEl = document.getElementById('pdf-upload-status');
