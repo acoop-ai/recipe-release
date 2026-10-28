@@ -1071,7 +1071,7 @@
     #guide .gnav,#guide .gclose{display:none !important;} #guide .gbody{overflow:visible;}
   }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <!-- PDF の表示の部品（PDF.js）は、下のアプリの JavaScript の「PDF.js の読み込み」で読む（4系から ES モジュール） -->
   <!-- Google Identity Services（4ドメイン認証。GitHub Pages 配信のため GIS がそのまま使える） -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -1100,7 +1100,7 @@
     <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.6rem; background: var(--bg-secondary); border-radius: 10px; padding: 0.55rem 0.9rem; box-shadow: 0 2px 10px -3px rgba(0,0,0,0.05);">
       <div class="header-logo" style="flex-direction: row; align-items: baseline; gap: 0.5rem;">
         <h1 style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.02em; margin-bottom: 0;">RECIPE VIEWER</h1>
-        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted);">build recipe-web-2026-10-02b</span></span>
+        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted);">build recipe-web-2026-10-22a</span></span>
       </div>
       <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
         <div class="status-badge" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(5, 150, 105, 0.06); border: 1px solid var(--border-color); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; color: var(--accent); font-weight: 600;">
@@ -2728,9 +2728,29 @@
     // PDF.js \u63cf\u753b \uff06 \u975e\u540c\u671f\u30b5\u30e0\u30cd\u30a4\u30eb\u30d0\u30c3\u30c1\u30ed\u30fc\u30c0\u30fc (\u5b9f\u88c5)
     // =========================================================
 
-    // PDF.js \u306e\u8a2d\u5b9a
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-    
+    // PDF.js の読み込み
+    //  - 版は固定する（@latest・版なしにしない）。4.2.67 より前は、細工した PDF を開くと
+    //    このページの中で JavaScript が動く穴がある（CVE-2024-4367）。2026-10-22 に 2.16.105 から上げた
+    //  - 4系からは ES モジュール（.mjs）なので import() で読む。読み込みに失敗したら、次に開くときに読み直す
+    //  - PDF は必ず openPdf_ で開く（isEvalSupported: false を付ける＝版を上げても残す二重の守り）
+    var PDFJS_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/';
+    var pdfjsLoading_ = null;
+    function pdfjs_() {
+      if (!pdfjsLoading_) {
+        pdfjsLoading_ = import(PDFJS_BASE + 'pdf.min.mjs').then(function (lib) {
+          lib.GlobalWorkerOptions.workerSrc = PDFJS_BASE + 'pdf.worker.min.mjs';
+          return lib;
+        }, function (e) { pdfjsLoading_ = null; throw e; });
+      }
+      return pdfjsLoading_;
+    }
+    function openPdf_(bytes) {
+      return pdfjs_().then(function (lib) {
+        return lib.getDocument({ data: bytes, isEvalSupported: false }).promise;
+      });
+    }
+    pdfjs_().catch(function () {});   // 先に読み始めておく（初めて PDF を開くときに待たせない）
+
     var pdfDoc = null;
     var pageNum = 1;
     var pageRendering = false;
@@ -2763,7 +2783,7 @@
             activePdfBlob = new Blob([bytes], { type: 'application/pdf' });
             activePdfBlobFileId = fileId;
           }
-          return pdfjsLib.getDocument({ data: bytes }).promise;
+          return openPdf_(bytes);
         })
         .then(function(pdfDoc_) {
           pdfDoc = pdfDoc_;
@@ -3043,7 +3063,7 @@
         var bin = atob(b64), bytes = new Uint8Array(bin.length);
         for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
         var blob = new Blob([bytes], { type: 'application/pdf' });
-        return pdfjsLib.getDocument({ data: bytes }).promise.then(function (doc) {
+        return openPdf_(bytes).then(function (doc) {
           if (seq !== cmp_.seq || cmp_.want[side] !== fileId) return;   // 別の確認画面・別の相手に変わっていたら捨てる
           cmp_.docs[side] = doc; cmp_.blobs[side] = blob;
           cmpDrawAll_();
