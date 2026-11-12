@@ -1059,7 +1059,7 @@
   #guide .gadmin{display:inline-block;background:#fffbeb;border:1px solid #f59e0b;color:#92400e;font-size:10px;font-weight:700;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle;}
   #guide table{border-collapse:collapse;width:100%;margin:8px 0;font-size:12.5px;}
   #guide th,#guide td{border:1px solid var(--border-color);padding:5px 9px;text-align:left;vertical-align:top;color:var(--text-secondary);}
-  #guide th{background:var(--bg-primary);white-space:nowrap;color:var(--text-primary);}
+  #guide th{background:var(--bg-primary);white-space:nowrap;color:var(--text-primary);position:sticky;top:-14px;z-index:1;}  /* 表が本文の枠より高いときも見出しを上に残す（枠の上の余白 14px のぶん上げる・原則4） */
   @media (max-width:760px){
     #guide .gwrap{flex-direction:column;}
     #guide .gnav{width:auto;max-height:132px;border-right:none;border-bottom:1px solid var(--border-color);display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px;}
@@ -1070,10 +1070,11 @@
     #guide{position:static;background:#fff;padding:0;} #guide .gcard{max-height:none;box-shadow:none;border-radius:0;}
     #guide .gnav,#guide .gclose{display:none !important;} #guide .gbody{overflow:visible;}
   }
+  /* ログインの画面を出している間は、開いていた小窓・お知らせを隠す（ログインのボタンを覆わない）。ログインし直すと、そのまま戻る */
+  body.auth-required .modal-overlay, body.auth-required #guide, body.auth-required .toast { display: none !important; }
   </style>
   <!-- PDF の表示の部品（PDF.js）は、下のアプリの JavaScript の「PDF.js の読み込み」で読む（4系から ES モジュール） -->
-  <!-- Google Identity Services（4ドメイン認証。GitHub Pages 配信のため GIS がそのまま使える） -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Google のログインの部品（GIS）は、ログインの画面を出すときだけ読む（下の loadGis_）。7日の札がある間は読まない -->
 </head>
 <body>
   <div class="bg-glow-orb"></div>
@@ -1085,7 +1086,7 @@
     <h2 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem;">商品レシピ確認システム</h2>
     <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.4rem;">
       会社の Google アカウントでログインしてください。<br>
-      <span style="font-size: 0.78rem; color: var(--text-muted);">jaz-acoop.co.jp ／ jaz-acoop1.jp ／ jaz-acoop2.jp ／ jaz-acoop3.jp</span>
+      <span style="font-size: 0.78rem; color: var(--text-muted);">一度ログインすると、この端末では7日間そのまま使えます。</span>
     </p>
     <div id="auth-error" style="display: none; font-size: 0.8rem; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 1rem; text-align: left; line-height: 1.6;"></div>
     <button id="login-btn" style="background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 0.75rem 1.6rem; font-size: 0.95rem; font-weight: 700; cursor: pointer;">Google でログイン</button>
@@ -1100,7 +1101,7 @@
     <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.6rem; background: var(--bg-secondary); border-radius: 10px; padding: 0.55rem 0.9rem; box-shadow: 0 2px 10px -3px rgba(0,0,0,0.05);">
       <div class="header-logo" style="flex-direction: row; align-items: baseline; gap: 0.5rem;">
         <h1 style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.02em; margin-bottom: 0;">RECIPE VIEWER</h1>
-        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted);">build recipe-web-2026-10-22a</span></span>
+        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted); white-space: normal;" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-12a ／ 窓口 <span id="api-build" style="font-size: inherit; color: inherit; font-weight: inherit; letter-spacing: inherit; margin: 0;">（確認中）</span></span></span>
       </div>
       <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
         <div class="status-badge" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(5, 150, 105, 0.06); border: 1px solid var(--border-color); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; color: var(--accent); font-weight: 600;">
@@ -1519,126 +1520,142 @@
     var totalCountEl = document.getElementById('total-count');
 
     /* =========================================================
-       \u63a5\u7d9a\u5148\u3068\u8a8d\u8a3c\uff08GitHub Pages \uff0b GAS API \u306e\u6a19\u6e96\u5f62\uff09
-       \u753b\u9762\uff1d\u3053\u306e\u30d5\u30a1\u30a4\u30eb\uff08GitHub Pages \u914d\u4fe1\uff09\uff0f \u30c7\u30fc\u30bf\uff1dGAS\u3002
-       \u6bce\u30ea\u30af\u30a8\u30b9\u30c8\u3067\u30a2\u30af\u30bb\u30b9\u30c8\u30fc\u30af\u30f3\u3092\u9001\u308a\u3001GAS \u5074\u30674\u30c9\u30e1\u30a4\u30f3\u3092\u691c\u8a3c\u3059\u308b\u3002
+       接続先と認証（GitHub Pages ＋ GAS API の標準形）
+       画面＝このファイル（GitHub Pages 配信）／ データ＝GAS。
+       ログインの最初の1回だけ Google の札を GAS に確かめてもらい、以後は GAS が署名した7日の札を送る（下の「アプリの札」）。
        ========================================================= */
     var CONFIG = {
       // GAS \u3092\u300c\u65b0\u3057\u3044\u30c7\u30d7\u30ed\u30a4\u300d\u3057\u305f\u5f8c\u306e /exec URL \u306b\u5dee\u3057\u66ff\u3048\u308b\uff08MANUAL_DEPLOY.md \u53c2\u7167\uff09
       GAS_URL: "https://script.google.com/macros/s/AKfycbylfsq5EPqmmuOMUMo5EDZGP_O9sEib7WgUirrB2sspjgob4cMINDC4RKS6LY-juE0/exec",
       // acoop-ai.github.io \u914d\u4e0b\u306f\u540c\u4e00\u30aa\u30ea\u30b8\u30f3\u306e\u305f\u3081\u3001\u30d2\u30c3\u30b9\u30eb\uff0fsoneki \u3068\u540c\u3058\u30af\u30e9\u30a4\u30a2\u30f3\u30c8ID\u3092\u5171\u7528\u3059\u308b
-      GOOGLE_CLIENT_ID: "1072945615483-74jadmaet56chvhkfh2cpt4ae9dvh140.apps.googleusercontent.com",
-      ALLOWED_DOMAINS: ["jaz-acoop.co.jp", "jaz-acoop1.jp", "jaz-acoop2.jp", "jaz-acoop3.jp"]
+      GOOGLE_CLIENT_ID: "1072945615483-74jadmaet56chvhkfh2cpt4ae9dvh140.apps.googleusercontent.com"
     };
     var IS_LOCAL = (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:");
     var GAS_READY = CONFIG.GAS_URL.indexOf("http") === 0;
     /** \u30ed\u30fc\u30ab\u30eb\u691c\u8a3c\u30e2\u30fc\u30c9\u3002\u624b\u5143\u306e\u30d6\u30e9\u30a6\u30b6\u3067\u753b\u9762\u3092\u78ba\u304b\u3081\u308b\u305f\u3081\u306e\u67b6\u7a7a\u30c7\u30fc\u30bf\u3067\u52d5\u304f\uff08\u672c\u756a\u3067\u306f\u7121\u52b9\uff09\u3002 */
     var LOCAL_MOCK = IS_LOCAL && !GAS_READY;
 
-    var currentAccessToken = null, accessTokenExpiry = 0, oauthTokenClient = null, tokenRefreshTimer = null;
-    var TOKEN_STORE_KEY = "recipe_oauth_token_v1";
+    /* ── アプリの札（7日）── 2026-11-12 PO「作業中に頻繁に再認証画面が出る」→ スマレコ・テンチャク【畜産】と同じ型
+       ・ログインの最初の1回だけ、Google の札を窓口（GAS）に確かめてもらい（startSession）、窓口が署名した7日の札を受け取る
+       ・それ以降は、札だけを送る（Google には聞かない）。Google の札は端末に残さない（受け取ったら窓口に渡して捨てる）
+       ・1時間ごとの更新・無音の更新・Google 側の許可の取り消し（revoke）はしない。ログアウトは、この端末の札を捨てるだけ
+       ・信頼の境目: 札は端末の localStorage にあり、だれでも書き換えられる → 窓口が毎回、署名・期限・世代・ドメインを確かめる。
+         札と一緒に置く email・isAdmin は表示だけに使う（本部・管理者の確かめは、窓口が毎回する） */
+    var SESSION_KEY = "recipe_session_v1";
+    var SESSION_MSG = "ログインの期限が切れました。もう一度ログインしてください。";
+    var GIS_SRC = "https://accounts.google.com/gsi/client";
+    var appSession = null;          // { t: 札, e: 期限(ms), email, isAdmin }
+    var sessionNoticeShown = false; // 「期限が切れました」を出したか（お知らせは1回だけ）
+    var appLoaded = false;          // 一覧を読み込めたか（使っている途中で切れたときは、ログインし直しても読み直さない。読めていなければ読み直す）
+    var oauthTokenClient = null, loginJob = null, loginBusy = false, gisLoading = null;
 
-    function persistAccessToken_() {
+    /** 端末の置き場の札。置き場が使えない端末（プライベートの窓など）は undefined。 */
+    function readSession_() {
+      var raw;
+      try { raw = localStorage.getItem(SESSION_KEY); } catch (e) { return undefined; }
       try {
-        if (currentAccessToken && accessTokenExpiry) {
-          localStorage.setItem(TOKEN_STORE_KEY, JSON.stringify({ t: currentAccessToken, e: accessTokenExpiry }));
-        }
-      } catch (e) {}
+        var o = JSON.parse(raw || "null");
+        return (o && typeof o.t === "string" && o.e) ? o : null;
+      } catch (e) { return null; }
     }
-    function restoreAccessToken_() {
-      try {
-        var raw = localStorage.getItem(TOKEN_STORE_KEY);
-        if (!raw) return false;
-        var o = JSON.parse(raw);
-        if (!o || !o.t || !o.e || Date.now() > o.e - 60000) return false;
-        currentAccessToken = o.t; accessTokenExpiry = o.e;
-        scheduleAccessTokenRefresh_(Math.floor((o.e - Date.now()) / 1000) + 30);
-        return true;
-      } catch (e) { return false; }
+    /** 使える札（期限の1分前までを使える扱い）。いつも端末の置き場から読む＝別のタブでのログアウト・入り直しに合わせる。 */
+    function currentSession_() {
+      var o = readSession_();
+      if (o === undefined) o = appSession;   // 置き場が使えない端末では、開いている間だけ覚える
+      appSession = (o && Date.now() <= o.e - 60000) ? o : null;
+      return appSession;
     }
-    function clearStoredToken_() { try { localStorage.removeItem(TOKEN_STORE_KEY); } catch (e) {} }
+    function saveSession_(o) { appSession = o; try { localStorage.setItem(SESSION_KEY, JSON.stringify(o)); } catch (e) {} }
+    function clearSession_() { appSession = null; try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
 
-    function ensureOAuthTokenClient_() {
-      if (oauthTokenClient) return;
-      if (!(window.google && google.accounts && google.accounts.oauth2)) {
-        throw new Error("Google\u30ed\u30b0\u30a4\u30f3\u90e8\u54c1\u304c\u8aad\u307f\u8fbc\u3081\u3066\u3044\u307e\u305b\u3093\u3002\u30da\u30fc\u30b8\u3092\u518d\u8aad\u307f\u8fbc\u307f\u3057\u3066\u304f\u3060\u3055\u3044");
-      }
-      oauthTokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CONFIG.GOOGLE_CLIENT_ID, scope: "openid email profile", callback: function () {}
-      });
+    /** 窓口の版を画面の左上に出す（貼り直しが効いたかを、画面で確かめる） */
+    function noteApiBuild_(b) {
+      var el = document.getElementById('api-build');
+      if (el && b) el.textContent = String(b);
     }
-    function requestAccessTokenOnce_(opts) {
-      return new Promise(function (resolve, reject) {
-        try { ensureOAuthTokenClient_(); } catch (e) { return reject(e); }
-        var silent = !!(opts && opts.silent);
-        var settled = false, guard = null;
-        if (silent) guard = setTimeout(function () { if (!settled) { settled = true; reject(new Error("silent token timeout")); } }, 10000);
-        oauthTokenClient.callback = function (resp) {
-          if (settled) return;
-          settled = true; if (guard) clearTimeout(guard);
-          if (!resp || resp.error || !resp.access_token) {
-            return reject(new Error((resp && (resp.error_description || resp.error)) || "\u30c8\u30fc\u30af\u30f3\u53d6\u5f97\u5931\u6557"));
-          }
-          currentAccessToken = resp.access_token;
-          var ei = Number(resp.expires_in) || 3600;
-          accessTokenExpiry = Date.now() + (ei - 30) * 1000;
-          persistAccessToken_(); scheduleAccessTokenRefresh_(ei);
-          resolve(resp);
-        };
-        try { var req = {}; if (silent) req.prompt = ""; oauthTokenClient.requestAccessToken(req); }
-        catch (e) { if (!settled) { settled = true; if (guard) clearTimeout(guard); reject(e); } }
-      });
-    }
-    function scheduleAccessTokenRefresh_(expiresInSec) {
-      if (tokenRefreshTimer) clearTimeout(tokenRefreshTimer);
-      var after = Math.min(Math.max((expiresInSec - 300) * 1000, 5000), 55 * 60 * 1000);
-      tokenRefreshTimer = setTimeout(function () { requestAccessTokenOnce_({ silent: true }).catch(function () {}); }, after);
-    }
-    function fetchUserInfo_() {
-      if (!currentAccessToken) return Promise.reject(new Error("\u672a\u30ed\u30b0\u30a4\u30f3"));
-      return fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-        headers: { Authorization: "Bearer " + currentAccessToken }
+
+    /** 窓口へ送る（返事は JSON）。giveUpMs を渡したときは、その時間で待つのをやめる（ログインの確かめだけ。AI の読み取りなど長い操作には付けない） */
+    function postGas_(body, giveUpMs) {
+      var ctl = (giveUpMs && typeof AbortController === "function") ? new AbortController() : null;
+      var timer = ctl ? setTimeout(function () { ctl.abort(); }, giveUpMs) : 0;
+      return fetch(CONFIG.GAS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
+        body: JSON.stringify(body),
+        redirect: "follow",
+        signal: ctl ? ctl.signal : undefined
       }).then(function (res) {
-        if (!res.ok) throw new Error("userinfo HTTP " + res.status);
+        if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
-      });
+      }, function (e) {
+        if (ctl && ctl.signal.aborted) throw new Error(Math.round(giveUpMs / 1000) + "秒たっても返事がありません。通信を確かめて、もう一度「Google でログイン」を押してください。");
+        throw e;
+      }).then(function (json) { if (timer) clearTimeout(timer); return json; }, function (e) { if (timer) clearTimeout(timer); throw e; });
+    }
+
+    /** 札が切れたとき: ログインの画面を1回だけ出し、印の付いたエラーを返す（呼び出し側はお知らせを重ねない）。 */
+    function sessionExpired_() {
+      var err = new Error(SESSION_MSG);
+      err.sessionExpired = true;
+      if (!sessionNoticeShown) { sessionNoticeShown = true; showAuthGate_(SESSION_MSG); }
+      return err;
     }
 
     /**
-     * GAS \u306e API \u3092\u547c\u3076\u3002\u65e7\u7248\u306e google.script.run \u306e\u7f6e\u304d\u63db\u3048\u3002
-     * \u4f7f\u3044\u65b9: gsCall('getRecipes').then(...).catch(...)
+     * GAS の API を呼ぶ。旧版の google.script.run の置き換え。
+     * 使い方: gsCall('getRecipes').then(...).catch(...)
      */
     function gsCall(fn) {
       var args = Array.prototype.slice.call(arguments, 1);
       if (LOCAL_MOCK) return mockCall_(fn, args);
-      if (!GAS_READY) return Promise.reject(new Error("\u63a5\u7d9a\u5148\uff08GAS_URL\uff09\u304c\u672a\u8a2d\u5b9a\u3067\u3059\u3002\u7ba1\u7406\u8005\u306b\u3054\u9023\u7d61\u304f\u3060\u3055\u3044\u3002"));
-
-      var needToken = !currentAccessToken || (accessTokenExpiry && Date.now() > accessTokenExpiry - 60000);
-      var pre = needToken ? requestAccessTokenOnce_({ silent: true }).catch(function () {}) : Promise.resolve();
-
-      return pre.then(function () {
-        if (!currentAccessToken) {
-          showAuthGate_("\u30bb\u30c3\u30b7\u30e7\u30f3\u306e\u6709\u52b9\u671f\u9650\u304c\u5207\u308c\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u30ed\u30b0\u30a4\u30f3\u3057\u3066\u304f\u3060\u3055\u3044\u3002");
-          throw new Error("\u30bb\u30c3\u30b7\u30e7\u30f3\u5207\u308c\u3067\u3059");
+      if (!GAS_READY) return Promise.reject(new Error("接続先（GAS_URL）が未設定です。管理者にご連絡ください。"));
+      return callWithSession_(fn, args, true);
+    }
+    function callWithSession_(fn, args, canRetry) {
+      var s = currentSession_();
+      if (!s) { clearSession_(); return Promise.reject(sessionExpired_()); }   // 期限の切れた札は端末に残さない（別のタブで入り直した新しい札なら、上で拾えている）
+      var sent = s.t;
+      return postGas_({ action: fn, args: args, session: sent }).then(function (json) {
+        if (json && json.build) noteApiBuild_(json.build);
+        if (json && json.code === "SESSION") {
+          var now = currentSession_();
+          // 返事を待つ間に入り直していた: 新しい札で1回だけ送り直す（窓口は、札を確かめる前には何もしていない）
+          if (now && now.t !== sent && canRetry) return callWithSession_(fn, args, false);
+          if (!now || now.t === sent) clearSession_();
+          throw sessionExpired_();
         }
-        return fetch(CONFIG.GAS_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=UTF-8" },
-          body: JSON.stringify({ action: fn, args: args, accessToken: currentAccessToken }),
-          redirect: "follow"
-        });
-      }).then(function (res) {
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        return res.json();
-      }).then(function (json) {
-        if (json && json.error) {
-          if (String(json.error).indexOf("\u8a8d\u8a3c\u5931\u6557") >= 0) {
-            currentAccessToken = null; accessTokenExpiry = 0; clearStoredToken_();
-            showAuthGate_("\u4f1a\u793e\u30a2\u30ab\u30a6\u30f3\u30c8\u3067\u30ed\u30b0\u30a4\u30f3\u3057\u76f4\u3057\u3066\u304f\u3060\u3055\u3044\u3002");
-          }
-          throw new Error(json.error);
-        }
+        if (json && json.error) throw new Error(json.error);
         return json.result;
+      });
+    }
+
+    /* ── Google のログイン（最初の1回だけ・窓の方式）── */
+    function loadGis_() {
+      if (window.google && google.accounts && google.accounts.oauth2) return Promise.resolve();
+      if (gisLoading) return gisLoading;
+      gisLoading = new Promise(function (resolve, reject) {
+        var s = document.createElement('script');
+        s.src = GIS_SRC; s.async = true;
+        s.onload = function () { resolve(); };
+        s.onerror = function () { gisLoading = null; reject(new Error('gis')); };
+        document.head.appendChild(s);
+      });
+      return gisLoading;
+    }
+    function setLoginBusy_(busy, label) {
+      var b = document.getElementById('login-btn');
+      if (!b) return;
+      b.disabled = !!busy;
+      b.style.opacity = busy ? '0.6' : '';
+      b.textContent = label || 'Google でログイン';
+    }
+    /** callback・error_callback は1度だけ渡し、いま動いているログイン（loginJob）へ回す（依頼のたびに上書きしない） */
+    function ensureTokenClient_() {
+      if (oauthTokenClient) return;
+      oauthTokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CONFIG.GOOGLE_CLIENT_ID, scope: "openid email profile", prompt: "select_account",
+        callback: function (resp) { if (loginJob) loginJob.onResponse(resp); },
+        error_callback: function (err) { if (loginJob) loginJob.onError(err); }
       });
     }
 
@@ -1768,90 +1785,153 @@
       });
     }
 
-    /* \u2500\u2500 \u753b\u9762\u306e\u51fa\u3057\u5206\u3051\uff08\u8a8d\u8a3c\u30b2\u30fc\u30c8 \u21d4 \u672c\u4f53\uff09\u2500\u2500 */
+    /* ── 画面の出し分け（認証ゲート ⇔ 本体）── */
     function showAuthGate_(msg) {
       document.getElementById('auth-gate').style.display = 'block';
       document.getElementById('app-container').style.display = 'none';
+      document.body.classList.add('auth-required');   // 開いていた小窓・お知らせは隠す（ログインのボタンを覆わない）
       var err = document.getElementById('auth-error');
       if (msg) { err.textContent = msg; err.style.display = 'block'; }
       else { err.style.display = 'none'; }
+      loadGis_().catch(function () {});               // 押す前に読んでおく（押してから読むと、ログインの窓が止められやすい）
     }
     function showApp_() {
       document.getElementById('auth-gate').style.display = 'none';
       document.getElementById('app-container').style.display = '';
+      document.body.classList.remove('auth-required');
     }
 
     function login_() {
-      requestAccessTokenOnce_({}).then(afterAuth_).catch(function (e) {
-        showAuthGate_("\u30ed\u30b0\u30a4\u30f3\u306b\u5931\u6557\u3057\u307e\u3057\u305f\uff1a" + (e && e.message || e));
+      if (loginBusy) return;                          // 窓口に確かめてもらっている間は、二重に始めない
+      if (loginJob) clearTimeout(loginJob.slow);      // 前の依頼は取り下げて始める（後から届いた返事も、いまの依頼として受ける）
+      setLoginBusy_(true, 'ログインの窓を開いています…');
+      var job = {
+        slow: setTimeout(function () {
+          if (loginJob !== job) return;
+          setLoginBusy_(false);
+          showAuthGate_('ログインの窓からの返事がありません。もう一度「Google でログイン」を押してください。');
+        }, 20000),
+        onResponse: function (resp) {
+          clearTimeout(job.slow); loginJob = null;
+          if (resp && resp.access_token) { finishLogin_(resp.access_token); return; }
+          setLoginBusy_(false);
+          showAuthGate_('ログインできませんでした。もう一度「Google でログイン」を押してください。');
+        },
+        onError: function (err) {
+          var type = (err && err.type) || '';
+          setLoginBusy_(false);
+          if (type === 'popup_closed') { clearTimeout(job.slow); showAuthGate_('ログインの窓が閉じられました。もう一度「Google でログイン」を押してください。'); return; }   // 後から返事が届く端末があるので、依頼は残す
+          clearTimeout(job.slow); loginJob = null;
+          showAuthGate_(type === 'popup_failed_to_open'
+            ? 'ログインの窓が開けませんでした。ブラウザのポップアップを許可してから、もう一度押してください。'
+            : 'ログインできませんでした。もう一度「Google でログイン」を押してください。');
+        }
+      };
+      loginJob = job;
+      loadGis_().then(function () {
+        ensureTokenClient_();
+        oauthTokenClient.requestAccessToken();
+      }).catch(function () {
+        clearTimeout(job.slow); loginJob = null; setLoginBusy_(false);
+        showAuthGate_('Google のログインの部品を読み込めませんでした。通信を確かめて、ページを読み込み直してください。');
       });
     }
+
+    /** Google の札を窓口に確かめてもらい、アプリの札（7日）を受け取る。Google の札はここで捨てる（端末に残さない） */
+    function finishLogin_(googleToken) {
+      loginBusy = true;
+      setLoginBusy_(true, '確かめています…');
+      postGas_({ action: 'startSession', accessToken: googleToken }, 30000).then(function (json) {
+        if (json && json.build) noteApiBuild_(json.build);
+        var r = json && json.result;
+        if (!r || !r.session) {
+          var msg = (json && json.error) || 'ログインできませんでした。もう一度お試しください。';
+          if (/不明なアクション/.test(msg)) msg = '窓口（GAS）が、まだ新しい版になっていません（E-DEPLOY）。管理の担当へ連絡してください。';
+          throw new Error(msg);
+        }
+        var prevEmail = userEmail;
+        saveSession_({ t: r.session, e: Number(r.expiresAt) || (Date.now() + 7 * 86400000), email: String(r.email || ''), isAdmin: !!r.isAdmin });
+        sessionNoticeShown = false;
+        applyIdentity_(r.email, !!r.isAdmin);
+        showApp_();
+        // 使っている途中で切れて、同じ人が入り直した: 画面はそのまま（開いていた小窓も戻る）。直前の操作だけ、もう一度
+        if (appLoaded && prevEmail && prevEmail === userEmail) { showToast('ログインしました。直前の操作は、もう一度押してください。'); return; }
+        return startApp_();
+      }).catch(function (e) {
+        showAuthGate_(String(e && e.message || e));
+      }).then(function () {
+        loginBusy = false;
+        setLoginBusy_(false);
+      });
+    }
+
+    /** ログアウト: この端末の札を捨てるだけ（Google 側の許可は取り消さない＝ほかの端末・ほかのアプリは落ちない） */
     function logout_() {
-      currentAccessToken = null; accessTokenExpiry = 0; userEmail = ''; isAdmin = false;
-      clearStoredToken_();
+      clearSession_();
+      userEmail = ''; isAdmin = false; appLoaded = false; sessionNoticeShown = false;
       showAuthGate_();
     }
 
-    function afterAuth_() {
-      return fetchUserInfo_().then(function (info) {
-        userEmail = String(info.email || "").toLowerCase();
-        if (CONFIG.ALLOWED_DOMAINS.indexOf(userEmail.split("@")[1] || "") < 0) {
-          logout_();
-          showAuthGate_("\u4f1a\u793e\u30a2\u30ab\u30a6\u30f3\u30c8\uff08jaz-acoop.co.jp / jaz-acoop1.jp / jaz-acoop2.jp / jaz-acoop3.jp\uff09\u3067\u30ed\u30b0\u30a4\u30f3\u3057\u76f4\u3057\u3066\u304f\u3060\u3055\u3044\u3002");
-          throw new Error("domain");
-        }
-        document.getElementById('user-email').textContent = userEmail;
-        showApp_();
-        return gsCall('whoami');
-      }).then(function (w) {
-        isAdmin = !!(w && w.isAdmin);
-        document.getElementById('settings-open-btn').style.display = isAdmin ? 'flex' : 'none';
-        // 権限判定の結果を常時見えるようにする（編集/削除ボタンが出ない不具合の切り分け用。
-        // 「本部」と出ているのにボタンが出ない＝ボタン側の問題／「店舗」と出ている＝権限判定側の問題、
-        // とその場で分かるようにする。2026-09-16）
-        var badge = document.getElementById('role-badge');
-        if (!badge) {
-          badge = document.createElement('span');
-          badge.id = 'role-badge';
-          badge.style.cssText = 'font-size:0.68rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:10px;margin-right:0.3rem;';
-          document.getElementById('user-email').insertAdjacentElement('beforebegin', badge);
-        }
-        badge.textContent = isAdmin ? '本部' : '店舗';
-        badge.style.background = isAdmin ? 'rgba(16,185,129,0.12)' : 'rgba(100,116,139,0.12)';
-        badge.style.color = isAdmin ? 'var(--accent)' : 'var(--text-muted)';
-        return startApp_();
-      }).catch(function (e) {
-        if (String(e && e.message) === "domain") return;
-        showAuthGate_("\u30ed\u30b0\u30a4\u30f3\u60c5\u5831\u3092\u78ba\u8a8d\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\uff1a" + (e && e.message || e));
-      });
+    /** だれが入っているか・本部か（表示だけ。本部・管理者の確かめは窓口が毎回する） */
+    function applyIdentity_(email, admin) {
+      userEmail = String(email || '').toLowerCase();
+      isAdmin = !!admin;
+      document.getElementById('user-email').textContent = userEmail;
+      document.getElementById('settings-open-btn').style.display = isAdmin ? 'flex' : 'none';
+      // 権限判定の結果を常時見えるようにする（編集/削除ボタンが出ない不具合の切り分け用。
+      // 「本部」と出ているのにボタンが出ない＝ボタン側の問題／「店舗」と出ている＝権限判定側の問題、
+      // とその場で分かるようにする。2026-09-16）
+      var badge = document.getElementById('role-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.id = 'role-badge';
+        badge.style.cssText = 'font-size:0.68rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:10px;margin-right:0.3rem;';
+        document.getElementById('user-email').insertAdjacentElement('beforebegin', badge);
+      }
+      badge.textContent = isAdmin ? '本部' : '店舗';
+      badge.style.background = isAdmin ? 'rgba(16,185,129,0.12)' : 'rgba(100,116,139,0.12)';
+      badge.style.color = isAdmin ? 'var(--accent)' : 'var(--text-muted)';
     }
 
-    /** \u8a8d\u8a3c\u304c\u901a\u3063\u3066\u304b\u3089\u30c7\u30fc\u30bf\u3092\u8aad\u3080\uff08\u8a2d\u5b9a \u2192 \u4e00\u89a7\u306e\u9806\uff09\u3002 */
-    function startApp_() {
+    /** 認証が通ってからデータを読む（設定と一覧は同時に頼む。札で開いたときは、本部かどうかも同時に確かめ直す）。 */
+    function startApp_(opts) {
+      if (opts && opts.refreshIdentity) {
+        gsCall('whoami').then(function (w) {
+          if (!w) return;
+          applyIdentity_(w.email || userEmail, !!w.isAdmin);
+          var s = currentSession_();
+          if (s && s.isAdmin !== !!w.isAdmin) { s.isAdmin = !!w.isAdmin; saveSession_(s); }
+        }).catch(function () {});
+      }
       return loadUserPreferencesAndInit().then(autoGuide_);
     }
 
-    /* \u2500\u2500 \u8d77\u52d5 \u2500\u2500 */
+    /* ── 起動 ── */
     setupEventListeners();
     document.getElementById('login-btn').addEventListener('click', login_);
     document.getElementById('logout-btn').addEventListener('click', logout_);
+    try { localStorage.removeItem("recipe_oauth_token_v1"); } catch (e) {}   // 前の版が置いた Google の札（約1時間）は、もう使わないので端末に残さない
 
     if (LOCAL_MOCK) {
-      // \u624b\u5143\u3067\u306e\u753b\u9762\u78ba\u8a8d\u7528\u3002\u67b6\u7a7a\u30c7\u30fc\u30bf\u3067\u672c\u4f53\u3092\u8868\u793a\u3059\u308b\uff08\u672c\u756a\u3067\u306f\u901a\u3089\u306a\u3044\u7d4c\u8def\uff09
+      // 手元での画面確認用。架空データで本体を表示する（本番では通らない経路）
       userEmail = 'local-test@jaz-acoop.co.jp';
       isAdmin = true;
-      document.getElementById('user-email').textContent = userEmail + '\uff08\u30ed\u30fc\u30ab\u30eb\u691c\u8a3c\uff09';
+      document.getElementById('user-email').textContent = userEmail + '（ローカル検証）';
       document.getElementById('settings-open-btn').style.display = 'flex';
       showApp_();
       startApp_();
-    } else if (restoreAccessToken_()) {
-      afterAuth_();
     } else {
-      showAuthGate_();
-      // \u4e00\u5ea6\u30ed\u30b0\u30a4\u30f3\u6e08\u307f\u306e\u30d6\u30e9\u30a6\u30b6\u306a\u3089\u3001\u753b\u9762\u3092\u51fa\u3057\u305f\u307e\u307e\u88cf\u3067\u9ed9\u3063\u3066\u66f4\u65b0\u3092\u8a66\u307f\u308b
-      setTimeout(function () {
-        requestAccessTokenOnce_({ silent: true }).then(afterAuth_).catch(function () {});
-      }, 800);
+      var stored = readSession_();
+      var live = currentSession_();
+      if (live) {
+        // 7日の札がある: Google にもログインの画面にも行かず、そのまま開く
+        applyIdentity_(live.email, live.isAdmin);
+        showApp_();
+        startApp_({ refreshIdentity: true });
+      } else {
+        if (stored) { clearSession_(); sessionNoticeShown = true; }   // 期限が切れた札だけがあった: 1回だけ知らせる
+        showAuthGate_(stored ? SESSION_MSG : '');
+      }
     }
 
     /* =========================================================
@@ -1905,6 +1985,9 @@
     }
 
     function loadUserPreferencesAndInit() {
+      // 一覧は設定と同時に頼む（前は設定の返事を待ってから一覧を頼んでいた＝窓口の往復が1回ぶん長かった）。描くのは両方そろってから
+      var recipesPending = gsCall('getRecipes');
+      recipesPending.catch(function () {});   // 失敗は loadRecipes が受ける（ここでは「受け手が後から付く」印だけ）
       return gsCall('getUserPreferences')
         .then(function(pref) {
           uncheckedCodes = (pref && pref.uncheckedCodes) || [];
@@ -1913,18 +1996,20 @@
         .catch(function(err) {
           console.error("設定の読み込みに失敗:", err);
           applyLocalPreferences_();
-          showToast('前回の選択をサーバーから読めませんでした。この端末に残っていた内容を表示します。', true);
+          if (!(err && err.sessionExpired)) showToast('前回の選択をサーバーから読めませんでした。この端末に残っていた内容を表示します。', true);
         })
         .then(function() {
           updateSortButtonsUI();
-          return loadRecipes();
+          return loadRecipes(recipesPending);
         });
     }
 
-    function loadRecipes() {
-      return gsCall('getRecipes')
+    /** 一覧を読んで描く。pending を渡されたら、その頼み（先に出してある getRecipes）の返事を使う。 */
+    function loadRecipes(pending) {
+      return (pending || gsCall('getRecipes'))
         .then(function(recipes) {
           allRecipes = recipes || [];
+          appLoaded = true;
           badge.textContent = allRecipes.length + ' \u4ef6\u306e\u30ec\u30b7\u30d4\u3092\u8aad\u8fbc\u6e08';
           totalCountEl.textContent = allRecipes.length;
           renderRecipeGrid();
@@ -2582,19 +2667,21 @@
         var selling = r.SellingPrice != null && r.SellingPrice !== "" ? (Number(r.SellingPrice).toLocaleString() + '\u5186') : '--\u5186';
         var cost = r.CostPrice != null && r.CostPrice !== "" ? (Number(r.CostPrice).toLocaleString() + '\u5186') : '--\u5186';
 
-        var checkboxHtml = 
+        // 商品名・コード・区分は、取り込んだPDF（AIの読み取り・ガルーンのファイル名）や人の入力から来る文字。HTMLとして読ませない（escapeHtml_）。
+        //   ログインの札が7日になったので、画面に紛れ込んだ JavaScript が札を持ち出せないよう、描くところで必ず無害にする（2026-11-12）
+        var checkboxHtml =
           '<label class="card-pref-checkbox-wrapper" style="cursor: pointer;" onclick="event.stopPropagation();">' +
-            '<input type="checkbox" class="card-pref-checkbox" id="check-' + r.Code + '"' + (isChecked ? ' checked' : '') + ' style="margin-right: 0.5rem;">' +
-            '<span class="recipe-code">' + r.Code + '</span>' +
+            '<input type="checkbox" class="card-pref-checkbox" id="check-' + escapeHtml_(r.Code) + '"' + (isChecked ? ' checked' : '') + ' style="margin-right: 0.5rem;">' +
+            '<span class="recipe-code">' + escapeHtml_(r.Code) + '</span>' +
           '</label>';
 
         card.innerHTML =
           '<div style="padding: 0.8rem;">' +
             '<div class="card-top">' +
               checkboxHtml +
-              '<span class="recipe-cat-tag ' + catClass + '">' + r.Category + '</span>' +
+              '<span class="recipe-cat-tag ' + catClass + '">' + escapeHtml_(r.Category) + '</span>' +
             '</div>' +
-            '<h3 class="recipe-name">' + r.Name + '</h3>' +
+            '<h3 class="recipe-name">' + escapeHtml_(r.Name) + '</h3>' +
           '</div>' +
           '<div class="card-bottom">' +
             '<div>' +
@@ -2976,9 +3063,11 @@
         return c;
       }
       var head = document.createElement('tr');
-      head.appendChild(cell('th', '', 'width: 6.5em; background: var(--bg-primary);'));
-      if (old) head.appendChild(cell('th', '今の登録', 'background: var(--bg-primary);'));
-      head.appendChild(cell('th', '届いたもの（AIが読んだ内容）', 'background: var(--bg-primary);'));
+      // 見出しの行は、確認画面を縦に送っても上に残す（原材料・工程が長いと表が画面より高くなる。ui_design_principles 原則4）
+      var stick = ' position: sticky; top: -1.4rem; z-index: 1;';   // 枠の上の余白（1.4rem）のぶん上げて、枠の上の端に付ける
+      head.appendChild(cell('th', '', 'width: 6.5em; background: var(--bg-primary);' + stick));
+      if (old) head.appendChild(cell('th', '今の登録', 'background: var(--bg-primary);' + stick));
+      head.appendChild(cell('th', '届いたもの（AIが読んだ内容）', 'background: var(--bg-primary);' + stick));
       table.appendChild(head);
       rows.forEach(function (r) {
         var tr = document.createElement('tr');
@@ -3704,6 +3793,8 @@
     var toastTimeout;
     function showToast(text, isError) {
       if (isError === undefined) { isError = false; }
+      // ログインの画面を出している間（札が切れた）は、失敗のお知らせを重ねない（お知らせはログインの画面の1回だけ）
+      if (isError && document.body.classList.contains('auth-required')) return;
       var toast = document.getElementById('toast');
       var toastText = document.getElementById('toast-text');
       var toastIcon = toast.querySelector('.toast-icon');
