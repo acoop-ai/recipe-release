@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>商品レシピ確認システム - 関東事業部</title>
+  <title>レシピの本棚 - 関東事業部</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
     // \u753b\u9762\u4e0a\u306bJavaScript\u30a8\u30e9\u30fc\u3092\u5f37\u5236\u8868\u793a\u3057\u3001\u30a8\u30e9\u30fc\u884c\u306e\u30bd\u30fc\u30b9\u30b3\u30fc\u30c9\u3092\u81ea\u52d5\u53d6\u5f97\u3057\u3066\u8868\u793a\u3059\u308b\u9ad8\u5ea6\u30c7\u30d0\u30c3\u30b0\u6a5f\u69cb
@@ -956,7 +956,7 @@
       right: 2rem;
       background: #1e293b;
       border: 1px solid var(--border-color);
-      color: var(--text-primary);
+      color: #f8fafc;   /* 暗い地に明るい字（前は暗い字で、お知らせが読めなかった・2026-11-12b） */
       padding: 1rem 1.5rem;
       border-radius: 8px;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
@@ -1032,9 +1032,9 @@
       justify-content: center;
       background: #525659;
     }
-  /* ── ご利用ガイド（全システム共通の標準レイアウト・principles_userguide_standard_layout）──
+  /* ── レシピの本棚利用ガイド（全システム共通の標準レイアウト・principles_userguide_standard_layout）──
      既定形: 左=目次(sticky)／右=本文。本文スクロールで目次をハイライト(scroll-spy)、目次クリックで本文へスクロール。
-     本文はこのファイル内の GUIDE_BODY / GUIDE_ADMIN / GUIDE_FAQ が原本。 */
+     本文の原本は GAS の Guide.html（ログインの内側）。写真と番号の丸は guide-img/（作り物のデータ）。 */
   #guide{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:1200;display:flex;align-items:center;justify-content:center;padding:16px;}
   #guide .gcard{background:var(--bg-secondary);border-radius:14px;width:100%;max-width:1040px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.28);overflow:hidden;}
   #guide .ghead{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--border-color);flex:none;}
@@ -1060,15 +1060,66 @@
   #guide table{border-collapse:collapse;width:100%;margin:8px 0;font-size:12.5px;}
   #guide th,#guide td{border:1px solid var(--border-color);padding:5px 9px;text-align:left;vertical-align:top;color:var(--text-secondary);}
   #guide th{background:var(--bg-primary);white-space:nowrap;color:var(--text-primary);position:sticky;top:-14px;z-index:1;}  /* 表が本文の枠より高いときも見出しを上に残す（枠の上の余白 14px のぶん上げる・原則4） */
+  /* レシピの本棚利用ガイドの図（2026-11-12b）: 写真＋番号の丸・番号つきの並び・流れの箱・困ったときのカード・だれ向けの切り替え・戻る／はじめへ */
+  #guide[hidden]{display:none !important;}   /* 閉じたガイドは隠して残す（開き直しを速く） */
+  #guide .ghead{flex-wrap:wrap;row-gap:6px;}
+  #guide .gtools{display:flex;gap:6px;margin-left:auto;align-items:center;flex-wrap:wrap;}
+  #guide .gtools button{background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-secondary);padding:6px 12px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;min-height:34px;}
+  #guide .gtools button:disabled{opacity:.45;cursor:default;}
+  #guide .gtools .gclose{margin-left:0;}
+  #guide .gfor{display:inline-flex;border:1px solid var(--border-color);border-radius:8px;overflow:hidden;}
+  #guide .gfor button{border:none;border-radius:0;background:var(--bg-secondary);padding:5px 12px;font-size:12.5px;font-weight:600;color:var(--text-secondary);cursor:pointer;min-height:32px;}
+  #guide .gfor button.on{background:var(--accent);color:#fff;}
+  #guide .gbody.as-store section[data-role]{display:none;}
+  #guide .gpair{display:flex;flex-direction:column;gap:10px;margin:8px 0 6px;}
+  #guide .gpair.is-side{flex-direction:row;align-items:flex-start;}
+  #guide .gpair.is-side .gshot{flex:0 1 auto;max-width:58%;}
+  #guide .gpair.is-side ol.gsteps{flex:1;min-width:0;}
+  #guide .gshot{margin:0;max-width:100%;}
+  #guide .gshot-scroll{max-width:100%;overflow-x:auto;}
+  #guide .gshot-frame{position:relative;width:100%;max-width:var(--gw);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);background:#fff;}
+  #guide .gshot.is-zoom .gshot-frame{width:var(--gw);max-width:none;}
+  #guide .gshot-frame img{display:block;width:100%;height:auto;}
+  #guide .gbox{position:absolute;border:2px solid rgba(234,88,12,.85);border-radius:6px;pointer-events:none;}
+  #guide .gnum{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#ea580c;color:#fff;font-size:12px;font-weight:800;line-height:1;flex:none;}
+  #guide .gmark{position:absolute;box-shadow:0 0 0 2px #fff;cursor:pointer;}
+  #guide .gbox.is-hot{border-color:#2563eb;background:rgba(37,99,235,.12);}
+  #guide .gmark.is-hot,#guide ol.gsteps li.is-hot .gnum,#guide .gflow li.is-hot .gnum{background:#2563eb;}
+  #guide .gcap{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--text-muted);margin-top:4px;}
+  #guide .gcap button{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;font-size:11.5px;padding:3px 9px;cursor:pointer;color:var(--text-secondary);}
+  #guide ol.gsteps{list-style:none;margin:6px 0;padding:0;display:grid;gap:3px;}
+  #guide ol.gsteps li{display:grid;grid-template-columns:22px 1fr;column-gap:8px;align-items:start;padding:4px 6px;border-radius:6px;margin:0;cursor:default;}
+  #guide ol.gsteps li.is-hot{background:rgba(37,99,235,.07);}
+  #guide .gstep b{color:var(--text-primary);margin-right:.6em;}
+  #guide ul.gnotes{margin:6px 0 4px 18px;}
+  #guide ul.gnotes li{font-size:12.5px;line-height:1.7;}
+  #guide ol.gflow{list-style:none;display:flex;flex-wrap:wrap;gap:26px;padding:0;margin:8px 0;}
+  #guide .gflow li{position:relative;flex:1 1 150px;border:1px solid var(--border-color);border-radius:10px;padding:10px 12px;background:var(--bg-primary);margin:0;}
+  #guide .gflow li:not(:last-child)::after{content:'→';position:absolute;right:-21px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:800;font-size:16px;}
+  #guide .gflow-ico{display:block;font-size:22px;margin:6px 0 2px;}
+  #guide .gflow b{display:block;color:var(--text-primary);font-size:13px;}
+  #guide .gflow .gflow-t{display:block;font-size:12px;color:var(--text-secondary);line-height:1.6;}
+  #guide .gqa{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin:8px 0;}
+  #guide .gqa > div{border:1px solid var(--border-color);border-radius:10px;padding:9px 12px;background:var(--bg-primary);}
+  #guide .gqa b{display:block;color:var(--text-primary);font-size:13px;margin-bottom:3px;}
+  #guide .gqa span{font-size:12.5px;color:var(--text-secondary);line-height:1.7;}
+  #guide h3.glanded{background:rgba(59,130,246,.16);border-radius:4px;transition:background .4s;}
   @media (max-width:760px){
+    #guide{padding:6px;} #guide .gcard{max-height:96vh;}
     #guide .gwrap{flex-direction:column;}
     #guide .gnav{width:auto;max-height:132px;border-right:none;border-bottom:1px solid var(--border-color);display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px;}
     #guide .gnav a{border-left:none;border-radius:999px;padding:4px 10px;background:var(--bg-secondary);border:1px solid var(--border-color);}
     #guide .gnav a.on{border-color:var(--accent);} #guide .gnav a.sub{display:none;}
+    #guide .gbody{padding:10px 12px 40px;}
+    #guide .gpair.is-side{flex-direction:column;} #guide .gpair.is-side .gshot{max-width:100%;}
+    #guide ol.gflow{flex-direction:column;gap:24px;}
+    #guide .gflow li:not(:last-child)::after{content:'↓';right:auto;left:50%;top:auto;bottom:-22px;transform:translateX(-50%);}
+    #guide .gtools{margin-left:0;}
   }
+  @media (prefers-reduced-motion: reduce){ #guide h3.glanded{transition:none;} }
   @media print{
     #guide{position:static;background:#fff;padding:0;} #guide .gcard{max-height:none;box-shadow:none;border-radius:0;}
-    #guide .gnav,#guide .gclose{display:none !important;} #guide .gbody{overflow:visible;}
+    #guide .gnav,#guide .gtools,#guide .gcap button{display:none !important;} #guide .gbody{overflow:visible;}
   }
   /* ログインの画面を出している間は、開いていた小窓・お知らせを隠す（ログインのボタンを覆わない）。ログインし直すと、そのまま戻る */
   body.auth-required .modal-overlay, body.auth-required #guide, body.auth-required .toast { display: none !important; }
@@ -1083,7 +1134,7 @@
   <!-- 認証ゲート（4ドメインのGoogleアカウントでログインするまで本体を出さない） -->
   <div id="auth-gate" style="max-width: 460px; margin: 12vh auto; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 16px; padding: 2.2rem; text-align: center; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.12);">
     <div style="font-size: 2.2rem; margin-bottom: 0.6rem;">🔐</div>
-    <h2 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem;">商品レシピ確認システム</h2>
+    <h2 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem;">レシピの本棚</h2>
     <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.4rem;">
       会社の Google アカウントでログインしてください。<br>
       <span style="font-size: 0.78rem; color: var(--text-muted);">一度ログインすると、この端末では7日間そのまま使えます。</span>
@@ -1100,8 +1151,8 @@
     <!-- ヘッダー -->
     <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.6rem; background: var(--bg-secondary); border-radius: 10px; padding: 0.55rem 0.9rem; box-shadow: 0 2px 10px -3px rgba(0,0,0,0.05);">
       <div class="header-logo" style="flex-direction: row; align-items: baseline; gap: 0.5rem;">
-        <h1 style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.02em; margin-bottom: 0;">RECIPE VIEWER</h1>
-        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 商品レシピ <span style="font-size: 0.62rem; color: var(--text-muted); white-space: normal;" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-12a ／ 窓口 <span id="api-build" style="font-size: inherit; color: inherit; font-weight: inherit; letter-spacing: inherit; margin: 0;">（確認中）</span></span></span>
+        <h1 style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.02em; margin-bottom: 0; white-space: nowrap;">レシピの本棚</h1>
+        <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部 <span style="font-size: 0.62rem; color: var(--text-muted); white-space: normal; text-transform: none;" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-12b ／ 窓口 <span id="api-build" style="font-size: inherit; color: inherit; font-weight: inherit; letter-spacing: inherit; text-transform: none; margin: 0;">（確認中）</span></span></span>
       </div>
       <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
         <div class="status-badge" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(5, 150, 105, 0.06); border: 1px solid var(--border-color); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; color: var(--accent); font-weight: 600;">
@@ -1109,7 +1160,7 @@
           <span id="recipe-count-badge">読込中...</span>
         </div>
         <button id="guide-open-btn" class="btn-secondary" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.35rem 0.7rem; border-radius: 7px; cursor: pointer; display: flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; transition: var(--transition-smooth); outline: none;">
-          📖 ご利用ガイド
+          📖 利用ガイド
         </button>
         <button id="settings-open-btn" class="settings-btn" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.35rem 0.7rem; border-radius: 7px; cursor: pointer; display: none; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; transition: var(--transition-smooth); outline: none;">
           ⚙️ データ管理
@@ -1164,8 +1215,8 @@
     </div>
   </div>
 
-  <!-- ご利用ガイドは openGuide / renderGuide_ が #guide 要素を body 直下に生成して描画する。
-       本文は下の GUIDE_BODY / GUIDE_ADMIN / GUIDE_FAQ。 -->
+  <!-- レシピの本棚利用ガイドは openGuide / renderGuide_ が #guide 要素を body 直下に生成して描画する。
+       本文は GAS の Guide.html（getGuide）。写真と番号の丸は guide-img/figs.js。 -->
 
   <!-- 管理者設定モーダル -->
   <div id="settings-modal" class="modal-overlay">
@@ -1717,8 +1768,8 @@
               return resolve(
                 fetch('Guide.html').then(function(r) { return r.text(); }).then(function(html) {
                   html = html.replace(/<!--[\s\S]*?-->/g, '');
-                  if (!isAdmin) html = html.replace(/<section[^>]*data-role="editor"[\s\S]*?<\/section>/g, '');
-                  return { html: html, build: 'local-mock' };
+                  if (!isAdmin) html = html.replace(/<section[^>]*data-role="editor"[\s\S]*?<\/section>/g, '').replace(/<section[^>]*data-role="admin"[\s\S]*?<\/section>/g, '');
+                  return { html: html, build: 'local-mock', reader: isAdmin ? 'admin' : 'store' };   // 手元の検証は管理者として見る
                 })
               );
             case 'listPending':
@@ -1869,6 +1920,7 @@
     function logout_() {
       clearSession_();
       userEmail = ''; isAdmin = false; appLoaded = false; sessionNoticeShown = false;
+      closeGuide(true); _guideCache = null;   // 前の人のガイド（本部の節など）を残さない
       showAuthGate_();
     }
 
@@ -2054,21 +2106,23 @@
     }
 
     /* =========================================================
-       \u3054\u5229\u7528\u30ac\u30a4\u30c9\uff08\u6a19\u6e96\u30ec\u30a4\u30a2\u30a6\u30c8: \u30b5\u30a4\u30c9\u76ee\u6b21\uff0b\u30e1\u30a4\u30f3\u672c\u6587\u30fb\u53cc\u65b9\u5411\u9023\u52d5\uff09
-
-       \u672c\u6587\u306e\u539f\u672c\u306f **GAS \u306e Guide.html**\uff08principles_userguide_standard_layout\uff09\u3002
-       \u516c\u958b\u30ea\u30dd\uff08GitHub Pages\uff09\u306b\u672c\u6587\u3092\u7f6e\u304b\u305a\u30014\u30c9\u30e1\u30a4\u30f3\u8a8d\u8a3c\u3092\u901a\u3063\u305f\u4eba\u306b\u3060\u3051\u914d\u4fe1\u3059\u308b\u3002
-       `.gs` \u3067\u306f\u306a\u304f `.html` \u306b\u3059\u308b\u306e\u306f\u3001**\u975e\u30a8\u30f3\u30b8\u30cb\u30a2\u304c\u5b89\u5168\u306b\u6587\u8a00\u3092\u76f4\u305b\u308b**\u305f\u3081
-       \uff08`.gs` \u306e\u6587\u5b57\u5217\u9023\u7d50\u306f\u5f15\u7528\u7b26\u306e\u4ed8\u3051\u5fd8\u308c\u3072\u3068\u3064\u3067\u30a2\u30d7\u30ea\u5168\u4f53\u304c\u6b62\u307e\u308b\uff09\u3002
-
-       \u5e97\u8217\u5411\u3051\u306b\u306f\u3001\u672c\u90e8\u3060\u3051\u306e\u7bc0\u3092\u30b5\u30fc\u30d0\u30fc\u5074\u3067**\u672c\u6587\u3054\u3068\u524a\u9664**\u3057\u3066\u914d\u308b\uff08\uff1d\u5c4a\u3051\u306a\u3044\uff09\u3002
-       \u76ee\u6b21\u306f\u3053\u3053\u3067**\u672c\u6587\u306e\u898b\u51fa\u3057\u304b\u3089\u81ea\u52d5\u751f\u6210**\u3059\u308b\u3002\u76ee\u6b21\u30c7\u30fc\u30bf\u3092\u5225\u306b\u6301\u305f\u306a\u3044\u306e\u3067\u3001
-       Guide.html \u306b\u7bc0\u3092\u8db3\u3059\u3060\u3051\u3067\u76ee\u6b21\u3082\u8ffd\u5f93\u3059\u308b\u3002
-       \u3053\u3053\u304c\u6301\u3064\u306e\u306f\u5165\u308c\u7269\u3060\u3051: \u76ee\u6b21\u30af\u30ea\u30c3\u30af\u2192\u672c\u6587\u3078\u30b9\u30af\u30ed\u30fc\u30eb\uff0f\u672c\u6587\u30b9\u30af\u30ed\u30fc\u30eb\u2192\u76ee\u6b21\u3092\u30cf\u30a4\u30e9\u30a4\u30c8\u3002
+       レシピの本棚利用ガイド（2026-11-12b 作り直し・標準レイアウト: 左に目次＋右に本文・双方向に連動）
+       ・本文の原本は GAS の Guide.html。ログインを通った人にだけ届き、読む人（店舗・本部・管理者）で節を出し分けるのは窓口
+       ・写真と番号の丸の位置は、この画面の側の guide-img/figs.js（作り物のデータで撮った物・tests/guide_shots.js が作る）。
+         図解（流れの箱）はここで描く。節に data-fig があれば、その図を出し、番号つきの並び（ol.gsteps）と丸を結ぶ
+       ・本部・管理者には「本部向け／店舗向け」の切り替え（店の人が見る形を、窓口を呼ばずに見られる）
+       ・「← ひとつ前に戻る」「↑ はじめへ」を上の帯にいつも出す。移るときは滑らせて、着いた見出しを光らせる
        ========================================================= */
-    var _gSecs = [];        // \u8868\u793a\u4e2d\u30ac\u30a4\u30c9\u306e\u76ee\u6b21\uff08\u672c\u6587\u306e\u898b\u51fa\u3057\u304b\u3089\u7d44\u307f\u7acb\u3066\u308b\uff09
-    var _gForce = null;     // \u76ee\u6b21\u30af\u30ea\u30c3\u30af\u3067\u6307\u5b9a\u3055\u308c\u305f\u898b\u51fa\u3057\uff08\u5229\u7528\u8005\u304c\u81ea\u5206\u3067\u30b9\u30af\u30ed\u30fc\u30eb\u3059\u308b\u307e\u3067\u512a\u5148\uff09
+    var GUIDE_NAME = 'レシピの本棚利用ガイド';
+    var GUIDE_ASSET_VER = 'recipe-web-2026-11-12b';   // guide-img/figs.js を読み直す印（画面の版と同じ）
+    var GUIDE_READERS = { store: '店舗向け', hq: '本部向け', admin: '本部・管理者向け' };
+    // 図解（写真でない図）。流れの箱の絵は、並びの順に1つずつ
+    var GUIDE_FLOWS = { 'flow-register': ['📤', '🤖', '🔍', '📁'] };
+    var _gSecs = [];        // 目次（本文の見出しから組み立てる）
+    var _gForce = null;     // 目次で押した見出し（利用者が自分で送るまで優先）
     var _gAnim = null;
+    var _gBack = [];        // ひとつ前に戻るための、移る前の位置（本文の送り）
+    var _figsLoading = null;
 
     function guideNavHtml_() {
       var h = '';
@@ -2081,31 +2135,71 @@
       return h;
     }
 
+    /** 本文を to の位置へ滑らせる（距離に応じて 0.28〜0.65 秒・動きを減らす設定なら、すぐ）。着いたら onDone */
+    function gGlide_(to, onDone) {
+      var gb = document.querySelector('#guide .gbody');
+      if (!gb) return;
+      to = Math.max(0, Math.min(to, gb.scrollHeight - gb.clientHeight));
+      if (_gAnim) cancelAnimationFrame(_gAnim);
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // 画面が裏にあると requestAnimationFrame が止まる → すぐ移る
+      if (reduce || document.visibilityState === 'hidden') { gb.scrollTop = to; gSpy_(); if (onDone) onDone(); return; }
+      var from = gb.scrollTop, d = to - from, t0 = performance.now();
+      var dur = Math.max(280, Math.min(650, 280 + Math.abs(d) / 6));
+      var step = function(t) {
+        var p = Math.min(1, (t - t0) / dur), e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;   // ease-in-out
+        gb.scrollTop = from + d * e; gSpy_();
+        if (p < 1) _gAnim = requestAnimationFrame(step); else { _gAnim = null; if (onDone) onDone(); }
+      };
+      _gAnim = requestAnimationFrame(step);
+      // 保険: rAF が抑制されても必ず目的地へ（ジャンプが無反応になる事故を防ぐ）
+      setTimeout(function() {
+        if (Math.abs(gb.scrollTop - to) > 1) { if (_gAnim) cancelAnimationFrame(_gAnim); _gAnim = null; gb.scrollTop = to; gSpy_(); if (onDone) onDone(); }
+      }, dur + 90);
+    }
+    function gFlash_(el) {
+      if (!el) return;
+      el.classList.remove('glanded'); void el.offsetWidth; el.classList.add('glanded');
+      setTimeout(function() { el.classList.remove('glanded'); }, 1600);
+    }
+    function gPushBack_() {
+      var gb = document.querySelector('#guide .gbody');
+      if (!gb) return;
+      var last = _gBack[_gBack.length - 1];
+      if (last === undefined || Math.abs(last - gb.scrollTop) > 4) _gBack.push(gb.scrollTop);
+      gBackState_();
+    }
+    function gBackState_() {
+      var b = document.querySelector('#guide .gback');
+      if (b) b.disabled = !_gBack.length;   // 戻る先が無くても隠さない（押せない形で出す）
+    }
+
     function gJump_(id) {
       var el = document.getElementById(id);
       var gb = document.querySelector('#guide .gbody');
       if (!el || !gb) return false;
-      // \u30b3\u30f3\u30c6\u30ca\u57fa\u6e96\u306e\u76f8\u5bfe\u4f4d\u7f6e\u3092\u81ea\u524d\u3067\u7b97\u51fa\u3059\u308b\uff08scrollIntoView \u306f\u30e2\u30fc\u30c0\u30eb\u5185\u3067\u52b9\u304b\u306a\u3044\u74b0\u5883\u304c\u3042\u308b\uff09
+      // コンテナ基準の相対位置を自前で算出する（scrollIntoView はモーダル内で効かない環境がある）
       var to = Math.max(0, gb.scrollTop + (el.getBoundingClientRect().top - gb.getBoundingClientRect().top) - 12);
+      gPushBack_();
       _gForce = id;
-      if (_gAnim) cancelAnimationFrame(_gAnim);
-      // \u975e\u8868\u793a\u30bf\u30d6\u3067\u306f requestAnimationFrame \u304c\u767a\u706b\u3057\u306a\u3044 \u2192 \u5373\u6642\u79fb\u52d5\u3067\u78ba\u5b9f\u306b\u7740\u5730\u3055\u305b\u308b
-      if (document.visibilityState === 'hidden') { gb.scrollTop = to; gSpy_(); return false; }
-      var from = gb.scrollTop, d = to - from, t0 = performance.now(), dur = 280;
-      var step = function(t) {
-        var p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);   // ease-out
-        gb.scrollTop = from + d * e; gSpy_();
-        _gAnim = (p < 1) ? requestAnimationFrame(step) : null;
-      };
-      _gAnim = requestAnimationFrame(step);
-      // \u4fdd\u967a: rAF \u304c\u6291\u5236\u3055\u308c\u3066\u3082\u5fc5\u305a\u76ee\u7684\u5730\u3078\uff08\u30b8\u30e3\u30f3\u30d7\u304c\u7121\u53cd\u5fdc\u306b\u306a\u308b\u4e8b\u6545\u3092\u9632\u3050\uff09
-      setTimeout(function() {
-        if (Math.abs(gb.scrollTop - to) > 1) {
-          if (_gAnim) cancelAnimationFrame(_gAnim);
-          _gAnim = null; gb.scrollTop = to; gSpy_();
-        }
-      }, dur + 90);
+      gGlide_(to, function() { gFlash_(el); });
       return false;
+    }
+    function gBackOne_() {
+      if (!_gBack.length) return;
+      var to = _gBack.pop(); gBackState_();
+      _gForce = null;
+      gGlide_(to, function() {
+        var cur = document.querySelector('#guide .gnav a.on');
+        gFlash_(cur ? document.getElementById(cur.dataset.gid) : null);
+      });
+    }
+    function gTop_() {
+      var gb = document.querySelector('#guide .gbody');
+      if (!gb || gb.scrollTop < 2) return;
+      gPushBack_();   // はじめへ も履歴に積む（押し間違えても戻れる）
+      _gForce = null;
+      gGlide_(0, function() { gFlash_(document.querySelector('#guide .gbody h3')); });
     }
 
     function gSpy_() {
@@ -2117,28 +2211,33 @@
       var r = body.getBoundingClientRect(), top = r.top + 16;
       var cur = ids[0];
       if (_gForce && ids.indexOf(_gForce) >= 0) {
-        cur = _gForce;                                   // \u30af\u30ea\u30c3\u30af\u76f4\u5f8c\u306f\u6307\u5b9a\u898b\u51fa\u3057\u3092\u512a\u5148
+        cur = _gForce;                                   // クリック直後は指定見出しを優先
       } else if (body.scrollTop + body.clientHeight >= body.scrollHeight - 4) {
-        // \u6700\u4e0b\u90e8: \u3053\u308c\u4ee5\u4e0a\u30b9\u30af\u30ed\u30fc\u30eb\u3067\u304d\u306a\u3044\u306e\u3067\u3001\u898b\u3048\u3066\u3044\u308b\u6700\u5f8c\u306e\u898b\u51fa\u3057\u3092\u73fe\u5728\u5730\u3068\u3059\u308b
+        // 最下部: これ以上スクロールできないので、見えている最後の見出しを現在地とする
         ids.forEach(function(id) {
           var el = document.getElementById(id);
-          if (el && el.getBoundingClientRect().top < r.bottom) cur = id;
+          if (el && el.offsetParent && el.getBoundingClientRect().top < r.bottom) cur = id;
         });
       } else {
         ids.forEach(function(id) {
           var el = document.getElementById(id);
-          if (el && el.getBoundingClientRect().top <= top) cur = id;
+          if (el && el.offsetParent && el.getBoundingClientRect().top <= top) cur = id;
         });
       }
+      var nav = document.querySelector('#guide .gnav');
       document.querySelectorAll('#guide .gnav a').forEach(function(a) {
-        a.classList.toggle('on', a.dataset.gid === cur);
+        var on = a.dataset.gid === cur;
+        a.classList.toggle('on', on);
+        // 目次の現在地が、目次の見えている範囲から外れないようにする
+        if (on && nav && nav.scrollHeight > nav.clientHeight + 1 && (a.offsetTop < nav.scrollTop || a.offsetTop + a.offsetHeight > nav.scrollTop + nav.clientHeight)) {
+          nav.scrollTop = a.offsetTop - nav.clientHeight / 2;
+        }
       });
     }
 
     /**
-     * 配信された本文から目次を組み立てる。
-     * section > h3 を大見出し、その中の h4 を小見出しにする。
-     * 見出しに id が無ければここで振る（Guide.html 側で id を書かなくてよい＝編集が楽）。
+     * 配信された本文から目次を組み立てる（見えている節だけ）。
+     * section > h3 を大見出し、その中の h4 を小見出しにする。見出しに id が無ければここで振る。
      */
     function buildSections_(bodyEl) {
       var secs = [];
@@ -2148,6 +2247,7 @@
         if (!h3) return;
         n++;
         if (!h3.id) h3.id = 'gsec-' + n;
+        if (getComputedStyle(sec).display === 'none') return;   // 店舗向けの見方で隠している節は、目次にも出さない
         var item = { id: h3.id, t: h3.textContent.trim(), subs: [] };
         var m = 0;
         sec.querySelectorAll('h4').forEach(function(h4) {
@@ -2160,67 +2260,199 @@
       return secs;
     }
 
-    function renderGuide_(g) {
-      closeGuide();
+    /* ── 図（写真＋番号の丸／流れの箱） ── */
+    function gNum_(n) { var c = document.createElement('span'); c.className = 'gnum'; c.textContent = String(n); c.setAttribute('aria-hidden', 'true'); return c; }
+    /** 写真の名前から、guide-img/figs.js の写真を引く（名前と置き場の形を確かめてから使う） */
+    function gShotOf_(name) {
+      var shots = window.GUIDE_SHOTS || {};
+      if (!Object.prototype.hasOwnProperty.call(shots, name)) return null;
+      var f = shots[name];
+      if (!f || !/^guide-img\/[a-z0-9-]+\.png(\?v=[0-9a-f]+)?$/.test(String(f.src)) || !(f.w > 0) || !(f.h > 0)) return null;
+      return f;
+    }
+    function gShotFig_(f, first) {
+      var fig = document.createElement('figure'); fig.className = 'gshot'; fig.style.setProperty('--gw', f.w + 'px');
+      var scroll = document.createElement('div'); scroll.className = 'gshot-scroll';
+      var frame = document.createElement('div'); frame.className = 'gshot-frame';
+      var img = document.createElement('img');
+      // 開いてすぐ見える最初の写真はすぐ読む。下の写真は、送って近づいたら読む（開くのを遅くしない）
+      img.alt = String(f.alt || ''); img.width = f.w; img.height = f.h; img.loading = first ? 'eager' : 'lazy'; img.decoding = 'async'; img.src = f.src;
+      frame.appendChild(img);
+      (f.marks || []).forEach(function(m, i) {
+        var n = String(i + 1);
+        var b = document.createElement('span'); b.className = 'gbox'; b.dataset.n = n;
+        b.style.left = m[2] + '%'; b.style.top = m[3] + '%'; b.style.width = m[4] + '%'; b.style.height = m[5] + '%';
+        var c = gNum_(n); c.classList.add('gmark'); c.dataset.n = n; c.style.left = m[0] + '%'; c.style.top = m[1] + '%';
+        frame.appendChild(b); frame.appendChild(c);
+      });
+      scroll.appendChild(frame); fig.appendChild(scroll);
+      var cap = document.createElement('figcaption'); cap.className = 'gcap';
+      var t = document.createElement('span'); t.textContent = '見本の写真（作り物のデータ）'; cap.appendChild(t);
+      if (f.w > 640) {
+        var z = document.createElement('button'); z.type = 'button'; z.textContent = '大きく見る'; z.setAttribute('aria-pressed', 'false');
+        z.addEventListener('click', function() { var on = fig.classList.toggle('is-zoom'); z.textContent = on ? '幅に戻す' : '大きく見る'; z.setAttribute('aria-pressed', String(on)); });
+        cap.appendChild(z);
+      }
+      fig.appendChild(cap);
+      return fig;
+    }
+    /** 番号つきの並び（Guide.html の ol.gsteps）の各行に、番号の丸と印を付ける */
+    function gNumberSteps_(ol) {
+      Array.prototype.forEach.call(ol.children, function(li, i) {
+        if (li.tagName !== 'LI') return;
+        var wrap = document.createElement('span'); wrap.className = 'gstep';
+        while (li.firstChild) wrap.appendChild(li.firstChild);
+        li.dataset.n = String(i + 1);
+        li.appendChild(gNum_(i + 1)); li.appendChild(wrap);
+      });
+    }
+    /** 流れの箱（並びの順に、番号・絵・見出し・補い） */
+    function gFlowFig_(icons, ol) {
+      var flow = document.createElement('ol'); flow.className = 'gflow';
+      Array.prototype.forEach.call(ol.querySelectorAll(':scope > li'), function(li, i) {
+        var box = document.createElement('li'); box.dataset.n = String(i + 1);
+        box.appendChild(gNum_(i + 1));
+        var ico = document.createElement('span'); ico.className = 'gflow-ico'; ico.setAttribute('aria-hidden', 'true'); ico.textContent = icons[i] || '';
+        box.appendChild(ico);
+        var b = li.querySelector('b');
+        var h = document.createElement('b'); h.textContent = b ? b.textContent : li.textContent; box.appendChild(h);
+        var rest = li.textContent.replace(b ? b.textContent : '', '').trim();
+        if (rest) { var t = document.createElement('span'); t.className = 'gflow-t'; t.textContent = rest; box.appendChild(t); }
+        flow.appendChild(box);
+      });
+      return flow;
+    }
+    /** 丸か並びにさわる・押すと、同じ番号の枠と行が光る */
+    function gLinkHot_(sec) {
+      var set = function(n) { sec.querySelectorAll('[data-n]').forEach(function(x) { x.classList.toggle('is-hot', x.dataset.n === n); }); };
+      sec.addEventListener('mouseover', function(e) { var t = e.target.closest('[data-n]'); set(t ? t.dataset.n : ''); });
+      sec.addEventListener('mouseleave', function() { set(''); });
+      sec.addEventListener('click', function(e) { var t = e.target.closest('.gmark, ol.gsteps > li, ol.gflow > li'); if (t) set(t.dataset.n); });
+    }
+    /** 本文の節ごとに図を付ける（data-fig）。写真が読めないときは、言葉だけで出す */
+    function gDecorate_(gb) {
+      var shots = 0;
+      gb.querySelectorAll('section').forEach(function(sec) {
+        var name = sec.getAttribute('data-fig') || '';
+        var ol = sec.querySelector(':scope > ol.gsteps');
+        if (name && Object.prototype.hasOwnProperty.call(GUIDE_FLOWS, name) && ol) {
+          ol.replaceWith(gFlowFig_(GUIDE_FLOWS[name], ol));
+          gLinkHot_(sec);
+          return;
+        }
+        if (ol) gNumberSteps_(ol);
+        var f = name ? gShotOf_(name) : null;
+        if (!f) return;
+        var pair = document.createElement('div');
+        pair.className = 'gpair' + ((f.w <= 640 || (f.w <= 1000 && f.w / f.h < 1.6)) ? ' is-side' : '');
+        var h3 = sec.querySelector('h3');
+        if (h3 && h3.nextSibling) sec.insertBefore(pair, h3.nextSibling); else sec.appendChild(pair);
+        pair.appendChild(gShotFig_(f, shots++ === 0));
+        if (ol) pair.appendChild(ol);
+        gLinkHot_(sec);
+      });
+    }
+
+    function renderGuide_(g, key) {
+      closeGuide(true);
+      _gBack = [];
       var inner;
       if (g === 'loading') {
-        inner = '<div style="padding:40px;text-align:center;color:var(--text-muted);font-size:0.9rem;">ご利用ガイドを読み込んでいます…</div>';
+        inner = '<div style="padding:40px;text-align:center;color:var(--text-muted);font-size:0.9rem;">利用ガイドを読み込んでいます…</div>';
       } else if (g && g.error) {
         inner = '<div style="margin:20px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#b91c1c;font-size:0.85rem;line-height:1.7;">' +
-                'ご利用ガイドを取得できませんでした：' + escapeHtml_(g.error) + '<br>時間をおいて、もう一度お試しください。</div>';
+                '利用ガイドを取得できませんでした：' + escapeHtml_(g.error) + '<br>時間をおいて、もう一度お試しください。</div>';
       } else {
-        // 先に本文を入れてから見出しを走査する（id を振るため）。目次はそのあとで差し込む
-        inner = '<div class="gwrap"><nav class="gnav"></nav><div class="gbody">' + ((g && g.html) || '') + '</div></div>';
+        // 本文は窓口（GAS の Guide.html・ログインの内側）から。先に入れてから見出しを走査する（id を振るため）
+        inner = '<div class="gwrap"><nav class="gnav" aria-label="目次"></nav><div class="gbody">' + ((g && g.html) || '') + '</div></div>';
       }
+      var reader = (g && g.reader && Object.prototype.hasOwnProperty.call(GUIDE_READERS, g.reader)) ? g.reader : 'store';
 
       var el = document.createElement('div');
       el.id = 'guide';
+      if (key && g && g.html) el.dataset.key = key;   // 描いた本文の持ち主（閉じても残し、同じ人が開き直したら描き直さずに出す）
       el.innerHTML = '<div class="gcard">' +
-        '<div class="ghead"><h2>\ud83d\udcd6 \u3054\u5229\u7528\u30ac\u30a4\u30c9</h2><span class="gsub">\u5546\u54c1\u30ec\u30b7\u30d4\u78ba\u8a8d\u30b7\u30b9\u30c6\u30e0</span>' +
-        '<button class="gclose" onclick="closeGuide()">\u9589\u3058\u308b</button></div>' + inner + '</div>';
+        '<div class="ghead"><h2>📖 ' + GUIDE_NAME + '</h2><span class="gsub"></span><span class="gfor" role="tablist" aria-label="だれ向け" hidden></span>' +
+        '<span class="gtools"><button type="button" class="gback" disabled>← ひとつ前に戻る</button><button type="button" class="gtop">↑ はじめへ</button>' +
+        '<button type="button" class="gclose">閉じる</button></span></div>' + inner + '</div>';
       el.addEventListener('click', function(e) { if (e.target === el) closeGuide(); });
       document.body.appendChild(el);
+      el.querySelector('.gclose').addEventListener('click', closeGuide);
+      el.querySelector('.gback').addEventListener('click', gBackOne_);
+      el.querySelector('.gtop').addEventListener('click', gTop_);
+      el.querySelector('.gsub').textContent = (g && g.html) ? '（' + GUIDE_READERS[reader] + '）' : '';
 
       var gb = el.querySelector('.gbody');
       var nav = el.querySelector('.gnav');
       if (gb && nav) {
-        // \u672c\u6587\u304c\u5165\u3063\u3066\u304b\u3089\u898b\u51fa\u3057\u3092\u8d70\u67fb\u3057\u3066\u76ee\u6b21\u3092\u4f5c\u308b\uff08Guide.html \u5074\u306b id \u3092\u66f8\u304b\u306a\u304f\u3066\u3088\u3044\uff09
-        _gSecs = buildSections_(gb);
-        nav.innerHTML = guideNavHtml_();
-
+        gDecorate_(gb);
+        var paint = function() { _gSecs = buildSections_(gb); nav.innerHTML = guideNavHtml_(); _gForce = null; gSpy_(); };
+        // 本部・管理者には「本部向け／店舗向け」（店舗向け＝本部・管理者だけの節を隠す。届いている本文を、見え方だけ変える）
+        if (reader !== 'store') {
+          var bar = el.querySelector('.gfor'); bar.hidden = false;
+          [['all', GUIDE_READERS[reader]], ['store', '店舗向け（店の人が見る形）']].forEach(function(o) {
+            var b = document.createElement('button'); b.type = 'button'; b.textContent = o[1]; b.setAttribute('role', 'tab');
+            b.dataset.view = o[0];
+            b.addEventListener('click', function() {
+              gb.classList.toggle('as-store', o[0] === 'store');
+              bar.querySelectorAll('button').forEach(function(x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-selected', String(on)); });
+              el.querySelector('.gsub').textContent = '（' + (o[0] === 'store' ? '店舗向け' : GUIDE_READERS[reader]) + '）';
+              gb.scrollTop = 0; _gBack = []; gBackState_(); paint();
+            });
+            bar.appendChild(b);
+          });
+          bar.querySelector('button').classList.add('on'); bar.querySelector('button').setAttribute('aria-selected', 'true');
+        }
+        paint();
         gb.addEventListener('scroll', gSpy_);
-        // \u5229\u7528\u8005\u304c\u81ea\u5206\u3067\u30b9\u30af\u30ed\u30fc\u30eb\u3057\u305f\u3089\u300c\u30af\u30ea\u30c3\u30af\u6307\u5b9a\u300d\u3092\u89e3\u9664\u3057\u3001\u73fe\u5728\u4f4d\u7f6e\u306e\u8ffd\u5f93\u306b\u623b\u3059
-        var release = function() { _gForce = null; gSpy_(); };
-        ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function(ev) {
-          gb.addEventListener(ev, release, { passive: true });
-        });
-        _gForce = null;
-        gSpy_();
+        // 利用者が自分でスクロールしたら「クリック指定」を解除し、現在位置の追従に戻す
+        var release = function() { _gForce = null; if (_gAnim) { cancelAnimationFrame(_gAnim); _gAnim = null; } gSpy_(); };
+        ['wheel', 'touchstart', 'keydown'].forEach(function(ev) { gb.addEventListener(ev, release, { passive: true }); });
       }
     }
 
-    var _guideCache = null;   // \u30bb\u30c3\u30b7\u30e7\u30f3\u5185\u30ad\u30e3\u30c3\u30b7\u30e5\uff08\u672c\u90e8/\u5e97\u8217\u3067\u4e2d\u8eab\u304c\u5909\u308f\u308b\u306e\u3067\u5f79\u5272\u3082\u899a\u3048\u308b\uff09
+    /** 写真の一覧（guide-img/figs.js）を、ガイドを開くときに1回だけ読む（画面を開くときは読まない） */
+    function loadGuideFigs_() {
+      if (window.GUIDE_SHOTS) return Promise.resolve(window.GUIDE_SHOTS);
+      if (_figsLoading) return _figsLoading;
+      _figsLoading = new Promise(function(resolve) {
+        var s = document.createElement('script');
+        s.src = 'guide-img/figs.js?v=' + GUIDE_ASSET_VER;
+        s.onload = function() { resolve(window.GUIDE_SHOTS || {}); };
+        s.onerror = function() { _figsLoading = null; resolve({}); };   // 写真が無くても、言葉だけで出す
+        document.head.appendChild(s);
+      });
+      return _figsLoading;
+    }
+
+    var _guideCache = null;   // 開いている間の覚え（読む人で中身が変わるので、本部かどうかも覚える）
 
     function openGuide() {
-      if (_guideCache && _guideCache.isAdmin === isAdmin) {
-        renderGuide_(_guideCache.data);
+      var key = (isAdmin ? '1' : '0') + '|' + userEmail;
+      var drawn = document.getElementById('guide');
+      if (drawn && drawn.dataset.key === key) { drawn.hidden = false; gSpy_(); gBackState_(); return; }   // 同じ人の2回目は、描いたものを出すだけ
+      if (_guideCache && _guideCache.key === key) {
+        loadGuideFigs_().then(function() { renderGuide_(_guideCache.data, key); });
         return;
       }
       renderGuide_('loading');
-      gsCall('getGuide')
-        .then(function(g) {
-          _guideCache = { isAdmin: isAdmin, data: g };
-          renderGuide_(g);
+      // 本文（窓口）と写真の一覧（この画面の側）は同時に頼む
+      Promise.all([gsCall('getGuide'), loadGuideFigs_()])
+        .then(function(r) {
+          _guideCache = { key: key, data: r[0] };
+          renderGuide_(r[0], key);
         })
-        .catch(function(e) { renderGuide_({ error: String(e && e.message || e) }); });
+        .catch(function(e) { if (!(e && e.sessionExpired)) renderGuide_({ error: String(e && e.message || e) }); else closeGuide(true); });
     }
 
-    function closeGuide() {
+    /** 閉じる。描いた本文は隠して残す（同じ人が開き直したら、すぐ出す）。remove のときと、読み込み中・失敗の表示は消す */
+    function closeGuide(remove) {
       var g = document.getElementById('guide');
-      if (g) g.remove();
+      if (!g) return;
+      if (remove === true || !g.dataset.key) g.remove(); else g.hidden = true;
     }
 
-    /** \u696d\u52d9\u30dd\u30fc\u30bf\u30eb\u7b49\u304b\u3089\u306e\u76f4\u30ea\u30f3\u30af\uff08?guide=1\uff09: \u8d77\u52d5\u304c\u7d42\u308f\u3063\u3066\u304b\u3089\u30ac\u30a4\u30c9\u3092\u81ea\u52d5\u3067\u958b\u304f */
+    /** 業務ポータル等からの直リンク（?guide=1）: 起動が終わってからガイドを自動で開く */
     function autoGuide_() {
       if (/[?&]guide=1/.test(location.search)) openGuide();
     }
@@ -2433,7 +2665,7 @@
       });
 
       // \u3054\u5229\u7528\u30ac\u30a4\u30c9\u30e2\u30fc\u30c0\u30eb\u306e\u958b\u9589\u30ea\u30b9\u30ca\u30fc
-      // ご利用ガイド（本文は GAS から取得して描画する）
+      // レシピの本棚利用ガイド（本文は GAS から取得して描画する）
       document.getElementById('guide-open-btn').addEventListener('click', openGuide);
 
       // 類似レシピ確認モーダルのボタン
