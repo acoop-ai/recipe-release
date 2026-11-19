@@ -1177,6 +1177,8 @@
   .gchk.is-stale{border-color:#f59e0b;background:#fffbeb;}
   .gchk .gchk-day{font-size:1.25rem;font-weight:800;color:var(--text-primary);}
   .gchk.is-stale .gchk-day{color:#b45309;}
+  .gchk.gchk-full{margin-top:8px;}
+  .gchk[hidden]{display:none;}
   .gchk .gchk-t{font-size:12.5px;color:var(--text-secondary);line-height:1.6;}
   .gchk a,.gnote-bar a{color:#1669c9;font-weight:700;text-decoration:underline;}
   #garoon-notice{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 .5rem;padding:.45rem .9rem;border:1px solid #f59e0b;background:#fffbeb;color:#92400e;border-radius:10px;font-size:.8rem;font-weight:600;}
@@ -1295,7 +1297,7 @@
         <!-- 名前の下に小さく版の字（2行まで折り返す）＝戻る・TOP を足しても、上の帯を1行のまま（右が空いたまま2行にしない） -->
         <div id="main-title-col" style="display: flex; flex-direction: column; line-height: 1.25; min-width: 0;">
           <h1 style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.02em; margin-bottom: 0; white-space: nowrap;">レシピの本棚</h1>
-          <span class="main-ver" style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: normal; max-width: 19rem;">関東事業部 <span style="font-size: 0.62rem; color: var(--text-muted); white-space: normal; text-transform: none;" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-18a ／ 窓口 <span id="api-build" style="font-size: inherit; color: inherit; font-weight: inherit; letter-spacing: inherit; text-transform: none; margin: 0;">（確認中）</span></span></span>
+          <span class="main-ver" style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: normal; max-width: 19rem;">関東事業部 <span style="font-size: 0.62rem; color: var(--text-muted); white-space: normal; text-transform: none;" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-19a ／ 窓口 <span id="api-build" style="font-size: inherit; color: inherit; font-weight: inherit; letter-spacing: inherit; text-transform: none; margin: 0;">（確認中）</span></span></span>
         </div>
       </div>
       <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
@@ -1401,6 +1403,7 @@
         <section class="rb-sec" id="garoon-check">
           <div class="rb-h">🕒 ガルーンを最後に確かめた日</div>
           <div class="gchk" id="garoon-check-box"><span class="gchk-t">読み込んでいます…</span></div>
+          <div class="gchk gchk-full" id="garoon-full-box" hidden></div>
         </section>
 
         <!-- Garoon から届いた確定待ち（届いただけで、まだ登録されていないPDF） -->
@@ -1930,7 +1933,7 @@
         RecipeIngredients: '\u30fb\u30b5\u30fc\u30e2\u30f3 [30g]\n\u30fb\u30b7\u30e3\u30ea [18g]', RawMaterials: '\u3055\u3051\u3001\u7c73\u3001\u9162\uff08\u3055\u3051\u3092\u542b\u3080\uff09',
         Instructions: '1. \u30b7\u30e3\u30ea\u3092\u63e1\u308b\n2. \u30cd\u30bf\u3092\u306e\u305b\u308b', FileId: '' }
     ];
-    var MOCK_PREF = { email: 'local-test@jaz-acoop.co.jp', uncheckedCodes: [], sortOption: 'code' };
+    var MOCK_PREF = { email: 'local-test@example.invalid', uncheckedCodes: [], sortOption: 'code' };
     // 2026-11-18a: 仕分け（今の登録と比べた結果）つきの作り物の確定待ち（台帳の記録の形は窓口の listPending と同じ）
     var MOCK_PENDING = [
       { id: 'mock-p1', name: '9021_にぎり盛合せ春.pdf', createdAt: '2026-11-18 08:40', createdMs: 1, garoon: { reason: '新しい', stamp: '2026-11-18 08:31', folder: '寿司', check: 'new', checkNote: '', checkCode: '' } },
@@ -1938,9 +1941,11 @@
       { id: 'mock-p3', name: '9003　から揚げ（増量）.pdf', createdAt: '2026-11-18 10:25', createdMs: 3, garoon: { reason: '更新日時', stamp: '2026-11-18 10:24', folder: '惣菜', check: 'same', checkNote: '', checkCode: '9003' } },
       { id: 'mock-p6', name: '9004　三色そぼろ弁当.pdf', createdAt: '2026-11-18 10:26', createdMs: 6, garoon: { reason: 'サイズ・更新日時', stamp: '2026-11-18 10:20', folder: '米飯', check: 'content', checkNote: '原材料表示・売価', checkCode: '9004' } },
       { id: 'mock-p4', name: '唐揚弁当（出前館用）.pdf', createdAt: '2026-11-18 10:27', createdMs: 4, garoon: { reason: '新しい', stamp: '2026-11-17', folder: '米飯', check: 'nocode', checkNote: '', checkCode: '' } },
-      { id: 'mock-p5', name: '9030　<b>海鮮丼</b>.pdf', createdAt: '2026-11-18 10:27', createdMs: 5, garoon: { reason: '新しい', stamp: '2026-11-17', folder: '寿司', check: 'new', checkNote: '', checkCode: '' } }
+      { id: 'mock-p5', name: '9030　<b>海鮮丼</b>.pdf', createdAt: '2026-11-18 10:27', createdMs: 5, garoon: { reason: '新しい', stamp: '2026-11-17', folder: '寿司', check: 'new', checkNote: '', checkCode: '' } },
+      { id: 'mock-p7', name: '9005　サーモン握り.pdf', createdAt: '2026-11-19 10:40', createdMs: 7, garoon: { reason: '全件の照合', stamp: '2026-09-03', folder: '寿司', check: 'visual', checkNote: '', checkCode: '9005' } }
     ];
-    var MOCK_GAROON = { lastChecked: '2026-11-14 17:40:00', days: 4, staleDays: 3, stale: true, openUrl: '' };
+    var MOCK_GAROON = { lastChecked: '2026-11-14 17:40:00', days: 4, staleDays: 3, stale: true, openUrl: '',
+                        full: { state: 'done', startedAt: '2026-11-19 10:31:02', finishedAt: '2026-11-19 10:36:40', total: 650, checked: 650, diff: 12, same: 540 } };
 
     /** 作り物の1ページの PDF（英字だけ・表の線・赤い丸の押印）。押印の位置（左下の原点からの pt）だけを変えて、見た目だけの違いを作る */
     function mockPdf_(stampX, stampY, extra) {
@@ -2207,7 +2212,7 @@
 
     if (LOCAL_MOCK) {
       // 手元での画面確認用。架空データで本体を表示する（本番では通らない経路）
-      userEmail = 'local-test@jaz-acoop.co.jp';
+      userEmail = 'local-test@example.invalid';
       isAdmin = true;
       document.getElementById('user-email').textContent = userEmail + '（ローカル検証）';
       document.getElementById('settings-open-btn').style.display = 'flex';
@@ -2325,6 +2330,31 @@
      * ⚙️ データ管理の「🕒 ガルーンを最後に確かめた日」と、決めた日数を過ぎたときの本部の画面の上の知らせに出す。
      * 中身は字として入れる（textContent）。ガルーンを開く場所は窓口から来た https の cybozu.com だけを使う。
      */
+    /**
+     * 2026-11-19a: 全件の照合（まだ／途中／済み）。窓口の getSavedSettings が本部の人にだけ数を返す（fid・ファイル名は来ない）。
+     * 照合はガルーンのボタンの小窓のいちばん下「🔍 全部を照らし合わせる（1回だけ）」で行う（この画面からは始めない）。
+     */
+    function renderGaroonFull_(f) {
+      var box = document.getElementById('garoon-full-box');
+      if (!box) return;
+      box.textContent = '';
+      if (!f || typeof f !== 'object') { box.hidden = true; return; }
+      box.hidden = false;
+      var num = function (v) { v = Number(v); return isFinite(v) && v >= 0 ? Math.floor(v) : 0; };
+      var day = function (s) { var m = String(s || '').match(/^\d{4}-(\d{2})-(\d{2})/); return m ? (+m[1]) + '月' + (+m[2]) + '日' : ''; };
+      var state = f.state === 'done' || f.state === 'running' ? f.state : 'none';
+      box.classList.toggle('is-stale', state !== 'done');
+      var d = document.createElement('span'); d.className = 'gchk-day';
+      d.textContent = state === 'done' ? '✓ 全件の照合: ' + day(f.finishedAt) + 'に済み（違った ' + num(f.diff) + '件）'
+        : state === 'running' ? '… 全件の照合: 途中（' + num(f.checked) + ' / ' + num(f.total) + '件）'
+        : '全件の照合: まだ';
+      var t = document.createElement('span'); t.className = 'gchk-t';
+      t.textContent = (state === 'done' ? '同じ ' + num(f.same) + '件。違った物は、ガルーンの小窓で選んで送ると、下の「確定待ち」に入ります。'
+        : state === 'running' ? 'ガルーンで「📋 レシピ取り込み」を押し、小窓のいちばん下の「続きから照らし合わせる」で続きができます。'
+        : 'ガルーンで「📋 レシピ取り込み」を押し、小窓のいちばん下の「🔍 全部を照らし合わせる（1回だけ）」を押すと、全部の PDF を今の登録と1バイトずつ比べます（数を見てから送れます）。');
+      box.appendChild(d); box.appendChild(t);
+    }
+
     function renderGaroonStatus_(g) {
       var box = document.getElementById('garoon-check-box'), notice = document.getElementById('garoon-notice');
       if (!g || typeof g !== 'object') {
@@ -2346,6 +2376,7 @@
         box.appendChild(d); box.appendChild(t);
         if (openUrl) { var a = document.createElement('a'); a.href = openUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = 'ガルーンを開く ↗'; box.appendChild(a); }
       }
+      renderGaroonFull_(g.full);
       if (notice) {
         var hidden = false;
         try { hidden = localStorage.getItem('recipe_garoon_notice_hidden') === todayKey_(); } catch (e) {}
@@ -2396,10 +2427,10 @@
        ・「← ひとつ前に戻る」「↑ はじめへ」を上の帯にいつも出す。移るときは滑らせて、着いた見出しを光らせる
        ========================================================= */
     var GUIDE_NAME = 'レシピの本棚利用ガイド';
-    var GUIDE_ASSET_VER = 'recipe-web-2026-11-18a';   // guide-img/figs.js を読み直す印（画面の版と同じ）
+    var GUIDE_ASSET_VER = 'recipe-web-2026-11-19a';   // guide-img/figs.js を読み直す印（画面の版と同じ）
     var GUIDE_READERS = { store: '店舗向け', hq: '本部向け', admin: '本部・管理者向け' };
     // 図解（写真でない図）。流れの箱の絵は、並びの順に1つずつ
-    var GUIDE_FLOWS = { 'flow-register': ['📤', '🤖', '🔍', '📁'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'] };
+    var GUIDE_FLOWS = { 'flow-register': ['📤', '🤖', '🔍', '📁'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-full': ['🔍', '🔐', '🔢', '☑️', '🗂'] };
     var _gSecs = [];        // 目次（本文の見出しから組み立てる）
     var _gForce = null;     // 目次で押した見出し（利用者が自分で送るまで優先）
     var _gAnim = null;
@@ -3822,7 +3853,7 @@
           var labels = Object.keys(keys).map(function (k) { return keys[k]; });
           rec.appendChild(el_('small', '', '変わった項目: ' + labels.join('・')));
         }
-        if (it && it.garoon && it.garoon.reason) rec.appendChild(el_('small', '', 'ガルーンで変わった所: ' + it.garoon.reason + (it.garoon.stamp ? '（更新 ' + it.garoon.stamp + '）' : '')));
+        if (it && it.garoon && it.garoon.reason) rec.appendChild(el_('small', '', (it.garoon.reason === '全件の照合' ? '全件の照合で、今の登録と中身が違った' : 'ガルーンで変わった所: ' + it.garoon.reason) + (it.garoon.stamp ? '（更新 ' + it.garoon.stamp + '）' : '')));
       }
       box.appendChild(rec);
     }
@@ -4201,7 +4232,7 @@
         document.getElementById('similar-progress').textContent = progressText || '';
         document.getElementById('similar-filename').textContent = item.fileName || '-';
         var g = item.garoon || null, gEl = document.getElementById('similar-garoon');
-        gEl.textContent = g && g.reason ? '（ガルーン: ' + g.reason + (g.stamp ? '・更新 ' + g.stamp : '') + '）' : '';
+        gEl.textContent = g && g.reason ? '（' + (g.reason === '全件の照合' ? '全件の照合で今の登録と違った' : 'ガルーン: ' + g.reason) + (g.stamp ? '・更新 ' + g.stamp : '') + '）' : '';
         document.getElementById('similar-notes').textContent = (item.notes || []).join(' ／ ');
         document.getElementById('similar-code').value = p.code || '';
         document.getElementById('similar-name').value = p.name || '';
@@ -4425,7 +4456,7 @@
       var kind = Object.prototype.hasOwnProperty.call(PENDING_KIND, g.check) ? g.check : (existing ? 'diff' : (code ? 'new' : 'nocode'));
       if (kind === 'new' && existing) kind = 'diff';
       var why = String(g.reason || '');
-      var whyText = !why ? '' : why === '新しい' ? 'ガルーンに新しく足された' : why === '更新日時' ? 'ガルーンで日付だけ変わった' : 'ガルーンで ' + why + ' が変わった';
+      var whyText = !why ? '' : why === '新しい' ? 'ガルーンに新しく足された' : why === '更新日時' ? 'ガルーンで日付だけ変わった' : why === '全件の照合' ? '全件の照合で、今の登録と中身が違った' : 'ガルーンで ' + why + ' が変わった';
       return {
         code: code, existing: existing, kind: kind,
         badge: PENDING_KIND[kind], note: kind === 'content' ? String(g.checkNote || '') : PENDING_KIND[kind][2],
