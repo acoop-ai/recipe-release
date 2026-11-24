@@ -286,63 +286,12 @@
       color: var(--text-secondary);
     }
 
-    /* レシピカードグリッド */
-    .recipe-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 3rem;
-    }
 
-    .recipe-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 1.2rem;
-      cursor: pointer;
-      transition: var(--transition-smooth);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-    }
 
-    .recipe-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-gold) 100%);
-      opacity: 0;
-      transition: var(--transition-smooth);
-    }
 
-    .recipe-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--border-focus);
-      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.12);
-    }
 
-    .recipe-card:hover::before {
-      opacity: 1;
-    }
 
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.8rem;
-    }
 
-    .recipe-code {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-    }
 
     .recipe-cat-tag {
       font-size: 0.75rem;
@@ -356,44 +305,10 @@
     .tag-maihan { background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); border-color: rgba(245, 158, 11, 0.2); }
     .tag-sushi { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
 
-    .recipe-name {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 1rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      min-height: 2.8rem;
-    }
 
-    .card-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding-top: 0.8rem;
-      margin-top: auto;
-    }
 
-    .margin-rate-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
 
-    .margin-rate-val {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--accent-gold);
-    }
 
-    .price-summary {
-      text-align: right;
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-    }
 
     /* 空状態メッセージ */
     .empty-state {
@@ -857,32 +772,8 @@
       border-color: var(--accent);
       color: var(--accent);
     }
-    .btn-sort {
-      background: transparent;
-      color: var(--text-secondary);
-      padding: 0.35rem 0.7rem;
-      font-size: 0.8rem;
-      border-radius: 6px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition-smooth);
-    }
-    .btn-sort.active {
-      background: var(--accent) !important;
-      color: #ffffff !important;
-    }
-    .btn-sort:hover:not(.active) {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-primary);
-    }
     
-    /* レシピカード内の優先チェックボックス */
-    .card-pref-checkbox-wrapper {
-      display: flex;
-      align-items: center;
-      margin-right: 0.5rem;
-    }
+    /* 一覧の「使う」のチェック（2026-11-19b: 表の行で使う） */
     .card-pref-checkbox {
       width: 18px;
       height: 18px;
@@ -903,14 +794,6 @@
       background-size: 12px 12px;
       background-position: center;
       background-repeat: no-repeat;
-    }
-    .recipe-card.demoted {
-      opacity: 0.65;
-      border: 1px dashed var(--border-color);
-      background: rgba(0,0,0,0.01);
-    }
-    .recipe-card.demoted:hover {
-      opacity: 0.9;
     }
 
     /* PDFページナビゲーション */
@@ -1122,6 +1005,7 @@
     #guide .gnav{width:auto;max-height:132px;border-right:none;border-bottom:1px solid var(--border-color);display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px;}
     #guide .gnav a{border-left:none;border-radius:999px;padding:4px 10px;background:var(--bg-secondary);border:1px solid var(--border-color);}
     #guide .gnav a.on{border-color:var(--accent);} #guide .gnav a.sub{display:none;}
+    #guide .gnav .glinks{display:contents;} #guide .gnav .gsearch{flex-basis:100%;padding:0 0 4px;}
     #guide .gbody{padding:10px 12px 40px;}
     #guide .gpair.is-side{flex-direction:column;} #guide .gpair.is-side .gshot{max-width:100%;}
     #guide ol.gflow{flex-direction:column;gap:24px;}
@@ -1198,6 +1082,8 @@
   .ptable td:nth-child(4){min-width:11em;max-width:22em;}
   .ptable td:nth-child(2){min-width:9em;}
   .kcard.on{border-style:solid;}
+  .bulk-sum{font-size:.76rem;color:var(--text-secondary);font-weight:600;}
+  @media (max-width:760px){ .ptable td:first-child select{max-width:8.5rem;} }
   .ptable .pname{word-break:break-all;color:var(--text-primary);font-weight:600;}
   .ptable .psub{font-size:.72rem;color:var(--text-muted);font-weight:500;margin-top:2px;}
   .kbadge{display:inline-block;font-size:.72rem;font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap;border:1px solid transparent;}
@@ -1226,6 +1112,91 @@
   .krec{margin-top:8px;font-size:.82rem;color:var(--text-primary);font-weight:600;line-height:1.6;max-width:60em;}
   .krec small{display:block;font-weight:500;color:var(--text-muted);font-size:.74rem;}
   @media (max-width:760px){ .kcards{grid-template-columns:1fr;} }
+  /* ── 一覧（1行1商品の表・2026-11-19b）。PC＝ページを送り、見出しは上の帯の下に止まる（--rt-top＝上の帯の高さ・JS が測る）。
+       細い画面＝表の枠の中で縦横に送り、見出しと左の列（使う・番号）が止まる ── */
+  .rtable-wrap{border:1px solid var(--border-color);border-radius:10px;background:var(--bg-secondary);}
+  /* 列の幅は見出しで決める（table-layout:fixed）: 並べ替えのたびに 551 行の中身から幅を計り直さない（CPU 4倍で配置の計算が約半分） */
+  .rtable{width:100%;border-collapse:separate;border-spacing:0;font-size:.86rem;table-layout:fixed;}
+  .rtable th,.rtable td{padding:.42rem .6rem;border-bottom:1px solid var(--border-color);text-align:left;vertical-align:middle;background:var(--bg-secondary);}
+  .rtable thead th{position:sticky;top:var(--rt-top,0px);z-index:3;background:var(--bg-primary);font-size:.78rem;color:var(--text-secondary);white-space:nowrap;}
+  .rtable thead th button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:4px 2px;font-weight:700;color:inherit;}
+  .rtable thead th button:focus-visible,.rtable .rt-open:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+  .rtable thead th[aria-sort="ascending"],.rtable thead th[aria-sort="descending"]{color:var(--accent);background:#ecfdf5;}
+  .rtable .rt-ar{font-size:.68rem;min-width:.8em;}
+  .rtable .rt-pick{width:44px;text-align:center;}
+  .rtable .rt-code{width:66px;font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent);}
+  .rtable .rt-cat{width:62px;}
+  .rtable .rt-num{width:78px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .rtable thead th.rt-num{text-align:right;}
+  .rtable .rt-upd{width:108px;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--text-secondary);}
+  .rtable td.rt-name{font-weight:600;}
+  .rtable .rt-open{all:unset;cursor:pointer;color:var(--text-primary);line-height:1.5;}
+  .rtable tbody tr{cursor:pointer;}
+  .rtable tbody tr:hover td{background:#f0fdf4;}
+  .rtable tbody tr.demoted td{color:var(--text-muted);background:#fafafa;}
+  .rtable tbody tr.demoted .rt-open{color:var(--text-muted);font-weight:500;}
+  .rtable tbody tr.rt-flash td{animation:rtFlash 1.4s ease;}
+  @keyframes rtFlash{0%{background:#bbf7d0;}100%{background:var(--bg-secondary);}}
+  .rtable td.rt-empty{text-align:center;color:var(--text-muted);padding:2rem 1rem;cursor:default;}
+  .rtable .recipe-cat-tag{font-size:.7rem;padding:.1rem .45rem;}
+  .rt-sortnote{font-size:.75rem;color:var(--text-muted);margin-left:.7rem;}
+  .rt-sortnote b{color:var(--accent);}
+  @media (max-width:760px){
+    .rtable-wrap{overflow:auto;max-height:calc(100dvh - var(--topbar-h,0px) - 12px);}
+    .rtable{min-width:700px;}
+    .rtable thead th{top:0;}
+    .rtable .rt-pick{position:sticky;left:0;z-index:2;}
+    .rtable .rt-code{position:sticky;left:44px;z-index:2;}
+    .rtable thead th.rt-pick,.rtable thead th.rt-code{z-index:4;}
+  }
+  /* ── 一覧の画面の置き方（2026-11-19b）: 上の帯は1行（探す欄も帯の中）・左のサイド（区分＝いまここと数・まとめての切り替え）・本文は横幅いっぱい ── */
+  #app-container{max-width:none;padding:0 16px 1.5rem;}
+  header.main-head{display:flex;align-items:center;justify-content:flex-start;gap:.7rem;flex-wrap:nowrap;background:var(--bg-secondary);border-radius:10px;padding:.4rem .8rem;box-shadow:0 2px 10px -3px rgba(0,0,0,.05);margin:0;border-bottom:none;}
+  .main-search{flex:0 1 30rem;min-width:12rem;margin:0 0 0 .3rem;}
+  .main-search .search-input{padding:.45rem .9rem .45rem 2.4rem;font-size:.86rem;border-radius:9px;}
+  .main-search .search-icon{left:.8rem;}
+  header.main-head .header-actions{display:flex;align-items:center;gap:.5rem;margin-left:auto;flex:none;}
+  .lgrid{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:start;}
+  .lside{position:sticky;top:calc(var(--rt-top,0px) + 2px);display:flex;flex-direction:column;gap:6px;padding:10px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-secondary);}
+  .lside-h{font-size:.72rem;font-weight:700;color:var(--text-muted);margin-top:4px;}
+  .lside .lside-cats{display:flex;flex-direction:column;gap:4px;}
+  .lside .filter-tab{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:.45rem .7rem;font-size:.85rem;border-radius:8px;text-align:left;box-shadow:none;}
+  .lside .lcount{font-size:.72rem;font-variant-numeric:tabular-nums;opacity:.85;}
+  .lside-acts{display:flex;flex-direction:column;gap:4px;}
+  .lside-acts .btn-action-small{width:100%;text-align:left;}
+  .lside{height:calc(100vh - var(--rt-top,0px) - 14px);overflow:auto;}
+  .lside-ver{margin-top:auto;font-size:.62rem;line-height:1.5;color:var(--text-muted);word-break:break-all;}
+  .rtable .rt-open{padding:3px 0;}
+  .lmain{min-width:0;}
+  .lmain #garoon-notice{max-width:30rem;}
+  @media (max-width:1180px){ header.main-head{flex-wrap:wrap;} }
+  @media (max-width:760px){
+    .lgrid{grid-template-columns:1fr;gap:8px;}
+    .lside{position:static;flex-direction:row;flex-wrap:wrap;align-items:center;padding:8px;}
+    .lside-h{display:none;}
+    .lside .lside-cats{flex-direction:row;flex-wrap:wrap;}
+    .lside .filter-tab{width:auto;min-height:34px;}
+    .lside-acts{flex-direction:row;}
+    .lside-acts .btn-action-small{width:auto;min-height:32px;}
+    .lside .status-badge{display:none !important;}
+    .lside{height:auto;overflow:visible;}
+    .lside-ver{flex-basis:100%;margin-top:2px;}
+    .main-search{flex:1 1 100%;margin:0;order:3;}
+    header.main-head .header-actions{flex:1 1 100%;flex-wrap:wrap;margin-left:0;}
+    #user-email{max-width:12rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    #logout-btn{min-height:28px;}
+    .rtable .rt-check{width:24px;height:24px;}
+  }
+  /* 探す欄（データ管理＝確定待ち・確認画面＝差し替える先は、それぞれの上の帯の中＝専用の行を作らない・利用ガイドは目次の上）。どれも同じ部品（SearchNorm）で書き方のゆれを吸収する */
+  .rb-search{display:flex;align-items:center;gap:6px;flex:0 1 24rem;min-width:9rem;}
+  .rb-search input{flex:1 1 auto;min-width:0;font-size:.82rem;padding:.38rem .6rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);}
+  .rb-search .fcount,.sim-search .fcount{font-size:.72rem;color:var(--text-muted);white-space:nowrap;}
+  .fnote{font-size:.78rem;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:.35rem .6rem;margin:.5rem 0;}
+  @media (max-width:760px){ .rb-search{flex:1 1 100%;order:5;} }
+  #guide .gsearch{padding:4px 12px 8px;}
+  #guide .gsearch input{width:100%;box-sizing:border-box;font-size:12.5px;padding:6px 8px;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);}
+  #guide .gsearch .fcount{display:block;font-size:11px;color:var(--text-muted);margin-top:3px;min-height:1em;}
+  #guide .gnav a[hidden]{display:none !important;}
   /* 一覧の上の帯: 細い画面では、名前と版の字を戻る・TOP の下の行へ（右端で切れない・版の字を4行にしない） */
   @media (max-width:600px){ #main-header-logo{flex-wrap:wrap;} #main-title-col{flex-basis:100%;} #main-title-col .main-ver{max-width:none!important;} }
   .chg-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.8rem;table-layout:fixed;}
@@ -1257,6 +1228,10 @@
   .cmp-slider input{width:160px;}
   @media (max-width:760px){ .cmp-grid{grid-template-columns:1fr;} }
   .sim-opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;}
+  .sim-search{grid-column:1/-1;margin-top:.4rem;}
+  .sim-found{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;}
+  .sim-found > small{grid-column:1/-1;}
+  @media (max-width:420px){ .sim-opts,.sim-found{grid-template-columns:1fr;} }
   .sim-opt{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .85rem;border:1px solid var(--border-color);border-radius:10px;cursor:pointer;font-size:.84rem;line-height:1.6;}
   .sim-opt.is-new{border-style:dashed;}
   .sim-opt.is-pdf{border-color:#0f766e;}
@@ -1283,28 +1258,28 @@
   </div>
 
   <div class="container" id="app-container" style="display: none;">
-    <!-- ヘッダー＋検索＆フィルター（スクロールしても隠れないよう画面上部に固定。
-         そのため縦幅を圧迫しないようコンパクトなレイアウトにしてある） -->
-    <div id="sticky-topbar" style="position: sticky; top: 0; z-index: 50; background: var(--bg-primary); padding-top: 0.7rem; padding-bottom: 0.6rem;">
-    <!-- ヘッダー -->
-    <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.6rem; background: var(--bg-secondary); border-radius: 10px; padding: 0.55rem 0.9rem; box-shadow: 0 2px 10px -3px rgba(0,0,0,0.05);">
+    <!-- 2026-11-19b: 上の帯は1行だけ（← 戻る・↑ TOP／名前と版／探す欄／利用ガイド・データ管理・アカウント）。
+         区分・「使う」のまとめての切り替え・読み込みの数は左のサイドへ（PC で見やすく・帯にタブを並べない・左右の余白を使い切る） -->
+    <div id="sticky-topbar" style="position: sticky; top: 0; z-index: 50; background: var(--bg-primary); padding-top: 0.6rem; padding-bottom: 0.5rem;">
+    <header class="main-head">
       <div class="header-logo" id="main-header-logo" style="flex-direction: row; align-items: center; gap: 0.5rem;">
         <!-- 2026-11-18a: 戻る・TOP はヘッダと同じく固定（上の帯は送っても上に残る）。履歴が無いときも隠さず押せない形で出す -->
         <div class="main-nav" style="display: inline-flex; gap: 0.35rem; flex: none;">
           <button type="button" class="rb-btn" id="main-back-btn" disabled title="ひとつ前の場所へ戻ります">← ひとつ前に戻る</button>
           <button type="button" class="rb-btn" id="main-top-btn" title="一覧のいちばん上へ">↑ TOP</button>
         </div>
-        <!-- 名前の下に小さく版の字（2行まで折り返す）＝戻る・TOP を足しても、上の帯を1行のまま（右が空いたまま2行にしない） -->
-        <div id="main-title-col" style="display: flex; flex-direction: column; line-height: 1.25; min-width: 0;">
+        <!-- 名前と「関東事業部」を1行に（上の帯を1行のまま・2026-11-19b）。版の字は左のサイドのいちばん下へ -->
+        <div id="main-title-col" style="display: flex; align-items: baseline; gap: 0.45rem; line-height: 1.25; min-width: 0;">
           <h1 style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.02em; margin-bottom: 0; white-space: nowrap;">レシピの本棚</h1>
-          <span class="main-ver" style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: normal; max-width: 19rem;">関東事業部 <span style="font-size: 0.62rem; color: var(--text-muted); white-space: normal; text-transform: none;" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-19a ／ 窓口 <span id="api-build" style="font-size: inherit; color: inherit; font-weight: inherit; letter-spacing: inherit; text-transform: none; margin: 0;">（確認中）</span></span></span>
+          <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">関東事業部</span>
         </div>
       </div>
-      <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-        <div class="status-badge" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(5, 150, 105, 0.06); border: 1px solid var(--border-color); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; color: var(--accent); font-weight: 600;">
-          <div class="status-dot" style="width: 7px; height: 7px; border-radius: 50%; background-color: var(--accent); animation: pulse 2s infinite;"></div>
-          <span id="recipe-count-badge">読込中...</span>
-        </div>
+      <!-- 探す欄（上の帯の中）。書き方のゆれ（ひらがな・カタカナ・ローマ字・漢字の読み・全角半角・のばす棒・空白）を吸収する -->
+      <div class="search-wrapper main-search">
+        <span class="search-icon">🔍</span>
+        <input type="search" id="search-input" class="search-input" placeholder="商品名・番号・原材料で探す（かな・漢字でも）" aria-label="レシピを探す" autocomplete="off">
+      </div>
+      <div class="header-actions">
         <button id="guide-open-btn" class="btn-secondary" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.35rem 0.7rem; border-radius: 7px; cursor: pointer; display: flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; transition: var(--transition-smooth); outline: none;">
           📖 利用ガイド
         </button>
@@ -1313,57 +1288,71 @@
         </button>
         <div id="user-box" style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: var(--text-secondary);">
           <span id="user-email"></span>
-          <button id="logout-btn" style="background: none; border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.25rem 0.55rem; border-radius: 6px; font-size: 0.68rem; cursor: pointer;">ログアウト</button>
+          <button id="logout-btn" style="background: none; border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.3rem 0.55rem; border-radius: 6px; font-size: 0.68rem; cursor: pointer;">ログアウト</button>
         </div>
       </div>
     </header>
-
-    <!-- 2026-11-18a: ガルーンを決めた日数より長く確かめていないとき、本部の人にだけ出す知らせ（日数は窓口の GAROON_STALE_DAYS・1か所） -->
-    <div id="garoon-notice" role="status" hidden>
-      <span id="garoon-notice-text"></span>
-      <span class="gn-act">
-        <a class="gn-btn" id="garoon-notice-open" href="#" target="_blank" rel="noopener noreferrer" hidden>ガルーンを開く ↗</a>
-        <button type="button" id="garoon-notice-manage">データ管理で見る</button>
-        <button type="button" id="garoon-notice-hide" title="今日はこの知らせを隠します（この端末だけ）">今日は隠す</button>
-      </span>
-    </div>
-
-    <!-- 検索とフィルター -->
-    <div class="search-filter-section" style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; padding: 0.6rem 0.9rem; margin-bottom: 0;">
-      <div class="search-wrapper" style="flex: 1 1 260px; margin-bottom: 0;">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="search-input" class="search-input" style="padding: 0.55rem 1rem 0.55rem 2.6rem; font-size: 0.9rem;" placeholder="商品名、コード、または原材料で検索..." autocomplete="off">
-      </div>
-      <div class="filter-tabs" style="gap: 0.4rem;">
-        <button class="filter-tab active" data-category="ALL" style="padding: 0.4rem 0.9rem; font-size: 0.82rem;">全体</button>
-        <button class="filter-tab" data-category="惣菜" style="padding: 0.4rem 0.9rem; font-size: 0.82rem;">惣菜</button>
-        <button class="filter-tab" data-category="米飯" style="padding: 0.4rem 0.9rem; font-size: 0.82rem;">米飯</button>
-        <button class="filter-tab" data-category="寿司" style="padding: 0.4rem 0.9rem; font-size: 0.82rem;">寿司</button>
-      </div>
-    </div>
     </div><!-- /#sticky-topbar -->
 
-    <!-- カウンタ と 設定コントロール -->
-    <div class="results-meta" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-      <div>表示中: <span id="displayed-count">0</span> / <span id="total-count">0</span> 件</div>
-      <div style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
-        <!-- 一括アクション -->
-        <div style="display: flex; gap: 0.4rem;">
+    <div class="lgrid">
+      <!-- 左のサイド（一覧の目次）: 区分＝いまここ・数／「使う」のまとめての切り替え／読み込みの数。上の帯の下に止まる -->
+      <aside class="lside" id="list-side" aria-label="一覧の目次">
+        <div class="lside-h">区分</div>
+        <nav class="filter-tabs lside-cats" aria-label="区分で絞る">
+          <button type="button" class="filter-tab active" data-category="ALL" aria-current="true"><span>全体</span><span class="lcount" data-count="ALL"></span></button>
+          <button type="button" class="filter-tab" data-category="惣菜"><span>惣菜</span><span class="lcount" data-count="惣菜"></span></button>
+          <button type="button" class="filter-tab" data-category="米飯"><span>米飯</span><span class="lcount" data-count="米飯"></span></button>
+          <button type="button" class="filter-tab" data-category="寿司"><span>寿司</span><span class="lcount" data-count="寿司"></span></button>
+        </nav>
+        <div class="lside-h">使う（よく使うレシピを上に）</div>
+        <div class="lside-acts">
           <button id="select-all-btn" class="btn-action-small">☑ すべて選択</button>
           <button id="deselect-all-btn" class="btn-action-small">☐ すべて解除</button>
         </div>
-        <!-- 並び順切り替え -->
-        <div style="display: flex; align-items: center; gap: 0.4rem; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.2rem; border-radius: 8px;">
-          <button id="sort-code-btn" class="btn-sort active" data-sort="code">商品番号順</button>
-          <button id="sort-name-btn" class="btn-sort" data-sort="name">あいうえお順</button>
+        <div class="lside-h lside-load">読み込み</div>
+        <div class="status-badge" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(5, 150, 105, 0.06); border: 1px solid var(--border-color); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; color: var(--accent); font-weight: 600; width: max-content; max-width: 100%;">
+          <div class="status-dot" style="width: 7px; height: 7px; border-radius: 50%; background-color: var(--accent); animation: pulse 2s infinite;"></div>
+          <span id="recipe-count-badge">読込中...</span>
+        </div>
+        <!-- 画面と窓口（GAS）の版（連絡するときに添える字）。窓口の版は、ログインしたあとの返事で分かる -->
+        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-19b ／ 窓口 <span id="api-build">（確認中）</span></div>
+      </aside>
+
+      <div class="lmain">
+        <!-- 2026-11-18a: ガルーンを決めた日数より長く確かめていないとき、本部の人にだけ出す知らせ（日数は窓口の GAROON_STALE_DAYS・1か所） -->
+        <div id="garoon-notice" role="status" hidden>
+          <span id="garoon-notice-text"></span>
+          <span class="gn-act">
+            <a class="gn-btn" id="garoon-notice-open" href="#" target="_blank" rel="noopener noreferrer" hidden>ガルーンを開く ↗</a>
+            <button type="button" id="garoon-notice-manage">データ管理で見る</button>
+            <button type="button" id="garoon-notice-hide" title="今日はこの知らせを隠します（この端末だけ）">今日は隠す</button>
+          </span>
+        </div>
+
+        <!-- 数と、いまの並び（並べ替えは表の見出しを押す・2026-11-19b） -->
+        <div class="results-meta" style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.5rem;">
+          <div>表示中: <span id="displayed-count">0</span> / <span id="total-count">0</span> 件<span class="rt-sortnote" id="rt-sortnote"></span></div>
+        </div>
+
+        <!-- レシピの一覧（1行1商品の表・2026-11-19b）。行を押すと中身が開く。見出しを押すと並びが替わり、もう一度押すと逆向き -->
+        <div id="recipe-table-wrap" class="rtable-wrap">
+          <table id="recipe-table" class="rtable">
+            <thead>
+              <tr>
+                <th class="rt-pick" scope="col" title="チェックを外すと、そのレシピは下へ移ります（よく使うレシピを上に出す）">使う</th>
+                <th class="rt-code" scope="col" aria-sort="ascending"><button type="button" data-sort="code">番号<span class="rt-ar" aria-hidden="true"></span></button></th>
+                <th class="rt-name" scope="col" aria-sort="none"><button type="button" data-sort="name">商品名<span class="rt-ar" aria-hidden="true"></span></button></th>
+                <th class="rt-cat" scope="col" aria-sort="none"><button type="button" data-sort="cat">区分<span class="rt-ar" aria-hidden="true"></span></button></th>
+                <th class="rt-num" scope="col" aria-sort="none"><button type="button" data-sort="sell">売価<span class="rt-ar" aria-hidden="true"></span></button></th>
+                <th class="rt-num" scope="col" aria-sort="none"><button type="button" data-sort="cost">原価<span class="rt-ar" aria-hidden="true"></span></button></th>
+                <th class="rt-num" scope="col" aria-sort="none"><button type="button" data-sort="margin">値入率<span class="rt-ar" aria-hidden="true"></span></button></th>
+                <th class="rt-upd" scope="col" aria-sort="none"><button type="button" data-sort="updated">最終更新<span class="rt-ar" aria-hidden="true"></span></button></th>
+              </tr>
+            </thead>
+            <tbody id="recipe-tbody"><tr><td class="rt-empty" colspan="8">レシピデータを読み込んでいます...</td></tr></tbody>
+          </table>
         </div>
       </div>
-    </div>
-
-    <!-- レシピカード一覧 -->
-    <div id="recipe-grid" class="recipe-grid">
-      <!-- JavaScriptで動的にカードを挿入 -->
-      <div class="empty-state">レシピデータを読み込んでいます...</div>
     </div>
 
     <!-- 管理・設定パネル（折りたたみ） -->
@@ -1384,6 +1373,7 @@
         </div>
         <h2 class="rb-title" id="settings-title">⚙️ データ管理</h2>
         <span class="rb-sub">本部の方だけに出ます</span>
+        <div class="rb-search" role="search"><input type="search" id="pending-search" placeholder="🔍 確定待ちを探す（商品名・コード・ファイル名）" aria-label="確定待ちを探す" autocomplete="off"><span class="fcount" id="pending-search-count"></span></div>
         <div class="rb-right">
           <button type="button" class="rb-btn rb-guide" data-guide-sec="pending">📖 利用ガイド</button>
           <button class="close-btn" id="settings-close-btn" type="button" aria-label="閉じる" title="閉じる">✕</button>
@@ -1417,8 +1407,9 @@
           <!-- まとめて実行: 行ごとの選択どおりに、確認画面を出さずに順に進める -->
           <div id="bulk-box" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.8rem;">
             <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 0.5rem; max-width: 60em;">
-              ・<b>PDF を差し替える</b>（今の登録がある物の既定）: 1バイトも同じ・見た目だけ（押印など）の物は、<b>PDF だけ</b>を差し替えます。読み取った中身（原材料・配分・工程・値段）は今の登録のまま。<br>
-              ・<b>読み取った中身も変わっていた物</b>は差し替えず、⚠ を付けて上に集めます。行の「確認して登録」で1件ずつ。<br>
+              ・<b>ガルーンが正です。</b>実行のときに窓口がもう一度今の登録と比べて、中身が同じなら PDF だけ、違えば中身ごと差し替えます。<br>
+              ・<b>PDF を差し替える</b>（1バイトも同じ・見た目だけ〈押印など〉の物の既定）: <b>PDF だけ</b>を新しくします。表の値は変わりません。<br>
+              ・<b>中身ごと差し替える</b>（⚠ 中身も変わった物の既定）: 読み取った中身（商品名・値段・原材料・配分・工程）と PDF をまとめて差し替えます。変わった項目は行と結果に出ます。<br>
               ・<b>新しく登録する</b>（今の登録が無い物）: AI が読んで新しく登録します（1件10〜20秒）。<b>不要</b>: 見送ります（ガルーンで更新されるまで届きません）。<b>保留</b>: 何もしません。<br>
               差し替えた前の PDF は「_差し替え前」フォルダに残ります（消えません）。
             </div>
@@ -1426,12 +1417,15 @@
               <button id="bulk-all-add" type="button" class="rb-btn">すべて既定に戻す</button>
               <button id="bulk-all-hold" type="button" class="rb-btn">すべて保留</button>
               <button id="bulk-go" type="button" style="background:#b45309;color:#fff;border:none;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:700;cursor:pointer;">この内容でまとめて実行</button>
+              <span id="bulk-sum" class="bulk-sum" aria-live="polite"></span>
               <button id="bulk-stop" type="button" style="display:none;background:transparent;color:#b42318;border:1px solid #b42318;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:700;cursor:pointer;">止める</button>
               <span id="bulk-status" role="status" style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary);"></span>
             </div>
             <div id="bulk-bar-wrap" style="display:none; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin-top: 0.6rem;"><div id="bulk-bar" style="height: 100%; width: 0; background: #b45309; transition: width 0.2s;"></div></div>
             <div id="bulk-result" style="display:none; margin-top: 0.6rem; max-height: 300px; overflow-y: auto; font-size: 0.78rem; line-height: 1.6;"></div>
           </div>
+          <!-- 2026-11-19b: 確定待ちを探す欄は、データ管理の上の帯の中（全件の照合のあとは数百件になりうる）。絞っている間だけ、ここに知らせ（見え方だけ＝まとめて実行は全部が対象） -->
+          <p class="fnote" id="pending-filter-note" hidden></p>
           <div id="pending-list"></div>
         </section>
 
@@ -1507,6 +1501,7 @@
         </div>
         <h2 class="rb-title" id="similar-title">🔍 登録内容の確認</h2>
         <span class="rb-sub" id="similar-progress"></span>
+        <div class="rb-search" role="search"><input type="search" id="sim-search-input" placeholder="🔍 差し替える先を探す（商品名・コード）" aria-label="差し替える先のレシピを探す" autocomplete="off"><span class="fcount" id="sim-search-count"></span></div>
         <div class="rb-right">
           <button type="button" class="rb-btn rb-guide" data-guide-sec="confirm">📖 利用ガイド</button>
         </div>
@@ -1741,6 +1736,10 @@
     <button id="undo-toast-btn" type="button">元に戻す</button>
   </div>
 
+  <!-- 探す欄の共通の部品（全部の資料・システムの標準。字の直し方だけで、データは無い。写しの元は weather_pos_analysis/tools/report_base/search_norm.js）。
+       🔴 下のアプリの本体より先に読む（後ろに置くと、本体が SearchNorm を見つけられず、ゆれを吸収しない探し方に静かに落ちる） -->
+  <script src="search-norm.js?v=recipe-web-2026-11-19b"></script>
+
   <!-- =========================================================
        5. クライアントサイド アプリケーション・ロジック (JavaScript)
        ========================================================= -->
@@ -1764,7 +1763,7 @@
     var undoToastTimer = null;
 
     // DOM\u53c2\u7167
-    var recipeGrid = document.getElementById('recipe-grid');
+    var recipeTbody = document.getElementById('recipe-tbody');   // 2026-11-19b: \u4e00\u89a7\u306f1\u884c1\u5546\u54c1\u306e\u8868\uff08\u30ab\u30fc\u30c9\u306f\u3084\u3081\u305f\uff09
     var searchInput = document.getElementById('search-input');
     var badge = document.getElementById('recipe-count-badge');
     var displayedCountEl = document.getElementById('displayed-count');
@@ -2000,7 +1999,13 @@
             case 'whoami':
               return resolve({ email: MOCK_PREF.email, isAdmin: true, role: '\u5168\u4f53\u7ba1\u7406\u8005' });
             case 'getRecipes':
-              return resolve(MOCK_RECIPES.slice());
+              // 作り物の更新日時（番号から決める＝毎回同じ）
+              return resolve(MOCK_RECIPES.map(function (r) { var n = parseInt(r.Code, 10) || 0; return Object.assign({ UpdatedAt: '2026-' + ('0' + (8 + n % 3)).slice(-2) + '-' + ('0' + (1 + n % 27)).slice(-2) + ' 09:00:00' }, r); }));
+            case 'getSearchTable':
+              // 手元の検証モードの作り物の読みの表（作り物のレシピの名前に出る字だけ・本物の表は窓口の中）
+              return resolve({ yomi: { '特製': 'とくせい', '唐揚': 'からあげ', '揚': 'あげ', '増量': 'ぞうりょう', '三色': 'さんしょく', '弁当': 'べんとう', '重': 'じゅう', '握': 'にぎり',
+                                       '寿司': 'すし', '鮭': 'さけ/しゃけ', '鶏': 'とり', '五目': 'ごもく', '肉': 'にく', '作': 'つく', '物': 'もの', '原材料': 'げんざいりょう', '米': 'こめ', '卵': 'たまご' },
+                               alias: [['スシ', 'すし', '寿司', '鮨']], word: [] });
             case 'getUserPreferences':
               return resolve({ email: MOCK_PREF.email, uncheckedCodes: MOCK_PREF.uncheckedCodes.slice(), sortOption: MOCK_PREF.sortOption });
             case 'saveUserPreferences':
@@ -2050,14 +2055,16 @@
                                replacedCode: args[2] === 'replace' ? args[3] : '',
                                replacedName: args[2] === 'replace' ? (cr ? cr.Name : '') : '' });
             case 'autoCommitPending':
-              // 画面の動きを見るための応答（窓口の autoCommitPending と同じ形）: 1バイトも同じ・見た目だけは PDF だけ差し替え／中身も変わったは登録しない／新しい物は新規
+              // 画面の動きを見るための応答（窓口の autoCommitPending と同じ形）: 1バイトも同じ・見た目だけは PDF だけ差し替え／中身も変わったは中身ごと差し替え（{content:true}）／新しい物は新規
               var pend = MOCK_PENDING.find(function(p) { return p.id === args[0]; });
               var pcode = pendingCode_(pend ? pend.name : '');
-              if (!pcode) return resolve({ success: false, kind: 'nocode', fileName: pend ? pend.name : '', reason: '商品コードがファイル名にもPDFにも見つかりません。「確認して登録」で1件ずつ登録してください。' });
+              if (!pcode) return resolve({ success: false, kind: 'nocode', fileName: pend ? pend.name : '', reason: '商品コードがファイル名にもPDFにも見つかりません。行の「確認して登録」でコードを入れて登録してください。' });
               var hit = MOCK_RECIPES.find(function(r) { return String(r.Code) === pcode; });
               var mchk = pend.garoon && pend.garoon.check;
-              if (hit && mchk === 'content') return resolve({ success: false, needsReview: true, kind: 'content', fileName: pend.name, code: pcode, name: hit.Name, changes: ['売価', '原材料表示'], reason: '読み取った中身が変わっています（売価・原材料表示）。' });
+              if (hit && mchk === 'content' && !(args[1] && args[1].content === true)) return resolve({ success: false, needsReview: true, kind: 'content', fileName: pend.name, code: pcode, name: hit.Name, changes: ['売価', '原材料表示'], reason: '読み取った中身が変わっています（売価・原材料表示）。' });
               MOCK_PENDING = MOCK_PENDING.filter(function(p) { return p.id !== args[0]; });
+              if (hit && mchk === 'content') return resolve({ success: true, fileName: pend.name, code: pcode, name: hit.Name, category: hit.Category, kind: 'content', action: '中身ごと差し替え',
+                changes: String(pend.garoon.checkNote || '原材料表示').split('・'), before: { name: hit.Name, sell: hit.SellingPrice, cost: hit.CostPrice }, after: { name: hit.Name, sell: hit.SellingPrice, cost: hit.CostPrice }, notes: [] });
               if (hit) return resolve({ success: true, fileName: pend.name, code: pcode, name: hit.Name, category: hit.Category, kind: mchk === 'same' ? 'same' : 'visual', action: 'PDFだけ差し替え', notes: [] });
               var pname = pend.name.replace(/[.]pdf$/i, '').replace(/^[0-9]+[ _　]*/, '');
               MOCK_RECIPES.push({ Code: pcode, Name: pname, Category: '惣菜', FileId: '' });
@@ -2256,17 +2263,23 @@
       }, 500);
     }
 
+    /** 表の見出しに、いまの並び（▲ 小さい順・あいうえお順／▼ 大きい順・逆）を出す。aria-sort も合わせる（読み上げ）。 */
     function updateSortButtonsUI() {
-      var btnCode = document.getElementById('sort-code-btn');
-      var btnName = document.getElementById('sort-name-btn');
-      if (btnCode && btnName) {
-        if (activeSort === 'code') {
-          btnCode.classList.add('active');
-          btnName.classList.remove('active');
-        } else {
-          btnName.classList.add('active');
-          btnCode.classList.remove('active');
-        }
+      var spec = sortSpec_(activeSort);
+      document.querySelectorAll('#recipe-table thead th').forEach(function (th) {
+        var b = th.querySelector('button[data-sort]');
+        if (!b) return;
+        var on = b.dataset.sort === spec.key;
+        th.setAttribute('aria-sort', on ? (spec.desc ? 'descending' : 'ascending') : 'none');
+        th.querySelector('.rt-ar').textContent = on ? (spec.desc ? '▼' : '▲') : '';
+        b.title = (on ? 'もう一度押すと逆の並び' : 'この列で並べる') + '（' + SORT_LABELS[b.dataset.sort][on && !spec.desc ? 1 : 0] + '）';
+      });
+      var note = document.getElementById('rt-sortnote');
+      if (note) {
+        note.textContent = '';
+        note.appendChild(document.createTextNode('並び: '));
+        var bb = document.createElement('b'); bb.textContent = SORT_LABELS[spec.key][spec.desc ? 1 : 0]; note.appendChild(bb);
+        note.appendChild(document.createTextNode('（見出しを押すと替わります）'));
       }
     }
 
@@ -2278,7 +2291,7 @@
           uncheckedCodes = localUnchecked ? localUnchecked.split(',') : [];
         }
         var localSort = localStorage.getItem('active_sort');
-        if (localSort !== null) activeSort = localSort;
+        if (localSort !== null) { var ls = sortSpec_(localSort); activeSort = ls.key + (ls.desc ? '_desc' : ''); }
       } catch (e) {}
     }
 
@@ -2286,10 +2299,11 @@
       // 一覧は設定と同時に頼む（前は設定の返事を待ってから一覧を頼んでいた＝窓口の往復が1回ぶん長かった）。描くのは両方そろってから
       var recipesPending = gsCall('getRecipes');
       recipesPending.catch(function () {});   // 失敗は loadRecipes が受ける（ここでは「受け手が後から付く」印だけ）
+      loadSearchTable_();                      // 2026-11-19b: 探す欄の読みの表も同時に頼む（一覧を待たせない＝直列にしない）
       return gsCall('getUserPreferences')
         .then(function(pref) {
           uncheckedCodes = (pref && pref.uncheckedCodes) || [];
-          activeSort = (pref && pref.sortOption) || 'code';
+          activeSort = sortSpec_(pref && pref.sortOption).key + (sortSpec_(pref && pref.sortOption).desc ? '_desc' : '');
         })
         .catch(function(err) {
           console.error("設定の読み込みに失敗:", err);
@@ -2311,11 +2325,15 @@
           badge.textContent = allRecipes.length + ' \u4ef6\u306e\u30ec\u30b7\u30d4\u3092\u8aad\u8fbc\u6e08';
           totalCountEl.textContent = allRecipes.length;
           renderRecipeGrid();
+          warmInfo_();
         })
         .catch(function(error) {
           badge.textContent = '\u8aad\u8fbc\u30a8\u30e9\u30fc';
-          recipeGrid.innerHTML = '<div class="empty-state" style="color: #ef4444;">\u30c7\u30fc\u30bf\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f: ' +
-            escapeHtml_(String(error && error.message || error)) + '</div>';
+          recipeTbody.textContent = '';
+          var tr = document.createElement('tr'), td = document.createElement('td');
+          td.className = 'rt-empty'; td.colSpan = 8; td.style.color = '#ef4444';
+          td.textContent = '\u30c7\u30fc\u30bf\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f: ' + String(error && error.message || error);
+          tr.appendChild(td); recipeTbody.appendChild(tr);
         });
     }
 
@@ -2427,7 +2445,7 @@
        ・「← ひとつ前に戻る」「↑ はじめへ」を上の帯にいつも出す。移るときは滑らせて、着いた見出しを光らせる
        ========================================================= */
     var GUIDE_NAME = 'レシピの本棚利用ガイド';
-    var GUIDE_ASSET_VER = 'recipe-web-2026-11-19a';   // guide-img/figs.js を読み直す印（画面の版と同じ）
+    var GUIDE_ASSET_VER = 'recipe-web-2026-11-19b';   // guide-img/figs.js を読み直す印（画面の版と同じ）
     var GUIDE_READERS = { store: '店舗向け', hq: '本部向け', admin: '本部・管理者向け' };
     // 図解（写真でない図）。流れの箱の絵は、並びの順に1つずつ
     var GUIDE_FLOWS = { 'flow-register': ['📤', '🤖', '🔍', '📁'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-full': ['🔍', '🔐', '🔢', '☑️', '🗂'] };
@@ -2678,7 +2696,8 @@
                 '利用ガイドを取得できませんでした：' + escapeHtml_(g.error) + '<br>時間をおいて、もう一度お試しください。</div>';
       } else {
         // 本文は窓口（GAS の Guide.html・ログインの内側）から。先に入れてから見出しを走査する（id を振るため）
-        inner = '<div class="gwrap"><nav class="gnav" aria-label="目次"></nav><div class="gbody">' + ((g && g.html) || '') + '</div></div>';
+        // 2026-11-19b: 目次のいちばん上に「ガイドの中を探す」（一覧と同じ部品＝書き方のゆれを吸収・当たった節だけ目次に残す・Enter で最初の節へ）
+        inner = '<div class="gwrap"><nav class="gnav" aria-label="目次"><div class="gsearch"><input type="search" class="gsearch-in" placeholder="🔍 ガイドの中を探す" aria-label="利用ガイドの中を探す" autocomplete="off"><span class="fcount"></span></div><div class="glinks"></div></nav><div class="gbody">' + ((g && g.html) || '') + '</div></div>';
       }
       var reader = (g && g.reader && Object.prototype.hasOwnProperty.call(GUIDE_READERS, g.reader)) ? g.reader : 'store';
 
@@ -2700,7 +2719,19 @@
       var nav = el.querySelector('.gnav');
       if (gb && nav) {
         gDecorate_(gb);
-        var paint = function() { _gSecs = buildSections_(gb); nav.innerHTML = guideNavHtml_(); _gForce = null; gSpy_(); };
+        var links = nav.querySelector('.glinks'), gIn = nav.querySelector('.gsearch-in');
+        var gFilter = attachFilter_(gIn, function () {
+          return [].slice.call(links.querySelectorAll('a[data-gid]')).map(function (a) {
+            var h = document.getElementById(a.getAttribute('data-gid')), sec = h && h.closest('section');
+            return { el: a, text: sec ? sec.textContent : a.textContent };
+          });
+        }, nav.querySelector('.gsearch .fcount'));
+        gIn.addEventListener('keydown', function (e) {
+          if (e.key !== 'Enter') return;
+          var a = [].slice.call(links.querySelectorAll('a[data-gid]')).filter(function (x) { return !x.hidden; })[0];
+          if (a) { e.preventDefault(); gJump_(a.getAttribute('data-gid')); }
+        });
+        var paint = function() { _gSecs = buildSections_(gb); links.innerHTML = guideNavHtml_(); _gForce = null; gSpy_(); if (gIn.value) gFilter(); };
         // 本部・管理者には「本部向け／店舗向け」（店舗向け＝本部・管理者だけの節を隠す。届いている本文を、見え方だけ変える）
         if (reader !== 'store') {
           var bar = el.querySelector('.gfor'); bar.hidden = false;
@@ -2812,6 +2843,14 @@
         rbGlide_(main, to, function () { rbFlash_(sec); rbSpy_(main); });
       }, function () {});
     }
+    /** 上の帯の探す欄に打ったとき、当たりの出る節（secId）が小窓の本文に見えていなければ、そこへ滑らせて光らせる（2026-11-19b） */
+    function rbShowIfHidden_(mainId, secId) {
+      var main = document.getElementById(mainId), sec = document.getElementById(secId);
+      if (!main || !sec || main._rbAnim) return;
+      var m = main.getBoundingClientRect(), s = sec.getBoundingClientRect();
+      if (s.top >= m.top && s.top < m.bottom - 120) return;
+      rbFocus_(mainId, secId);
+    }
     /** 左の目次の「いまここ」（本文の上の端を過ぎた最後の節）。最下部では見えている最後の節 */
     function rbSpy_(main) {
       if (!main || !main.dataset.side) return;
@@ -2900,7 +2939,8 @@
       manage:    { label: '⚙️ データ管理を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'garoon-check' }); } },
       upload:    { label: '📤 PDF を落とす欄を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'upload-card' }); } },
       search:    { label: '🔍 探す欄へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); var s = document.getElementById('search-input'); if (s) { s.focus(); rbFlash_(s.closest('.search-wrapper') || s); } } },
-      map:       { label: '📚 一覧の画面へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); rbFlash_(document.getElementById('recipe-grid')); } }
+      map:       { label: '📚 一覧の画面へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); rbFlash_(document.getElementById('recipe-table-wrap')); } },
+      sort:      { label: '↕ 一覧の見出し（並べ替え）へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); rbFlash_(document.querySelector('#recipe-table thead')); } }
     };
 
     /* ── 一覧の画面の「← ひとつ前に戻る」「↑ TOP」（上の帯の左端・固定）──
@@ -2920,9 +2960,12 @@
       mainBackState_();
     }
     function mainTop_() {
-      var se = document.scrollingElement || document.documentElement;
-      if (se.scrollTop > 2) mainPush_({ type: 'scroll', y: se.scrollTop });
-      rbGlide_(se, 0, function () { rbFlash_(document.getElementById('recipe-grid')); });
+      var se = document.scrollingElement || document.documentElement, wrap = document.getElementById('recipe-table-wrap');
+      var inner = (wrap && wrap.scrollHeight > wrap.clientHeight + 2) ? wrap : null;   // 細い画面は、表の枠の中で縦に送っている
+      var y = se.scrollTop, wy = inner ? inner.scrollTop : 0;
+      if (y > 2 || wy > 2) mainPush_({ type: 'scroll', y: y, wy: wy });
+      if (inner && wy > 0) rbGlide_(inner, 0);
+      rbGlide_(se, 0, function () { rbFlash_(wrap); });
     }
     function mainBackOne_() {
       var e = mainBack_.pop();
@@ -2930,7 +2973,21 @@
       if (!e) return;
       if (e.type === 'guide') { rbBackToGuide_(); return; }
       rbGlide_(document.scrollingElement || document.documentElement, e.y || 0);
+      var wrap = document.getElementById('recipe-table-wrap');
+      if (wrap && e.wy) rbGlide_(wrap, e.wy);
     }
+    /** 上の帯の高さ（表の見出しを、その下に止めるため・--rt-top／--topbar-h）。帯の高さが変わるたびに測り直す */
+    (function () {
+      var bar = document.getElementById('sticky-topbar');
+      if (!bar) return;
+      var set = function () {
+        var h = Math.round(bar.getBoundingClientRect().height);
+        document.documentElement.style.setProperty('--rt-top', h + 'px');
+        document.documentElement.style.setProperty('--topbar-h', h + 'px');
+      };
+      set();
+      if (window.ResizeObserver) new ResizeObserver(set).observe(bar); else window.addEventListener('resize', set);
+    })();
     /** ガイドの節に「▶ この画面を開く」を付ける（gDecorate_ から） */
     function gGoButtons_(gb) {
       gb.querySelectorAll('section[data-go]').forEach(function (sec) {
@@ -2954,7 +3011,28 @@
     /**
      * \u30a4\u30d9\u30f3\u30c8\u30ea\u30b9\u30ca\u30fc\u306e\u8a2d\u5b9a
      */
+    var pendingFilter_ = null;   // \u78ba\u5b9a\u5f85\u3061\u306e\u63a2\u3059\u6b04\uff08renderPending_ \u304c\u63cf\u304d\u76f4\u3057\u305f\u3042\u3068\u306b\u3082\u5f53\u3066\u308b\uff09
     function setupEventListeners() {
+      // 2026-11-19b: \u78ba\u5b9a\u5f85\u3061\u306e\u63a2\u3059\u6b04\uff08\u5171\u901a\u306e\u90e8\u54c1 attachFilter_\uff1d\u4e00\u89a7\u3068\u540c\u3058 SearchNorm\uff09
+      // 欄はデータ管理の上の帯の中。打ったら、確定待ちの表が見えていなければそこへ滑らせ、絞っている間は表の上に知らせ（まとめて実行は全部が対象）
+      var ps = document.getElementById('pending-search'), pnote = document.getElementById('pending-filter-note');
+      if (ps) pendingFilter_ = attachFilter_(ps, function () {
+        return [].slice.call(document.querySelectorAll('#pending-list tbody tr')).map(function (tr) { return { el: tr, text: tr._stext || tr.textContent }; });
+      }, document.getElementById('pending-search-count'), function (q, n) {
+        if (!pnote) return;
+        pnote.hidden = !q;
+        pnote.textContent = q ? '🔍 上の帯の「' + q + '」で絞っています（' + n + ' 件）。「まとめて実行」は、絞る前の全部が対象です。' : '';
+      });
+      if (ps) ps.addEventListener('input', function () { rbShowIfHidden_('settings-main', 'pending-card'); });
+      // 確認画面の「差し替える先を探す」も、その画面の上の帯の中。打ったら「ほかのレシピを探して選ぶ」へ滑らせて、当たりをそこに出す
+      (function () {
+        var ss = document.getElementById('sim-search-input'), timer = null;
+        var run = function () { if (simSearchRun_) simSearchRun_(); };
+        if (ss) ss.addEventListener('input', function () {
+          clearTimeout(timer); timer = setTimeout(run, 90);
+          rbShowIfHidden_('similar-main', 'sim-search-box');
+        });
+      })();
       // PDF\u76f4\u63a5\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u306e\u30a4\u30d9\u30f3\u30c8\u30ea\u30b9\u30ca\u30fc
       var dropzone = document.getElementById('pdf-upload-dropzone');
       var fileInput = document.getElementById('pdf-upload-file-input');
@@ -2991,19 +3069,26 @@
         });
       }
       // \u4e26\u3073\u9806\u5207\u308a\u66ff\u3048\u30dc\u30bf\u30f3
-      document.getElementById('sort-code-btn').addEventListener('click', function() {
-        if (activeSort === 'code') return;
-        activeSort = 'code';
+      // 2026-11-19b: 並びは表の見出しで替える（同じ見出しをもう一度押すと逆向き）。選んだ並びはアカウントに保存（今までどおり）
+      document.querySelector('#recipe-table thead').addEventListener('click', function(e) {
+        var b = e.target.closest('button[data-sort]');
+        if (!b) return;
+        var spec = sortSpec_(activeSort), key = b.dataset.sort;
+        activeSort = key + ((key === spec.key && !spec.desc) ? '_desc' : '');
         updateSortButtonsUI();
         saveUserPreferencesDebounced();
         renderRecipeGrid();
       });
-      document.getElementById('sort-name-btn').addEventListener('click', function() {
-        if (activeSort === 'name') return;
-        activeSort = 'name';
-        updateSortButtonsUI();
-        saveUserPreferencesDebounced();
-        renderRecipeGrid();
+      // 行を押すと中身が開く・「使う」のチェックで上と下を入れ替える（行ごとに聞き手を付けない＝1つの聞き手で受ける）
+      recipeTbody.addEventListener('change', function(e) {
+        if (!e.target.classList.contains('rt-check')) return;
+        var tr = e.target.closest('tr');
+        if (tr && tr._recipe) togglePref_(tr._recipe, e.target.checked);
+      });
+      recipeTbody.addEventListener('click', function(e) {
+        if (e.target.closest('.rt-pick')) return;
+        var tr = e.target.closest('tr[data-code]');
+        if (tr && tr._recipe) openModal(tr._recipe);
       });
 
       // \u53d6\u308a\u6d88\u3057\u30c8\u30fc\u30b9\u30c8\u306e\u300c\u5143\u306b\u623b\u3059\u300d\u30dc\u30bf\u30f3
@@ -3027,16 +3112,19 @@
         showToast('\u3059\u3079\u3066\u306e\u30ec\u30b7\u30d4\u306e\u9078\u629e\u3092\u89e3\u9664\u3057\u307e\u3057\u305f\u3002');
       });
       // \u691c\u7d22\u5165\u529b\u30a4\u30d9\u30f3\u30c8
+      // 2026-11-19b: 打つのを少し待ってから探す（1字ごとに描き直さない）。書き方のゆれは SearchNorm が吸収する
+      var searchTimer_ = null;
       searchInput.addEventListener('input', function(e) {
-        searchQuery = e.target.value.toLowerCase().trim();
-        renderRecipeGrid();
+        clearTimeout(searchTimer_);
+        searchTimer_ = setTimeout(function () { setSearchQuery_(searchInput.value); }, 90);
       });
 
       // \u30ab\u30c6\u30b4\u30ea\u30d5\u30a3\u30eb\u30bf\u30fc\u30bf\u30d6\u306e\u30af\u30ea\u30c3\u30af
       document.querySelectorAll('.filter-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
-          document.querySelectorAll('.filter-tab').forEach(function(t) { t.classList.remove('active'); });
+          document.querySelectorAll('.filter-tab').forEach(function(t) { t.classList.remove('active'); t.removeAttribute('aria-current'); });
           this.classList.add('active');
+          this.setAttribute('aria-current', 'true');   // 左のサイドの「いまここ」
           activeCategory = this.dataset.category;
           renderRecipeGrid();
         });
@@ -3269,61 +3357,326 @@
 
     }
 
+    /* ── 一覧（1行1商品の表・2026-11-19b） ──
+       PO（11/19）「四列のカードを、番号表の一覧のような1商品1行に。番号や商品名で昇順・降順をかけやすく」。
+       並びは見出しを押して替える（もう一度押すと逆向き）。「使う」のチェックを外した物は、どの並びでも下にまとめる（よく使うレシピを上に出す）。
+       探す欄は共通の部品 SearchNorm（search-norm.js）で、書き方のゆれ（ひらがな・カタカナ・ローマ字・漢字の読み・全角半角・長音・空白）を吸収する。
+       読みの表はログインのあと窓口から受け取る（getSearchTable・公開の画面には置かない）。受け取るまでは、かな・カナ・ローマ字・全角半角まで。
+       行は1回作って覚え、並べ替え・絞り込みでは並べ直すだけ（550件を毎回作り直さない）。字はすべて textContent で入れる。 */
+    var SORT_LABELS = {
+      code: ['番号の小さい順', '番号の大きい順'], name: ['あいうえお順', 'あいうえお順の逆'], cat: ['惣菜・米飯・寿司の順', '寿司・米飯・惣菜の順'],
+      sell: ['売価の安い順', '売価の高い順'], cost: ['原価の安い順', '原価の高い順'], margin: ['値入率の低い順', '値入率の高い順'], updated: ['更新の古い順', '更新の新しい順']
+    };
+    var rowCache_ = {};          // 商品コード → 行（tr）
+    var infoCache_ = {};         // 商品コード → { src, key, nameKey, updated }
+    var searchTerms_ = null;     // 打った字から作った探す語（空なら null）
+    var searchTableReady_ = false;
+
+    // ── listView_ ここから（tests/test_list_1119b.js が取り出して確かめる）──
+    var SORT_KEYS = { code: 1, name: 1, cat: 1, sell: 1, cost: 1, margin: 1, updated: 1 };
+    var CAT_ORDER = { '惣菜': 0, '米飯': 1, '寿司': 2 };
+    /** 並びの名前（code・name_desc など）を { key, desc } に。知らない名前は番号の小さい順 */
+    function sortSpec_(s) {
+      var m = String(s == null ? '' : s).match(/^([a-z]+)(_desc)?$/);
+      return (m && Object.prototype.hasOwnProperty.call(SORT_KEYS, m[1])) ? { key: m[1], desc: !!m[2] } : { key: 'code', desc: false };
+    }
+    function numOrNull_(v) {
+      if (v === '' || v == null) return null;
+      var n = Number(v);
+      return isFinite(n) ? n : null;
+    }
     /**
-     * \u4e26\u3073\u66ff\u3048/\u518d\u63cf\u753b\u3092 FLIP \u6cd5\u3067\u306a\u3081\u3089\u304b\u306b\u30a2\u30cb\u30e1\u30fc\u30b7\u30e7\u30f3\u3059\u308b\u3002
-     * \u64cd\u4f5c\u3057\u305f\u672c\u4eba\u306e\u30ab\u30fc\u30c9\u3060\u3051\u5c11\u3057\u5f3e\u3080\u30fb\u50be\u304f\u6f14\u51fa\u3092\u8db3\u3057\u3001\u3069\u308c\u304c\u3069\u3061\u3089\u3078\u52d5\u3044\u305f\u304b
-     * \u4e00\u76ee\u3067\u5206\u304b\u308b\u3088\u3046\u306b\u3059\u308b\uff08\u8aa4\u64cd\u4f5c\u306b\u6c17\u4ed8\u304d\u3084\u3059\u304f\u3059\u308b\u305f\u3081\u306e\u4ed5\u639b\u3051\u3002\u90fd\u5ea6\u78ba\u8a8d\u306e\u4ee3\u308f\u308a\uff09\u3002
+     * 絞り込みと並び（画面に触らない・同じ入力なら同じ答え）。
+     *   st＝{ category: 'ALL'|区分, terms: 探す語（SearchNorm.terms の答え）か null, unchecked: {商品コード: 1}, sort: 並びの名前 }
+     *   info(r, 何)＝ 'key'（探す鍵）・'name'（名前のあいうえおの並びの字）・'updated'（更新日時の字）を返す
+     *   1) 区分と探す語で絞る 2) チェックを外した物は下にまとめる 3) 選んだ列の値で並べる（値の無い物は向きに関わらず下）4) 同じ値なら番号の小さい順
      */
-    function flipAnimateGrid_(renderFn, toggledCode, direction) {
-      var oldRects = {};
-      Array.prototype.forEach.call(recipeGrid.children, function(card) {
-        var code = card.dataset.code;
-        if (code) oldRects[code] = card.getBoundingClientRect();
-      });
-
-      renderFn();
-
-      Array.prototype.forEach.call(recipeGrid.children, function(card) {
-        var code = card.dataset.code;
-        var oldRect = code ? oldRects[code] : null;
-        if (!oldRect) return;   // \u65b0\u3057\u304f\u8868\u793a\u3055\u308c\u305f\uff08\u4eca\u56de\u306e\u30b1\u30fc\u30b9\u3067\u306f\u767a\u751f\u3057\u306a\u3044\uff09
-        var newRect = card.getBoundingClientRect();
-        var dx = oldRect.left - newRect.left;
-        var dy = oldRect.top - newRect.top;
-        var isTarget = (code === toggledCode);
-        if (dx === 0 && dy === 0 && !isTarget) return;
-
-        var extra = isTarget
-          ? ' scale(1.045) rotate(' + (direction === 'demote' ? '-2.4deg' : '2deg') + ')'
-          : '';
-        card.style.transition = 'none';
-        card.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)' + extra;
-        if (isTarget) {
-          card.style.position = 'relative';
-          card.style.zIndex = '5';
-          card.style.boxShadow = '0 12px 26px -6px rgba(0,0,0,0.28)';
+    function listView_(recipes, st, info) {
+      var spec = sortSpec_(st.sort), dir = spec.desc ? -1 : 1;
+      var terms = st.terms && st.terms.length ? st.terms : null;
+      var out = [];
+      for (var i = 0; i < recipes.length; i++) {
+        var r = recipes[i];
+        if (st.category !== 'ALL' && String(r.Category) !== st.category) continue;
+        if (terms && !SearchNorm.hit(info(r, 'key'), terms)) continue;
+        out.push(r);
+      }
+      var val = function (r) {
+        switch (spec.key) {
+          case 'name': return info(r, 'name') || null;
+          case 'cat': return Object.prototype.hasOwnProperty.call(CAT_ORDER, r.Category) ? CAT_ORDER[r.Category] : null;
+          case 'sell': return numOrNull_(r.SellingPrice);
+          case 'cost': return numOrNull_(r.CostPrice);
+          case 'margin': return numOrNull_(r.MarginRate);
+          case 'updated': return info(r, 'updated') || null;
+          default: return numOrNull_(r.Code);
         }
-        void card.offsetHeight;   // \u5f37\u5236\u30ea\u30d5\u30ed\u30fc\u3067\u3053\u3053\u307e\u3067\u306e\u30b9\u30bf\u30a4\u30eb\u3092\u78ba\u5b9a\u3055\u305b\u308b
-        card.style.transition = 'transform 380ms cubic-bezier(0.22, 1, 0.36, 1)' +
-          (isTarget ? ', box-shadow 380ms ease' : '');
-        card.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
+      };
+      var keyed = out.map(function (r, n) { return { r: r, v: val(r), u: !!st.unchecked[String(r.Code)], c: numOrNull_(r.Code), n: n }; });
+      keyed.sort(function (a, b) {
+        if (a.u !== b.u) return a.u ? 1 : -1;
+        if (a.v !== b.v) {
+          if (a.v == null) return 1;
+          if (b.v == null) return -1;
+          return (a.v < b.v ? -1 : 1) * dir;
+        }
+        if (a.c !== b.c) return (a.c == null) ? 1 : (b.c == null) ? -1 : a.c - b.c;
+        return a.n - b.n;
+      });
+      return keyed.map(function (x) { return x.r; });
+    }
+    // ── listView_ ここまで ──
 
-        card.addEventListener('transitionend', function te(ev) {
-          if (ev.target !== card) return;
-          card.style.transition = '';
-          card.style.transform = '';
-          card.style.position = '';
-          card.style.zIndex = '';
-          card.style.boxShadow = '';
-          card.removeEventListener('transitionend', te);
-        });
+    /** 1件の、探す鍵・名前の並びの字・更新日時（覚えておき、名前や原材料が変わったら作り直す）。鍵は探すときに初めて作る */
+    function recipeInfo_(r, what) {
+      var code = String(r.Code), src = code + ' ' + String(r.Name || '') + ' ' + String(r.RawMaterials || '');
+      var c = infoCache_[code];
+      if (!c || c.src !== src || c.at !== r.UpdatedAt) c = infoCache_[code] = { src: src, at: r.UpdatedAt, key: null, nameKey: null, updated: null };
+      if (what === 'key') {
+        if (c.key === null) c.key = window.SearchNorm ? SearchNorm.key(src) : src.toLowerCase();
+        return c.key;
+      }
+      if (what === 'name') {
+        if (c.nameKey === null) c.nameKey = nameSortKey_(String(r.Name || ''));
+        return c.nameKey;
+      }
+      if (c.updated === null) c.updated = stampOf_(r.UpdatedAt);
+      return c.updated;
+    }
+    /** 名前の、あいうえお順の並びの字＝読み（漢字は読みの表で読む・表が無ければ字のまま）。かなはそろえた形（カタカナ → ひらがな・全角半角） */
+    function nameSortKey_(name) {
+      if (!window.SearchNorm) return name;
+      var m = SearchNorm.maps(name), rd = m[2] && m[2].k, lit = m[0] && m[0].k;
+      return String((rd && !/[一-鿿々]/.test(rd)) ? rd : (lit || name));
+    }
+    /** 更新日時を「2026-09-01 09:00」の字に（窓口から日付の型で来ても、この端末の暦の日にする） */
+    function stampOf_(v) {
+      if (v == null || v === '') return '';
+      var s = String(v), m = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/);
+      if (m && s.indexOf('T') < 0) return m[1] + '-' + m[2] + '-' + m[3] + (m[4] ? ' ' + m[4] + ':' + m[5] : '');
+      var d = new Date(s);
+      if (isNaN(d.getTime())) return '';
+      var p = function (n) { return ('0' + n).slice(-2); };
+      return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+    }
+    function uncheckedSet_() { var o = {}; uncheckedCodes.forEach(function (c) { o[String(c)] = 1; }); return o; }
+    function yen_(v) { var n = numOrNull_(v); return n == null ? '--' : n.toLocaleString('ja-JP') + '円'; }
+    function pct_(v) { var n = numOrNull_(v); return n == null ? '--' : n.toFixed(1) + '%'; }
+
+    /** 1件の行（覚えた行を使う。中身が変わっていれば作り直す）。チェックと薄い色は、描くたびに合わせる */
+    function rowFor_(r, unchecked) {
+      var code = String(r.Code);
+      var sig = [r.Name, r.Category, r.SellingPrice, r.CostPrice, r.MarginRate, r.UpdatedAt].join('\u0001');
+      var row = rowCache_[code];
+      if (!row || row._sig !== sig) {
+        row = document.createElement('tr');
+        row._sig = sig; row.dataset.code = code;
+        var cell = function (cls, text) { var td = document.createElement('td'); td.className = cls; if (text != null) td.textContent = text; row.appendChild(td); return td; };
+        var cb = document.createElement('input');
+        cb.type = 'checkbox'; cb.className = 'card-pref-checkbox rt-check';
+        cb.setAttribute('aria-label', 'よく使う（チェックを外すと下へ）: ' + String(r.Name || code));
+        cell('rt-pick').appendChild(cb);
+        cell('rt-code', code);
+        var open = document.createElement('button');
+        open.type = 'button'; open.className = 'rt-open'; open.textContent = String(r.Name || '（名前なし）');
+        cell('rt-name').appendChild(open);
+        var tag = document.createElement('span');
+        tag.className = 'recipe-cat-tag ' + (r.Category === '米飯' ? 'tag-maihan' : r.Category === '寿司' ? 'tag-sushi' : 'tag-sozai');
+        tag.textContent = String(r.Category || '');
+        cell('rt-cat').appendChild(tag);
+        cell('rt-num', yen_(r.SellingPrice));
+        cell('rt-num', yen_(r.CostPrice));
+        cell('rt-num', pct_(r.MarginRate));
+        cell('rt-upd', stampOf_(r.UpdatedAt).slice(0, 10));
+        rowCache_[code] = row;
+      }
+      row._recipe = r;
+      var off = !!unchecked[code];
+      row.classList.toggle('demoted', off);
+      row.firstChild.firstChild.checked = !off;
+      return row;
+    }
+
+    /**
+     * 区分・探す欄・並び・チェックに合わせて、表を描き直す（行は使い回す）。
+     * 2026-11-19b 速さ: 行を DOM に入れ直すと、その行の配置の計算が走る（CPU 4倍で 551 行に約1秒）。そこで
+     *   ① 動く行だけ動かす（今の並びのうち、そのまま残せる最長の並びを残す）＝「使う」を外す・探して絞るは数行の出し入れで済む
+     *   ② 動く行が多いとき（並べ替え・探す字を消す）は、見えている上の 60 行をすぐ描き、残りは 150 行ずつ次の手番で足す
+     *      （足している間は tbody に aria-busy。数は先に全部の数を出す）
+     */
+    var RT_FIRST_ = 60, RT_CHUNK_ = 150, RT_MOVE_MAX_ = 120;
+    var renderJob_ = 0;
+    function renderRecipeGrid() {
+      var unchecked = uncheckedSet_();
+      var list = listView_(allRecipes, { category: activeCategory, terms: searchTerms_, unchecked: unchecked, sort: activeSort }, recipeInfo_);
+      var job = ++renderJob_;
+      displayedCountEl.textContent = list.length;
+      updateSortButtonsUI();
+      paintCategoryCounts_();
+      if (!list.length) {
+        var tr = document.createElement('tr'), td = document.createElement('td');
+        td.className = 'rt-empty'; td.colSpan = 8;
+        td.textContent = appLoaded ? '🔍 条件に合うレシピが見つかりませんでした。区分を「全体」に戻すか、探す字を短くしてください。' : 'レシピデータを読み込んでいます...';
+        tr.appendChild(td);
+        recipeTbody.textContent = '';
+        recipeTbody.appendChild(tr);
+        recipeTbody.removeAttribute('aria-busy');
+        return;
+      }
+      var rows = list.map(function (r) { return rowFor_(r, unchecked); });
+      if (placeRowsInPlace_(rows)) { recipeTbody.removeAttribute('aria-busy'); return; }
+      // 動く行が多い: 上から順に、少しずつ入れる
+      var frag = document.createDocumentFragment(), at = Math.min(rows.length, RT_FIRST_);
+      for (var i = 0; i < at; i++) frag.appendChild(rows[i]);
+      recipeTbody.textContent = '';
+      recipeTbody.appendChild(frag);
+      if (at >= rows.length) { recipeTbody.removeAttribute('aria-busy'); return; }
+      recipeTbody.setAttribute('aria-busy', 'true');
+      (function more() {
+        setTimeout(function () {
+          if (job !== renderJob_) return;          // 次の描き直しが始まった
+          var f = document.createDocumentFragment(), end = Math.min(rows.length, at + RT_CHUNK_);
+          for (; at < end; at++) f.appendChild(rows[at]);
+          recipeTbody.appendChild(f);
+          if (at < rows.length) more(); else recipeTbody.removeAttribute('aria-busy');
+        }, 0);
+      })();
+    }
+    /**
+     * 今の tbody の行を、rows の並びに合わせる（要らない行は外す・動く行だけ入れ直す）。
+     * 入れ直す行が RT_MOVE_MAX_ を超えるなら、何もしないで false（呼び手が少しずつ描く）。
+     */
+    function placeRowsInPlace_(rows) {
+      var cur = recipeTbody.children, pos = new Map(), i;
+      for (i = 0; i < cur.length; i++) if (cur[i].dataset && cur[i].dataset.code) pos.set(cur[i], i);
+      if (!pos.size) return false;
+      // rows の中で、今の位置が増えていく最長の並び（そのまま残せる行）を求める
+      var seq = [], idx = [];
+      for (i = 0; i < rows.length; i++) if (pos.has(rows[i])) { seq.push(pos.get(rows[i])); idx.push(i); }
+      var tails = [], tailAt = [], prev = new Array(seq.length);
+      for (i = 0; i < seq.length; i++) {
+        var lo = 0, hi = tails.length;
+        while (lo < hi) { var mid = (lo + hi) >> 1; if (tails[mid] < seq[i]) lo = mid + 1; else hi = mid; }
+        tails[lo] = seq[i]; tailAt[lo] = i; prev[i] = lo > 0 ? tailAt[lo - 1] : -1;
+      }
+      var keep = new Set();
+      for (var k = tails.length ? tailAt[tails.length - 1] : -1; k >= 0; k = prev[k]) keep.add(rows[idx[k]]);
+      if (rows.length - keep.size > RT_MOVE_MAX_) return false;
+      var want = new Set(rows);
+      Array.prototype.slice.call(cur).forEach(function (el) { if (!want.has(el)) recipeTbody.removeChild(el); });
+      var anchor = null;
+      for (i = rows.length - 1; i >= 0; i--) {
+        if (!keep.has(rows[i])) recipeTbody.insertBefore(rows[i], anchor);
+        anchor = rows[i];
+      }
+      return true;
+    }
+    /** 左のサイドの区分の数（探す欄の字に当たる数・区分は問わず）。探していなければ、区分ごとの全部の数 */
+    function paintCategoryCounts_() {
+      var n = { ALL: 0 };
+      for (var i = 0; i < allRecipes.length; i++) {
+        var r = allRecipes[i];
+        if (searchTerms_ && searchTerms_.length && !SearchNorm.hit(recipeInfo_(r, 'key'), searchTerms_)) continue;
+        n.ALL++;
+        n[r.Category] = (n[r.Category] || 0) + 1;
+      }
+      document.querySelectorAll('#list-side .lcount').forEach(function (el) {
+        var k = el.getAttribute('data-count');
+        el.textContent = appLoaded ? String(Object.prototype.hasOwnProperty.call(n, k) ? n[k] : 0) : '';
       });
     }
 
-    /** \u300c\u5916\u3059\u300d\u64cd\u4f5c\u3092\u53d6\u308a\u6d88\u305b\u308b\u65e8\u306e\u30c8\u30fc\u30b9\u30c8\u3092\u51fa\u3059\uff08\u4e00\u5b9a\u6642\u9593\u3067\u81ea\u52d5\u7684\u306b\u6d88\u3048\u308b\uff09\u3002 */
+    /** 探す欄の字を受け取って絞り込む（空なら全部） */
+    function setSearchQuery_(q) {
+      q = String(q || '').trim();
+      searchQuery = q;
+      searchTerms_ = q ? (window.SearchNorm ? SearchNorm.terms(q) : null) : null;
+      if (q && !window.SearchNorm) searchTerms_ = null;
+      renderRecipeGrid();
+    }
+
+    /** 「使う」のチェックを替えた（外す＝下へ・入れる＝上へ）。外したときだけ「元に戻す」を出す */
+    function togglePref_(r, checked) {
+      var codeStr = String(r.Code), idx = uncheckedCodes.indexOf(codeStr);
+      if (checked) { if (idx !== -1) uncheckedCodes.splice(idx, 1); }
+      else if (idx === -1) uncheckedCodes.push(codeStr);
+      saveUserPreferencesDebounced();
+      if (checked) {
+        if (lastToggle && lastToggle.code === codeStr) { lastToggle = null; hideUndoToast_(); }
+      } else {
+        lastToggle = { code: codeStr, name: r.Name };
+        showUndoToast_(r.Name);
+      }
+      renderRecipeGrid();
+      flashRow_(codeStr);
+    }
+    /**
+     * 探す鍵と名前の並びの字を、手が空いている間に先に作っておく（2026-11-19b 速さ: はじめて探す・名前で並べるときに待たせない）。
+     * 一覧と読みの表の両方が届いてから 25 件ずつ。途中で探しても、まだの分はその場で作る（recipeInfo_ が同じ物を作る）
+     */
+    var warmJob_ = 0;
+    function warmInfo_() {
+      if (!appLoaded || !searchTableReady_) return;
+      var job = ++warmJob_, list = allRecipes, at = 0;
+      (function step() {
+        setTimeout(function () {
+          if (job !== warmJob_ || list !== allRecipes) return;
+          var end = Math.min(list.length, at + 25);
+          for (; at < end; at++) { recipeInfo_(list[at], 'key'); recipeInfo_(list[at], 'name'); }
+          if (at < list.length) step();
+        }, 0);
+      })();
+    }
+    /** 動いた行を少し光らせる（見えている所にあるときだけ。画面は送らない） */
+    function flashRow_(code) {
+      var row = rowCache_[String(code)];
+      if (!row || !row.isConnected) return;
+      row.classList.remove('rt-flash'); void row.offsetWidth; row.classList.add('rt-flash');
+    }
+
+    /**
+     * 探す欄の読みの表を窓口から受け取り、部品に渡す（ログインの後・一覧と同時に頼む）。
+     * 受け取ったら、鍵と名前の並びの字を作り直し、いま開いている探す欄を探し直す。
+     */
+    function loadSearchTable_() {
+      if (searchTableReady_ || !window.SearchNorm) return Promise.resolve();
+      return gsCall('getSearchTable').then(function (t) {
+        if (!t || typeof t !== 'object' || !t.yomi) return;
+        SearchNorm.load(t);
+        searchTableReady_ = true;
+        infoCache_ = {};
+        searchTerms_ = searchQuery ? SearchNorm.terms(searchQuery) : null;
+        if (appLoaded) renderRecipeGrid();
+        warmInfo_();
+        document.dispatchEvent(new Event('recipe-search-table'));   // ほかの探す欄（確定待ち・差し替える先・ガイド）も探し直す
+      }).catch(function () { /* 読みの表が無くても、かな・カナ・ローマ字・全角半角では当たる */ });
+    }
+
+    /** 共通の探す欄の部品: 入れ物（items＝{ el, text }）を、打った字で見せる・隠す。数を countEl に出す。table が届いたら探し直す */
+    function attachFilter_(input, getItems, countEl, onDone) {
+      var timer = null, keys = new WeakMap();
+      var run = function () {
+        var q = String(input.value || '').trim(), terms = q && window.SearchNorm ? SearchNorm.terms(q) : null, n = 0, all = 0;
+        getItems().forEach(function (it) {
+          all++;
+          var k = keys.get(it.el);
+          if (!k || k.text !== it.text) { k = { text: it.text, key: window.SearchNorm ? SearchNorm.key(it.text) : it.text.toLowerCase() }; keys.set(it.el, k); }
+          var hit = !q || (terms ? SearchNorm.hit(k.key, terms) : k.key.indexOf(q.toLowerCase()) >= 0);
+          it.el.hidden = !hit;
+          if (hit) n++;
+        });
+        if (countEl) countEl.textContent = q ? (n + ' / ' + all + ' 件') : '';
+        if (onDone) onDone(q, n);
+      };
+      input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(run, 90); });
+      document.addEventListener('recipe-search-table', function () { if (!input.isConnected) return; keys = new WeakMap(); if (input.value) run(); });
+      return run;
+    }
+
+    /** 「外す」操作を取り消せる旨のトーストを出す（一定時間で自動的に消える）。 */
     function showUndoToast_(recipeName) {
       var toast = document.getElementById('undo-toast');
-      document.getElementById('undo-toast-text').textContent = '\u300c' + recipeName + '\u300d\u3092\u5916\u3057\u307e\u3057\u305f';
+      document.getElementById('undo-toast-text').textContent = '「' + recipeName + '」を外しました';
       toast.classList.add('active');
       clearTimeout(undoToastTimer);
       undoToastTimer = setTimeout(function() { toast.classList.remove('active'); }, 8000);
@@ -3332,7 +3685,7 @@
       document.getElementById('undo-toast').classList.remove('active');
       clearTimeout(undoToastTimer);
     }
-    /** \u76f4\u524d\u306e\u300c\u5916\u3059\u300d\u64cd\u4f5c\u3092\u53d6\u308a\u6d88\u3057\u3001\u518d\u3073\u30c1\u30a7\u30c3\u30af\u3092\u5165\u308c\u305f\u72b6\u614b\u306b\u623b\u3059\u3002 */
+    /** 直前の「外す」操作を取り消し、再びチェックを入れた状態に戻す。 */
     function undoLastToggle_() {
       if (!lastToggle) return;
       var codeStr = lastToggle.code;
@@ -3341,142 +3694,8 @@
       saveUserPreferencesDebounced();
       lastToggle = null;
       hideUndoToast_();
-      flipAnimateGrid_(renderRecipeGrid, codeStr, 'restore');
-    }
-
-    /**
-     * \u691c\u7d22\u3068\u30d5\u30a3\u30eb\u30bf\u306b\u57fa\u3065\u3044\u3066\u30ec\u30b7\u30d4\u30ab\u30fc\u30c9\u3092\u63cf\u753b\u3059\u308b
-     */
-    function renderRecipeGrid() {
-      // \u30d5\u30a3\u30eb\u30bf\u30ea\u30f3\u30b0\u51e6\u7406
-      var filtered = allRecipes.filter(function(r) {
-        if (activeCategory !== 'ALL' && r.Category !== activeCategory) {
-          return false;
-        }
-        
-        if (searchQuery) {
-          var codeStr = String(r.Code || "");
-          var nameStr = String(r.Name || "").toLowerCase();
-          var materialsStr = String(r.RawMaterials || "").toLowerCase();
-          return codeStr.includes(searchQuery) || nameStr.includes(searchQuery) || materialsStr.includes(searchQuery);
-        }
-        
-        return true;
-      });
-
-      // \u4e26\u3073\u66ff\u3048\u51e6\u7406
-      filtered.sort(function(a, b) {
-        var aCode = String(a.Code);
-        var bCode = String(b.Code);
-        var aUnchecked = uncheckedCodes.indexOf(aCode) !== -1;
-        var bUnchecked = uncheckedCodes.indexOf(bCode) !== -1;
-        
-        // 1. \u30c1\u30a7\u30c3\u30af\u72b6\u614b\u306b\u3088\u308b\u30bd\u30fc\u30c8 (\u512a\u5148\u304c\u5148\u982d)
-        if (aUnchecked !== bUnchecked) {
-          return aUnchecked ? 1 : -1;
-        }
-        
-        // 2. \u6307\u5b9a\u30bd\u30fc\u30c8\u9806\u306b\u3088\u308b\u4e26\u3073\u66ff\u3048
-        if (activeSort === 'code') {
-          var aNum = parseInt(a.Code, 10) || 0;
-          var bNum = parseInt(b.Code, 10) || 0;
-          return aNum - bNum;
-        } else {
-          var aName = a.Name || "";
-          var bName = b.Name || "";
-          return aName.localeCompare(bName, 'ja');
-        }
-      });
-
-      displayedCountEl.textContent = filtered.length;
-
-      if (filtered.length === 0) {
-        recipeGrid.innerHTML = '<div class="empty-state">' +
-            '\ud83d\udd0d \u6761\u4ef6\u306b\u4e00\u81f4\u3059\u308b\u30ec\u30b7\u30d4\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f\u3002<br>' +
-            '<span style="font-size: 0.8rem; margin-top: 0.5rem; display:block;">\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5909\u3048\u3066\u518d\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002</span>' +
-          '</div>';
-        return;
-      }
-
-      recipeGrid.innerHTML = '';
-      filtered.forEach(function(r) {
-        var card = document.createElement('div');
-        card.dataset.code = String(r.Code);   // 並び替えアニメーション（FLIP）でカードを追跡するための紐付け
-
-        var isChecked = uncheckedCodes.indexOf(String(r.Code)) === -1;
-        card.className = 'recipe-card' + (isChecked ? '' : ' demoted');
-        
-        var catClass = 'tag-sozai';
-        if (r.Category === '\u7c73\u98ef') { catClass = 'tag-maihan'; }
-        if (r.Category === '\u5bff\u53f8') { catClass = 'tag-sushi'; }
-
-        var margin = r.MarginRate != null && r.MarginRate !== "" ? (Number(r.MarginRate).toFixed(1) + '%') : '--%';
-        var selling = r.SellingPrice != null && r.SellingPrice !== "" ? (Number(r.SellingPrice).toLocaleString() + '\u5186') : '--\u5186';
-        var cost = r.CostPrice != null && r.CostPrice !== "" ? (Number(r.CostPrice).toLocaleString() + '\u5186') : '--\u5186';
-
-        // 商品名・コード・区分は、取り込んだPDF（AIの読み取り・ガルーンのファイル名）や人の入力から来る文字。HTMLとして読ませない（escapeHtml_）。
-        //   ログインの札が7日になったので、画面に紛れ込んだ JavaScript が札を持ち出せないよう、描くところで必ず無害にする（2026-11-12）
-        var checkboxHtml =
-          '<label class="card-pref-checkbox-wrapper" style="cursor: pointer;" onclick="event.stopPropagation();">' +
-            '<input type="checkbox" class="card-pref-checkbox" id="check-' + escapeHtml_(r.Code) + '"' + (isChecked ? ' checked' : '') + ' style="margin-right: 0.5rem;">' +
-            '<span class="recipe-code">' + escapeHtml_(r.Code) + '</span>' +
-          '</label>';
-
-        card.innerHTML =
-          '<div style="padding: 0.8rem;">' +
-            '<div class="card-top">' +
-              checkboxHtml +
-              '<span class="recipe-cat-tag ' + catClass + '">' + escapeHtml_(r.Category) + '</span>' +
-            '</div>' +
-            '<h3 class="recipe-name">' + escapeHtml_(r.Name) + '</h3>' +
-          '</div>' +
-          '<div class="card-bottom">' +
-            '<div>' +
-              '<div class="margin-rate-label">\u5024\u5165\u7387</div>' +
-              '<div class="margin-rate-val">' + margin + '</div>' +
-            '</div>' +
-            '<div class="price-summary">' +
-              '\u58f2\u4fa1: ' + selling + '<br>' +
-              '\u539f\u4fa1: ' + cost +
-            '</div>' +
-          '</div>';
-        
-        // チェックボックスの状態変更イベント
-        var chk = card.querySelector('.card-pref-checkbox');
-        if (chk) {
-          chk.addEventListener('change', function(e) {
-            var codeStr = String(r.Code);
-            var idx = uncheckedCodes.indexOf(codeStr);
-            if (chk.checked) {
-              if (idx !== -1) {
-                uncheckedCodes.splice(idx, 1);
-              }
-            } else {
-              if (idx === -1) {
-                uncheckedCodes.push(codeStr);
-              }
-            }
-            saveUserPreferencesDebounced();
-
-            if (chk.checked) {
-              // 直前に外した本人が今チェックを戻した場合は、取り消し通知を引っ込める
-              if (lastToggle && lastToggle.code === codeStr) {
-                lastToggle = null;
-                hideUndoToast_();
-              }
-            } else {
-              // 「外す」操作だけ、あとから元に戻せるようにする（都度確認はしない代わりの安全策）
-              lastToggle = { code: codeStr, name: r.Name };
-              showUndoToast_(r.Name);
-            }
-
-            // カードが移動する様子が見えるよう、位置をなめらかにアニメーションしながら再描画
-            flipAnimateGrid_(renderRecipeGrid, codeStr, chk.checked ? 'restore' : 'demote');
-          });
-        }
-        card.addEventListener('click', function() { openModal(r); });
-        recipeGrid.appendChild(card);
-      });
+      renderRecipeGrid();
+      flashRow_(codeStr);
     }
 
     /** 詳細画面で今開いているレシピ（削除の対象を取り違えないために保持する）。 */
@@ -3762,7 +3981,7 @@
     var KIND_INFO = {
       same:    { icon: '＝', title: '中身は前と1バイトも同じ', text: 'ガルーンで日付だけが変わった版です。PDF の中身はまったく同じです。', rec: 'おすすめ: PDF だけ差し替える（読み取った中身は今の登録のまま）' },
       visual:  { icon: '👁', title: '見た目だけの違い', text: '読み取った中身（原材料・配分・工程・値段）は同じです。押印などの位置や形が違います。', rec: 'おすすめ: 下の赤い枠で違う所を見て、PDF だけ差し替える（読み取った中身は今の登録のまま）' },
-      content: { icon: '⚠', title: '読み取った中身も変わった', text: '原材料・配分・工程・値段のどれかが、今の登録と違います。', rec: 'おすすめ: 変わった項目を確かめて「このレシピを差し替える（読み取った中身で）」' }
+      content: { icon: '⚠', title: '読み取った中身も変わった', text: '原材料・配分・工程・値段のどれかが、今の登録と違います。', rec: 'おすすめ: 「このレシピを差し替える（読み取った中身で）」（ガルーンが正。変わった項目は下の表）' }
     };
 
     var cmp_ = null;
@@ -4204,6 +4423,50 @@
       cmpRender_();
     }
 
+    /**
+     * 2026-11-19b: 確認画面の「差し替える先」で、ほかのレシピを探して選ぶ欄（一覧と同じ鍵＝recipeInfo_ の 'key' を使い回す）。
+     * 当たった物（最大 12 件・似たレシピに出ている物は除く）を「このレシピを差し替える」の選び肢として出す。選ぶと札・表・画像が描き直る（opts の change）。
+     */
+    var simSearchRun_ = null;
+    function simSearchBox_(shownCodes) {
+      // 打つ欄は確認画面の上の帯の中（#sim-search-input・開くたびに空にする）。ここは当たりを出す所
+      var input = document.getElementById('sim-search-input'), count = document.getElementById('sim-search-count');
+      input.value = ''; count.textContent = '';
+      var box = el_('div', 'sim-search');
+      box.id = 'sim-search-box';
+      var h = el_('div', 'rb-h', '🔎 ほかのレシピを探して選ぶ');
+      h.appendChild(el_('small', '', '上の帯の「差し替える先を探す」に打つと、当たったレシピがここに出ます（ひらがな・カタカナ・ローマ字・漢字でも）'));
+      box.appendChild(h);
+      var found = el_('div', 'sim-found');
+      box.appendChild(found);
+      var shown = {}; (shownCodes || []).forEach(function (c) { shown[c] = 1; });
+      var keep = '';   // 選んでいた当たり（探し直しても消さない）
+      var run = function () {
+        var q = String(input.value || '').trim();
+        var cur = document.querySelector('input[name="sim-choice"]:checked');
+        if (cur && found.contains(cur)) keep = cur.value;
+        found.textContent = '';
+        if (!q) { count.textContent = ''; return; }
+        var terms = window.SearchNorm ? SearchNorm.terms(q) : null, hits = [];
+        for (var i = 0; i < allRecipes.length && hits.length < 13; i++) {
+          var r = allRecipes[i];
+          if (shown[String(r.Code)]) continue;
+          if (terms ? SearchNorm.hit(recipeInfo_(r, 'key'), terms) : recipeInfo_(r, 'key').indexOf(q.toLowerCase()) >= 0) hits.push(r);
+        }
+        count.textContent = hits.length > 12 ? '13件以上' : hits.length + '件';
+        if (hits.length > 12) found.appendChild(el_('small', 'fcount', '13件以上当たりました。上の 12 件だけ出しています（字を足すと絞れます）'));
+        else if (!hits.length) found.appendChild(el_('small', 'fcount', '当たるレシピがありません（字を短くするか、別の書き方で）'));
+        hits.slice(0, 12).forEach(function (r) {
+          var v = 'replace:' + String(r.Code);
+          found.appendChild(simOption_(v, 'このレシピを差し替える（読み取った中身で）',
+            similarText_({ name: r.Name, code: r.Code, category: r.Category, updatedAt: stampOf_(r.UpdatedAt).slice(0, 10) }), '探して選んだレシピ', '', v === keep));
+        });
+      };
+      simSearchRun_ = run;
+      return box;
+    }
+    document.addEventListener('recipe-search-table', function () { var i = document.getElementById('sim-search-input'); if (simSearchRun_ && i && i.value) simSearchRun_(); });
+
     /** 差し替え先の選び肢を1つ作る（字はすべて textContent） */
     function simOption_(value, title, sub, note, cls, checked) {
       var lab = el_('label', 'sim-opt' + (cls ? ' ' + cls : ''));
@@ -4267,6 +4530,8 @@
         opts.appendChild(simOption_('new', '新しい1件として登録する',
           all.length ? '上の今の登録はそのまま残ります' : '一覧に1件追加されます',
           all.length ? '原材料表示の省略版とフル版のように、両方持つ場合はこちら' : '', 'is-new', defaultValue === 'new'));
+        // 2026-11-19b: 似たレシピに無いときは、探して選ぶ（一覧と同じ探し方＝書き方のゆれを吸収）。選んだ物は「このレシピを差し替える」と同じ
+        opts.appendChild(simSearchBox_(all.map(function (c) { return String(c.code); })));
         list.appendChild(opts);
         var foot = el_('p', '', '※ 差し替えると、これまでのPDFは Google ドライブの「_差し替え前」フォルダへ移動します（消えません）。誰が・いつ・何を差し替えたかは「RecipeHistory」シートに残ります。');
         foot.style.cssText = 'font-size: 0.75rem; color: var(--text-muted); margin-top: 0.6rem; line-height: 1.7; max-width: 60em;';
@@ -4457,13 +4722,15 @@
       if (kind === 'new' && existing) kind = 'diff';
       var why = String(g.reason || '');
       var whyText = !why ? '' : why === '新しい' ? 'ガルーンに新しく足された' : why === '更新日時' ? 'ガルーンで日付だけ変わった' : why === '全件の照合' ? '全件の照合で、今の登録と中身が違った' : 'ガルーンで ' + why + ' が変わった';
+      // 2026-11-19b（PO「大元のガルーンデータが常に正です」）: 中身も変わった物も、既定は中身ごと差し替える。登録のしかたは窓口が比べ直して決める
+      var addLabel = !existing ? '新しく登録する' : kind === 'content' ? '中身ごと差し替える（読み取った中身で）' : kind === 'diff' ? '差し替える（中身が違えば中身ごと）' : 'PDF を差し替える';
       return {
         code: code, existing: existing, kind: kind,
-        badge: PENDING_KIND[kind], note: kind === 'content' ? String(g.checkNote || '') : PENDING_KIND[kind][2],
+        badge: PENDING_KIND[kind], note: kind === 'content' ? (g.checkNote ? '変わった項目: ' + String(g.checkNote) : '') : PENDING_KIND[kind][2],
         why: whyText + (g.stamp ? '（更新 ' + g.stamp + '）' : ''),
-        addLabel: existing ? 'PDF を差し替える' : '新しく登録する',
-        addOk: !!code && kind !== 'content',
-        def: (!code || kind === 'content') ? 'hold' : 'add'
+        addLabel: addLabel,
+        addOk: !!code,
+        def: code ? 'add' : 'hold'
       };
     }
 
@@ -4514,7 +4781,7 @@
         [['add', info.addLabel], ['drop', '不要'], ['hold', '保留']].forEach(function (o) {
           var opt = document.createElement('option');
           opt.value = o[0]; opt.textContent = o[1];
-          if (o[0] === 'add' && !info.addOk) opt.disabled = true;   // コードの無い物・中身も変わった物は、まとめては登録しない
+          if (o[0] === 'add' && !info.addOk) opt.disabled = true;   // コードの無い物は、まとめては登録しない（確認画面でコードを入れる）
           sel.appendChild(opt);
         });
         sel.value = pendingChoice_[p.id];
@@ -4542,25 +4809,48 @@
 
         function paint() { tr.classList.toggle('is-off', pendingChoice_[p.id] !== 'add'); }
         paint();
+        tr._stext = String(p.name || '') + ' ' + (info.code || '') + ' ' + (info.existing ? String(names[info.code] || '') : '');   // 探す欄で当てる字
         tbody.appendChild(tr);
       });
       table.appendChild(tbody); wrap.appendChild(table); listEl.appendChild(wrap);
+      if (pendingFilter_) pendingFilter_();   // 探す欄に字があれば、描き直した行にも当てる
       bulkRefresh_();
       rbSpy_(document.getElementById('settings-main'));   // 中身の高さが変わったので、左の目次の「いまここ」を合わせ直す
     }
 
-    /** まとめて実行のボタンに、いまの選択の件数を出す。 */
+    /**
+     * いまの選択の内訳（2026-11-19b）: 中身ごと（⚠ 中身も変わった）・PDF だけ（1バイトも同じ・見た目だけ）・新しく登録・
+     * 読んで決める（まだ読み比べていない物＝実行のときに窓口が読んで、PDF だけか中身ごとかを決める）・不要。表示だけ（登録は窓口が比べ直して決める）
+     */
+    function bulkCounts_() {
+      var names = recipeNameByCode_(), n = { content: 0, pdf: 0, add: 0, read: 0, drop: 0 };
+      pendingItems_.forEach(function (p) {
+        var c = pendingChoice_[p.id];
+        if (c === 'drop') { n.drop++; return; }
+        if (c !== 'add') return;
+        var k = pendingInfo_(p, names);
+        if (!k.existing) n.add++;
+        else if (k.kind === 'content') n.content++;
+        else if (k.kind === 'diff') n.read++;
+        else n.pdf++;
+      });
+      return n;
+    }
+    /** まとめて実行のボタンに、いまの選択の件数（内訳）を出す。 */
     function bulkRefresh_() {
       if (bulkRunning_) return;
-      var add = 0, drop = 0;
-      pendingItems_.forEach(function (p) { var c = pendingChoice_[p.id]; if (c === 'add') add++; else if (c === 'drop') drop++; });
+      var n = bulkCounts_();
       var go = bulkEl_('bulk-go');
-      go.textContent = 'この内容でまとめて実行（差し替え・登録 ' + add + '件・不要 ' + drop + '件）';
-      go.disabled = !(add + drop);
+      var total = n.content + n.pdf + n.add + n.read + n.drop;
+      go.textContent = 'この内容でまとめて実行（' + total + '件）';
+      // 内訳は釦の横の小さな字（釦を横長に伸ばさない）
+      bulkEl_('bulk-sum').textContent = '中身ごと ' + n.content + '件・PDF だけ ' + n.pdf + '件・新しく登録 ' + n.add + '件' +
+        (n.read ? '・読んで決める ' + n.read + '件' : '') + '・不要 ' + n.drop + '件';
+      go.disabled = !total;
       go.style.opacity = go.disabled ? '0.5' : '1';
       go.style.cursor = go.disabled ? 'default' : 'pointer';
       bulkEl_('bulk-box').style.display = pendingItems_.length || bulkEl_('bulk-result').style.display !== 'none' ? 'block' : 'none';
-      ['bulk-all-add', 'bulk-all-hold', 'bulk-go'].forEach(function (id) { bulkEl_(id).style.display = pendingItems_.length ? 'inline-block' : 'none'; });
+      ['bulk-all-add', 'bulk-all-hold', 'bulk-go', 'bulk-sum'].forEach(function (id) { bulkEl_(id).style.display = pendingItems_.length ? 'inline-block' : 'none'; });
     }
 
     function bulkRow_(mark, color, text, notes, goItem) {
@@ -4607,14 +4897,15 @@
       resultEl.style.display = 'block';
       bulkEl_('bulk-bar-wrap').style.display = 'block';
       bulkEl_('bulk-bar').style.width = '0';
-      ['bulk-all-add', 'bulk-all-hold', 'bulk-go'].forEach(function (id) { bulkEl_(id).style.display = 'none'; });
+      ['bulk-all-add', 'bulk-all-hold', 'bulk-go', 'bulk-sum'].forEach(function (id) { bulkEl_(id).style.display = 'none'; });
       bulkEl_('bulk-stop').style.display = 'inline-block';
       listEl.style.pointerEvents = 'none';
       listEl.style.opacity = '0.5';
 
-      var added = 0, swapped = 0, dropped = 0, left = 0, review = 0, flagged = 0, started = Date.now();
+      var added = 0, swapped = 0, replaced = 0, dropped = 0, left = 0, review = 0, flagged = 0, starred = 0, already = 0, started = Date.now();
       var namesNow = recipeNameByCode_();
       var heldWarn = pendingItems_.filter(function (p) { return pendingChoice_[p.id] !== 'add' && pendingChoice_[p.id] !== 'drop' && pendingInfo_(p, namesNow).kind === 'content'; }).length;
+      var yenOf = function (v) { return (v === '' || v == null || isNaN(Number(v))) ? '—' : Number(v).toLocaleString('ja-JP') + '円'; };
       for (var i = 0; i < jobs.length; i++) {
         if (bulkStop_) break;
         var job = jobs[i], it = job.item;
@@ -4628,26 +4919,42 @@
             delete pendingChoice_[it.id];
             resultEl.appendChild(bulkRow_('－ 不要', 'var(--text-muted)', it.name));
           } else {
-            var res = await gsCall('autoCommitPending', it.id);
+            // 2026-11-19b: {content:true}＝中身も変わっていたら中身ごと差し替える（ガルーンが正）。決めるのは窓口（比べ直す）
+            var res = await gsCall('autoCommitPending', it.id, { content: true });
             if (res && res.success) {
               delete pendingChoice_[it.id];
-              var hasNotes = res.notes && res.notes.length;
-              if (hasNotes) flagged++;
+              var hasNotes = !!(res.notes && res.notes.length), facts = [];
               var row;
-              if (res.action === 'PDFだけ差し替え') {
+              if (res.action === '中身ごと差し替え') {
+                replaced++;
+                // 名前・売価・原価が変わった物は、事実として前と後を出し、★ を付けて結果のいちばん上に集める（止めない）
+                var b0 = res.before || {}, a0 = res.after || {}, ch = res.changes || [];
+                if (ch.indexOf('商品名') >= 0) facts.push('商品名: ' + String(b0.name || '') + ' → ' + String(a0.name || ''));
+                if (ch.indexOf('売価') >= 0) facts.push('売価: ' + yenOf(b0.sell) + ' → ' + yenOf(a0.sell));
+                if (ch.indexOf('原価') >= 0) facts.push('原価: ' + yenOf(b0.cost) + ' → ' + yenOf(a0.cost));
+                row = bulkRow_(facts.length ? '★ 中身ごと差し替え' : '⇄ 中身ごと差し替え', '#0f766e', res.code + ' ' + res.name + '（変わった項目: ' + ch.join('・') + '）', facts.concat(res.notes || []));
+              } else if (res.action === 'PDFだけ差し替え') {
                 swapped++;
                 row = bulkRow_('↻ PDF を差し替え', '#10b981', res.code + ' ' + res.name + '（' + (res.kind === 'same' ? '1バイトも同じ' : '見た目だけ') + '・読み取った中身は今の登録のまま）');
               } else {
                 added++;
                 row = bulkRow_('✓ 新規', '#10b981', res.code + ' ' + res.name + '（' + res.category + '）', res.notes);
               }
-              if (hasNotes) resultEl.insertBefore(row, resultEl.firstChild); else resultEl.appendChild(row);
+              // 並び: ★（名前・売価・原価が変わった）→ 注記のある物 → ほか
+              if (facts.length) { starred++; row.classList.add('bulk-facts'); resultEl.insertBefore(row, resultEl.firstChild); }
+              else if (hasNotes) { flagged++; resultEl.insertBefore(row, [].slice.call(resultEl.children).find(function (el) { return !el.classList.contains('bulk-facts'); }) || null); }
+              else resultEl.appendChild(row);
+            } else if (res && res.already) {
+              // もう確定待ちに無い（別の画面で済んだ・2回目）: 窓口は何も書いていない
+              already++;
+              delete pendingChoice_[it.id];
+              resultEl.appendChild(bulkRow_('－ 済み', 'var(--text-muted)', it.name + '（もう確定待ちにありません。何もしていません）'));
             } else if (res && res.needsReview) {
-              // 読み取った中身も変わっていた: 登録しない。⚠ を付けて上に集め、その行から「確認して登録」へ
+              // 窓口が 11-19a までの版（中身ごとの合図を知らない）: 差し替えていない。窓口を貼り直すと、中身ごと差し替えられる
               review++;
               pendingChoice_[it.id] = 'hold';
               it.garoon = it.garoon || {}; it.garoon.check = 'content'; it.garoon.checkNote = (res.changes || []).join('・');
-              resultEl.insertBefore(bulkRow_('⚠ 中身も変わった', '#b45309', it.name, ['変わった項目: ' + (res.changes || []).join('・') + '（差し替えていません）'], it), resultEl.firstChild);
+              resultEl.insertBefore(bulkRow_('⚠ 中身も変わった', '#b45309', it.name, ['変わった項目: ' + (res.changes || []).join('・') + '（窓口が前の版のため差し替えていません。窓口を貼り直すと中身ごと差し替えられます）'], it), resultEl.firstChild);
             } else {
               left++;
               pendingChoice_[it.id] = 'hold';
@@ -4666,11 +4973,12 @@
       bulkEl_('bulk-bar-wrap').style.display = 'none';
       listEl.style.pointerEvents = '';
       listEl.style.opacity = '';
-      statusEl.textContent = (bulkStop_ ? '止めました' : '終わりました') + ': PDF の差し替え ' + swapped + '件 ／ 新規 ' + added + '件' +
-        (dropped ? ' ／ 不要 ' + dropped + '件' : '') + (review ? ' ／ ⚠ 中身も変わった ' + review + '件（下の一覧の上のほう・1件ずつ確認）' : '') +
-        (left ? ' ／ 確定待ちに残り ' + left + '件' : '') + (flagged ? ' ／ ⚠ 見直し ' + flagged + '件' : '') +
-        (heldWarn ? ' ／ ⚠ 中身も変わった ' + heldWarn + '件は差し替えずに残しています（行の「確認して登録」で1件ずつ）' : '');
-      if (added || swapped) await loadRecipes();
+      statusEl.textContent = (bulkStop_ ? '止めました（もう一度押すと続きから）' : '終わりました') + ': 中身ごと ' + replaced + '件 ／ PDF だけ ' + swapped + '件 ／ 新規 ' + added + '件' +
+        (dropped ? ' ／ 不要 ' + dropped + '件' : '') + (already ? ' ／ 済み ' + already + '件' : '') +
+        (review ? ' ／ ⚠ 中身も変わった ' + review + '件は差し替えていません（窓口が前の版）' : '') +
+        (left ? ' ／ 確定待ちに残り ' + left + '件' : '') + (starred ? ' ／ ★ 名前・売価・原価が変わった ' + starred + '件（結果の上）' : '') + (flagged ? ' ／ ⚠ 見直し ' + flagged + '件' : '') +
+        (heldWarn ? ' ／ ⚠ 中身も変わった ' + heldWarn + '件は保留のまま' : '');
+      if (added || swapped || replaced) await loadRecipes();
       loadPendingList();
     }
 
