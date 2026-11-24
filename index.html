@@ -1043,7 +1043,12 @@
   .rb-sec.rb-landed{box-shadow:0 0 0 3px rgba(59,130,246,.45);border-radius:12px;transition:box-shadow .4s;}
   .rb-h{font-size:.95rem;font-weight:700;color:var(--text-primary);margin:0 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
   .rb-h small{font-size:12px;font-weight:500;color:var(--text-muted);}
-  .rb-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
+  /* 2026-11-24a: JSON の戻しの欄と目次の口は、管理者にだけ出す（hidden を外すのは窓口の canRestore が true のときだけ）。.rb-side a の display に負けないように */
+  .rb-side a[hidden],#import-card[hidden]{display:none!important;}
+  /* 「確認して登録」の進み具合と結果（確定待ちの中・前は PDF を落とす欄の中にあった） */
+  .plog{margin:0 0 .8rem;font-size:.8rem;line-height:1.5;color:var(--text-muted);max-height:200px;overflow-y:auto;padding:.4rem .6rem;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:8px;max-width:60em;}
+  .plog[hidden]{display:none;}
+  .plog > div{font-size:.78rem;padding-left:.3rem;margin-bottom:.25rem;}
   @media (max-width:760px){
     .rb-dialog{width:100vw!important;height:100vh!important;max-height:100vh!important;border-radius:0!important;}
     .rb-head{flex-wrap:wrap;row-gap:6px;}
@@ -1054,7 +1059,6 @@
     .rb-side a.on{border-color:var(--accent);}
     .rb-side a .rb-count{float:none;margin-left:4px;}
     .rb-main{--rbpt:10px;--rbpl:10px;padding:var(--rbpt) var(--rbpl) 40px!important;}
-    .rb-cards{grid-template-columns:1fr;}
   }
   /* ガルーンを最後に確かめた日（データ管理）・本部の画面の上の知らせ */
   .gchk{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--border-color);border-radius:12px;padding:12px 14px;background:var(--bg-secondary);max-width:760px;}   /* 横長に伸ばさない（文の段落ぶんの幅） */
@@ -1069,6 +1073,12 @@
   #garoon-notice[hidden]{display:none;}
   #garoon-notice .gn-act{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap;}
   #garoon-notice button,#garoon-notice a.gn-btn{background:#fff;border:1px solid #f59e0b;color:#92400e;border-radius:7px;padding:4px 10px;font-size:.75rem;font-weight:700;cursor:pointer;text-decoration:none;}
+  #garoon-notice button[hidden],#garoon-notice a.gn-btn[hidden]{display:none;}
+  /* 2026-11-24a: 管理者の毎日の帯。今日済んでいれば緑（色だけにしない＝字の頭に ✓）。「取り込む」は主の釦 */
+  #garoon-notice.is-done{border-color:#10b981;background:#ecfdf5;color:#065f46;}
+  #garoon-notice.is-done button,#garoon-notice.is-done a.gn-btn{border-color:#10b981;color:#065f46;}
+  #garoon-notice a.gn-btn.gn-main{background:#b45309;border-color:#b45309;color:#fff;}
+  #garoon-notice.is-done a.gn-btn.gn-main{background:#fff;color:#065f46;border-color:#10b981;}
   /* 確定待ちの表（見出しは本文を送っても上に残す・左の列は「選ぶ」） */
   .ptable-wrap{border:1px solid var(--border-color);border-radius:10px;}  /* overflow を付けない（付けると、この箱が送る枠になり、見出しが本文の送りで残らない＝原則4） */
   .ptable{width:100%;border-collapse:separate;border-spacing:0;font-size:.8rem;}
@@ -1077,6 +1087,24 @@
   .ptable td:first-child,.ptable th:first-child{position:sticky;left:calc(0px - var(--rbpl));z-index:2;}
   .ptable thead th:first-child{z-index:4;}
   .ptable tr.is-warn td{background:#fff7ed;}
+  /* 2026-11-24a: 更新の記録（確定待ちの表と同じ形＝見出しは本文を送っても上に残る・左の列は時刻）。日の切れ目の行・★ の行 */
+  .ptable tr.hday td{background:var(--bg-primary);font-weight:700;color:var(--text-primary);font-size:.82rem;}
+  .ptable .hstar{color:#b45309;font-weight:700;}
+  .ptable .hdash{color:var(--text-muted);}
+  .ptable .hdone{color:#0f766e;font-weight:700;}
+  .ptable tr.hday .hnote{font-weight:500;color:#92400e;font-size:.78rem;}
+  #revert-modal .rv-dialog{background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border-color);border-radius:14px;box-shadow:0 25px 50px -12px rgba(0,0,0,.5);width:min(600px,94vw);max-height:90vh;overflow:auto;padding:18px 20px;}
+  #revert-modal .rv-title{font-size:1.05rem;margin:0 0 4px;}
+  #revert-modal .rv-sub{font-size:.85rem;color:var(--text-secondary);margin:0 0 10px;}
+  #revert-modal .rv-table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  #revert-modal .rv-table th,#revert-modal .rv-table td{border-bottom:1px solid var(--border-color);padding:6px 8px;text-align:left;vertical-align:top;}
+  #revert-modal .rv-table tr.rv-diff td{background:#fff7ed;font-weight:700;}
+  #revert-modal .rv-note{font-size:.8rem;color:var(--text-secondary);margin:10px 0 0;padding-left:1.2em;}
+  #revert-modal .rv-msg{font-size:.85rem;font-weight:700;color:#b42318;min-height:1.2em;margin:8px 0 0;}
+  #revert-modal .rv-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;}
+  #revert-modal .rv-go{background:#b45309;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:700;cursor:pointer;}
+  #revert-modal .rv-go:disabled{opacity:.5;cursor:default;}
+  #history-card[hidden]{display:none!important;}
   .ptable tr.is-off:not(.is-warn) td{opacity:.6;}
   .ptable td:nth-child(3){min-width:15em;}
   .ptable td:nth-child(4){min-width:11em;max-width:22em;}
@@ -1315,11 +1343,12 @@
           <span id="recipe-count-badge">読込中...</span>
         </div>
         <!-- 画面と窓口（GAS）の版（連絡するときに添える字）。窓口の版は、ログインしたあとの返事で分かる -->
-        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-19b ／ 窓口 <span id="api-build">（確認中）</span></div>
+        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-24a ／ 窓口 <span id="api-build">（確認中）</span></div>
       </aside>
 
       <div class="lmain">
-        <!-- 2026-11-18a: ガルーンを決めた日数より長く確かめていないとき、本部の人にだけ出す知らせ（日数は窓口の GAROON_STALE_DAYS・1か所） -->
+        <!-- 2026-11-18a: ガルーンを決めた日数より長く確かめていないとき、本部の人にだけ出す知らせ（日数は窓口の GAROON_STALE_DAYS・1か所）。
+             2026-11-24a: 管理者（ADMIN_EMAILS）には、代わりに毎日の帯（今日はまだ／今日 ◯時◯分に取り込み済み・確定待ち ◯件）。中身は窓口が管理者にだけ返す（getSavedSettings の daily） -->
         <div id="garoon-notice" role="status" hidden>
           <span id="garoon-notice-text"></span>
           <span class="gn-act">
@@ -1382,10 +1411,10 @@
       <div class="rb-wrap">
         <nav class="rb-side" id="settings-side" aria-label="データ管理の目次">
           <a href="#garoon-check" data-sec="garoon-check">🕒 ガルーンを確かめた日</a>
+          <a href="#garoon-full" data-sec="garoon-full">🔍 全件の照合</a>
           <a href="#pending-card" data-sec="pending-card">📥 確定待ち <span class="rb-count" id="side-pending-count"></span></a>
-          <a href="#upload-card" data-sec="upload-card">📤 PDF を落とす</a>
-          <a href="#sync-card" data-sec="sync-card">🔄 ドライブと同期</a>
-          <a href="#import-card" data-sec="import-card">📥 JSON の取り込み</a>
+          <a href="#history-card" data-sec="history-card" id="side-history-link" hidden>📜 更新の記録（管理者）</a>
+          <a href="#import-card" data-sec="import-card" id="side-import-link" hidden>🗄 JSON の戻し（管理者）</a>
         </nav>
         <div class="modal-body settings-body rb-main" id="settings-main">
 
@@ -1393,6 +1422,11 @@
         <section class="rb-sec" id="garoon-check">
           <div class="rb-h">🕒 ガルーンを最後に確かめた日</div>
           <div class="gchk" id="garoon-check-box"><span class="gchk-t">読み込んでいます…</span></div>
+        </section>
+
+        <!-- 全件の照合（1回だけ・2026-11-19a）。2026-11-24a: 左の目次から直接行けるよう、節に分けた（中身は前のまま） -->
+        <section class="rb-sec" id="garoon-full">
+          <div class="rb-h">🔍 全件の照合（1回だけ）</div>
           <div class="gchk gchk-full" id="garoon-full-box" hidden></div>
         </section>
 
@@ -1420,58 +1454,33 @@
               <span id="bulk-sum" class="bulk-sum" aria-live="polite"></span>
               <button id="bulk-stop" type="button" style="display:none;background:transparent;color:#b42318;border:1px solid #b42318;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:700;cursor:pointer;">止める</button>
               <span id="bulk-status" role="status" style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary);"></span>
+              <!-- 2026-11-24a: まとめて実行の結果は「更新の記録」にも残る（画面を移っても見られる）。終わったら、その日の記録へ飛ぶ口（管理者だけ） -->
+              <button id="bulk-history" type="button" class="rb-btn" hidden>更新の記録で見る ▸</button>
             </div>
             <div id="bulk-bar-wrap" style="display:none; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin-top: 0.6rem;"><div id="bulk-bar" style="height: 100%; width: 0; background: #b45309; transition: width 0.2s;"></div></div>
-            <div id="bulk-result" style="display:none; margin-top: 0.6rem; max-height: 300px; overflow-y: auto; font-size: 0.78rem; line-height: 1.6;"></div>
+            <div id="bulk-result" style="display:none; margin-top: 0.6rem; max-width: 60em; max-height: 300px; overflow-y: auto; font-size: 0.78rem; line-height: 1.6;"></div>
           </div>
+          <!-- 「確認して登録」の進み具合と結果（2026-11-24a: 前は PDF を落とす欄の中にあった＝欄を外したのでここへ。字は textContent で入れる） -->
+          <div id="pending-log" class="plog" role="log" aria-live="polite" aria-label="確認して登録の記録" hidden></div>
           <!-- 2026-11-19b: 確定待ちを探す欄は、データ管理の上の帯の中（全件の照合のあとは数百件になりうる）。絞っている間だけ、ここに知らせ（見え方だけ＝まとめて実行は全部が対象） -->
           <p class="fnote" id="pending-filter-note" hidden></p>
           <div id="pending-list"></div>
         </section>
 
-        <div class="rb-cards">
-        <!-- 生データ直接アップロード (自動AI解析 ＆ 分類保存) -->
-        <section class="info-card rb-sec" id="upload-card" style="background: rgba(16, 185, 129, 0.03); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 1.2rem;">
-          <div class="info-card-title" style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem;">商品レシピPDF 直接アップロード</div>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem; line-height: 1.45;">
-            ガルーンからダウンロードしたPDFファイルをここに直接ドラッグ＆ドロップまたはファイル選択してアップロードします（複数選択可）。<br>
-            AIが内容を読み、毎回、確認画面で今の登録と見比べてから登録します。
-          </p>
-          <div id="pdf-upload-dropzone" style="position: relative; border: 2px dashed var(--border-color); border-radius: 8px; padding: 1.5rem; text-align: center; background: rgba(0,0,0,0.2); cursor: pointer; transition: 0.2s; box-sizing: border-box;">
-            <span style="font-size: 2rem; display: block; margin-bottom: 0.3rem;">📤</span>
-            <span style="font-size: 0.85rem; font-weight: bold; color: var(--text-primary); display: block;">ここにPDFファイルをドロップ、またはクリックして選択</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 0.2rem;">複数PDFをまとめて処理できます</span>
-            <!-- 透明なinput要素を重ね合わせる（Iframe内の複数選択セキュリティ制限を回避するため、直にクリックさせます） -->
-            <input type="file" id="pdf-upload-file-input" accept=".pdf" multiple style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;">
-          </div>
-          <div id="pdf-upload-status" style="margin-top: 0.8rem; font-size: 0.8rem; line-height: 1.5; color: var(--text-muted); min-height: 1.2rem; max-height: 200px; overflow-y: auto; padding: 0.4rem; background: rgba(0,0,0,0.1); border-radius: 6px; display: none;"></div>
+        <!-- 更新の記録（2026-11-24a・管理者だけ＝窓口の getSavedSettings の canRestore が true のときだけ hidden を外す・窓口も getRecipeHistory のたびに管理者かを確かめる）。
+             見えたときに初めて読む（開いただけでは読まない）。日ごと（新しい日が上）・★＝名前・売価・原価の前と後・「この差し替えを戻す」は、その商品のいちばん新しい差し替えだけ -->
+        <section class="rb-sec" id="history-card" hidden>
+          <div class="rb-h">📜 更新の記録（管理者だけ） <small id="history-meta">見えたときに読み込みます</small> <button type="button" class="rb-btn" id="history-reload">読み直す</button></div>
+          <p style="max-width:60em;font-size:.8rem;color:var(--text-muted);line-height:1.6;margin:0 0 .6rem;">登録・差し替え・戻しを、新しい日から1行ずつ。<b>★</b> は名前・売価・原価が変わった物（前 → 後）。「↩ この差し替えを戻す」は、その商品のいちばん新しい差し替えだけ（前の PDF と前の値に戻ります・今の PDF は「_差し替え前」へ）。11月24日の版より前の記録は、前の値が無い所が「―」です（戻せません）。</p>
+          <div id="history-list"></div>
         </section>
 
-        <!-- Googleドライブ PDF同期 -->
-        <section class="info-card rb-sec" id="sync-card" style="background: rgba(0,0,0,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem;">
-          <div class="info-card-title" style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem;">Googleドライブ PDF同期・自動AI解析</div>
+        <!-- JSON の取り込み（バックアップの戻し）。2026-11-24a: 管理者（ADMIN_EMAILS）にだけ出す＝窓口の getSavedSettings の canRestore が true のときだけ hidden を外す。
+             窓口も importRecipes のたびに管理者かを確かめる（requireSystemAdmin_）。入口はガルーンの取り込みだけ（PDF を落とす欄・ドライブと同期は外した） -->
+        <section class="info-card rb-sec" id="import-card" hidden style="background: rgba(0,0,0,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem; max-width: 560px;">
+          <div class="info-card-title" style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem;">🗄 JSON の取り込み（バックアップの戻し・管理者だけ）</div>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem; line-height: 1.45;">
-            指定フォルダ内のPDFファイルをスキャンします。<br>
-            スプレッドシートに未登録の新規PDFは、<b>AI（Gemini）が内容（原材料・配分・工程など）を読んで追加</b>します。
-          </p>
-          <div style="margin-bottom: 0.8rem;">
-            <div id="api-key-status" style="font-size: 0.8rem; margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; border-radius: 6px; background: rgba(0,0,0,0.015); border: 1px solid var(--border-color);">
-              🔑 Gemini APIキー: <span id="api-status-label" style="font-weight: bold; color: #ef4444;">未登録</span>
-            </div>
-            <label style="display: block; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.3rem;">Googleドライブ フォルダID:</label>
-            <input type="text" id="drive-folder-id" placeholder="フォルダURLの最後尾の文字列を入力..." style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem; border-radius: 6px; font-size: 0.85rem; outline: none; transition: var(--transition-smooth);">
-          </div>
-          <button id="sync-btn" class="action-btn" style="padding: 0.7rem 1.2rem; font-size: 0.9rem; font-weight: bold; background: var(--accent); color: #111a15; border: none; border-radius: 6px; cursor: pointer; transition: var(--transition-smooth); display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
-            🔄 PDFファイルを同期 ＆ 自動AI解析
-          </button>
-          <div id="sync-status" class="sync-status" style="margin-top: 0.6rem; font-size: 0.8rem; color: var(--text-muted); min-height: 1.2rem; line-height: 1.45;"></div>
-        </section>
-
-        <!-- レシピJSONインポート -->
-        <section class="info-card rb-sec" id="import-card" style="background: rgba(0,0,0,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem;">
-          <div class="info-card-title" style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem;">レシピJSONインポート (バックアップ復元用)</div>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem; line-height: 1.45;">
-            ローカルに保存された `recipes_data.json` ファイルを読み込みます。
+            バックアップの <code>recipes_data.json</code> を読み込み、<b>今の一覧を全部、ファイルの中身に入れ替えます。</b>PDF は商品コードで今の物を引き継ぎます。
           </p>
           <div class="dropzone" id="dropzone" style="border: 2px dashed var(--border-color); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: var(--transition-smooth); background: rgba(0,0,0,0.01);">
             <span style="font-size: 1.8rem; display: block; margin-bottom: 0.5rem;">📥</span>
@@ -1483,14 +1492,25 @@
           </div>
           <div id="import-status" style="margin-top: 0.6rem; font-size: 0.8rem; color: var(--text-muted); min-height: 1.2rem;"></div>
         </section>
-        </div>
 
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 登録内容の確認（アップロード・確定待ち。差し替えるかどうかは人が決める）。
+  <!-- 2026-11-24a: 「この差し替えを戻す」の確認の小窓（いまと戻したあとを並べる）。押せるのは管理者だけ（窓口も確かめる） -->
+  <div id="revert-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="revert-title">
+    <div class="rv-dialog">
+      <h2 id="revert-title" class="rv-title">↩ この差し替えを戻しますか</h2>
+      <p class="rv-sub" id="revert-sub"></p>
+      <table class="rv-table"><thead><tr><th></th><th>いま</th><th>戻したあと</th></tr></thead><tbody id="revert-rows"></tbody></table>
+      <ul class="rv-note" id="revert-note"></ul>
+      <p class="rv-msg" id="revert-msg" role="status"></p>
+      <div class="rv-acts"><button type="button" class="rb-btn" id="revert-cancel">やめる</button><button type="button" class="rv-go" id="revert-go">前に戻す</button></div>
+    </div>
+  </div>
+
+  <!-- 登録内容の確認（確定待ちの「確認して登録」。差し替えるかどうかは人が決める）。
        2026-11-18a: 今の登録との違いを3つの札で先に出す・変わった項目・ページの画像の見比べ（赤い枠）・左の目次・上の帯に戻る／TOP／利用ガイド -->
   <div id="similar-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="similar-title">
     <div class="modal-container rb-dialog" style="border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
@@ -1738,7 +1758,7 @@
 
   <!-- 探す欄の共通の部品（全部の資料・システムの標準。字の直し方だけで、データは無い。写しの元は weather_pos_analysis/tools/report_base/search_norm.js）。
        🔴 下のアプリの本体より先に読む（後ろに置くと、本体が SearchNorm を見つけられず、ゆれを吸収しない探し方に静かに落ちる） -->
-  <script src="search-norm.js?v=recipe-web-2026-11-19b"></script>
+  <script src="search-norm.js?v=recipe-web-2026-11-24a"></script>
 
   <!-- =========================================================
        5. クライアントサイド アプリケーション・ロジック (JavaScript)
@@ -1748,7 +1768,6 @@
     var allRecipes = [];
     var activeCategory = 'ALL';
     var searchQuery = '';
-    var hasSavedApiKey = false;
     var uncheckedCodes = [];
     var activePdfFileId = '';
     /** 開いている原本PDFの中身（印刷・別タブ用）。ドライブのURLは使わない。 */
@@ -1945,6 +1964,23 @@
     ];
     var MOCK_GAROON = { lastChecked: '2026-11-14 17:40:00', days: 4, staleDays: 3, stale: true, openUrl: '',
                         full: { state: 'done', startedAt: '2026-11-19 10:31:02', finishedAt: '2026-11-19 10:36:40', total: 650, checked: 650, diff: 12, same: 540 } };
+    // 2026-11-24a: 手元の検証は管理者として見る（JSON の戻しの欄・毎日の帯）。写真や試験で「管理者でない本部の人」の形を見るときは false にする
+    var MOCK_SYSADMIN = true;
+    // 作り物の更新の記録（窓口の getRecipeHistory と同じ形・新しい方が先）
+    var MOCK_HISTORY = { total: 6, truncated: false, rows: [
+      { id: 'h20261124093100-a1', at: '2026-11-24 09:31:00', by: 'local-test@example.invalid', action: '差し替え', code: '9004', name: '三色そぼろ弁当', oldCode: '', known: true,
+        stars: [{ label: '売価', b: 398, a: 430 }], others: ['原材料表示', 'PDF'], revert: { ok: true, why: '' },
+        cmp: { now: { name: '三色そぼろ弁当', cat: '米飯', sell: 430, cost: 260, margin: 39.5 }, back: { name: '三色そぼろ弁当', cat: '米飯', sell: 398, cost: 250, margin: 37.2 }, others: ['原材料表示', 'PDF'] } },
+      { id: 'h20261124093000-a2', at: '2026-11-24 09:30:00', by: 'local-test@example.invalid', action: 'PDFだけ差し替え', code: '9002', name: '特製から揚げ', oldCode: '', known: true,
+        stars: [], others: ['PDF'], revert: { ok: true, why: '' }, cmp: { now: { name: '特製から揚げ', cat: '惣菜', sell: 300, cost: 190, margin: 36.7 }, back: { name: '特製から揚げ', cat: '惣菜', sell: 300, cost: 190, margin: 36.7 }, others: ['PDF'] } },
+      { id: 'h20261124092900-a3', at: '2026-11-24 09:29:00', by: 'local-test@example.invalid', action: '新規登録', code: '9021', name: 'にぎり盛合せ春', oldCode: '', known: true, stars: [], others: [], revert: null, cmp: null },
+      { id: 'h20261123091000-b1', at: '2026-11-23 09:10:00', by: 'local-test@example.invalid', action: '差し替え', code: '9004', name: '三色そぼろ弁当', oldCode: '', known: true,
+        stars: [{ label: '商品名', b: '三色弁当', a: '三色そぼろ弁当' }], others: ['PDF'], revert: { ok: false, why: 'このあとに「差し替え」（11/24 9:31）があるので戻せません。いちばん新しい差し替えだけ戻せます' }, cmp: null },
+      { id: 'h20261123090500-b2', at: '2026-11-23 09:05:00', by: 'local-test@example.invalid', action: '情報修正', code: '9003', name: 'から揚げ（増量）', oldCode: '', known: true, stars: [{ label: '原価', b: 220, a: 210 }], others: [], revert: null, cmp: null },
+      { id: '', at: '2026-11-18 10:30:00', by: 'local-test@example.invalid', action: '差し替え', code: '9005', name: 'サーモン握り', oldCode: '', known: false, noValues: true, stars: [], others: [], revert: { ok: false, why: '11月24日の版より前の記録のため、前の形が残っていません（戻せません）' }, cmp: null }
+    ] };
+    // 作り物の毎日の記録（窓口の _garoonDaily_ と同じ形・ガルーンの置き場は空＝公開の画面に書かない）
+    var MOCK_DAILY = { today: null, last: { day: '2026-11-23', at: '2026-11-23 09:05:00', sent: 3 }, openUrl: '' };
 
     /** 作り物の1ページの PDF（英字だけ・表の線・赤い丸の押印）。押印の位置（左下の原点からの pt）だけを変えて、見た目だけの違いを作る */
     function mockPdf_(stampX, stampY, extra) {
@@ -2013,7 +2049,16 @@
               MOCK_PREF.sortOption = args[1] || 'code';
               return resolve({ success: true, email: MOCK_PREF.email });
             case 'getSavedSettings':
-              return resolve({ folderId: '\uff08\u30ed\u30fc\u30ab\u30eb\u691c\u8a3c\uff09', hasApiKey: true, build: 'local-mock', garoon: Object.assign({}, MOCK_GAROON) });
+              return resolve(Object.assign({ build: 'local-mock', garoon: Object.assign({}, MOCK_GAROON), canRestore: MOCK_SYSADMIN },
+                MOCK_SYSADMIN ? { daily: Object.assign({ pending: MOCK_PENDING.length }, MOCK_DAILY) } : {}));
+            case 'getRecipeHistory':
+              return resolve(JSON.parse(JSON.stringify(MOCK_HISTORY)));
+            case 'revertRecipeChange':
+              var hr = MOCK_HISTORY.rows.find(function (x) { return x.id === args[0]; });
+              if (!hr || !hr.revert || !hr.revert.ok) return resolve({ success: false, already: !!(hr && hr.revert && hr.revert.already), reason: (hr && hr.revert && hr.revert.why) || 'この記録は戻せません。' });
+              hr.revert = { ok: false, already: true, why: '戻しました（11/24 10:05）' }; hr.cmp = null;
+              MOCK_HISTORY.rows.unshift({ id: 'h20261124100500-mock', at: '2026-11-24 10:05:00', by: 'local-test@example.invalid', action: '戻し', code: hr.code, name: hr.name, oldCode: '', known: true, stars: hr.stars.map(function (x) { return { label: x.label, b: x.a, a: x.b }; }), others: hr.others, revert: null, cmp: null });
+              return resolve({ success: true, code: hr.code, name: hr.name, revertOf: hr.id });
             case 'getPdfBase64':
               return resolve('JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCA1OTUgODQyXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNSAwIFIgPj4gPj4gPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCA0NyA+PgpzdHJlYW0KQlQgL0YxIDM2IFRmIDEwMCA3MDAgVGQgKE1PQ0sgUkVDSVBFIFBERikgVGogRVQKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8IC9UeXBlIC9Gb250IC9TdWJ0eXBlIC9UeXBlMSAvQmFzZUZvbnQgL0hlbHZldGljYSA+PgplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTggMDAwMDAgbiAKMDAwMDAwMDExNSAwMDAwMCBuIAowMDAwMDAwMjQxIDAwMDAwIG4gCjAwMDAwMDAzMzggMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA2IC9Sb290IDEgMCBSID4+CnN0YXJ0eHJlZgo0MDgKJSVFT0YK');   // 試験用の1ページPDF
             case 'getThumbnailsBatch':
@@ -2032,20 +2077,6 @@
               return resolve(MOCK_PENDING.slice());
             case 'analyzePending':
               return resolve(mockAnalyze_(args[0]));
-            case 'analyzeRecipePdf':
-              // \u753b\u9762\u306e\u52d5\u304d\u3092\u898b\u308b\u305f\u3081\u306e\u56fa\u5b9a\u5fdc\u7b54\u3002\u300c9002 \u7279\u88fd\u304b\u3089\u63da\u3052\u300d\u3092\u5019\u88dc\u3068\u3057\u3066\u8fd4\u3059
-              return resolve({
-                success: true, pendingId: 'mock-pending', fileName: args[0],
-                parsed: { code: '9013', name: '\u304b\u3089\u63da\u3052 \u7279\u88fd', category: '\u60e3\u83dc',
-                          margin_rate: 34.0, cost_price: 200, selling_price: 310,
-                          recipe_ingredients: '\u30fb\u9d8f\u3082\u3082\u8089 [105g]', raw_materials: '\u9d8f\u8089\u3001\u3067\u3093\u7c89\u3001\u3057\u3087\u3046\u3086',
-                          instructions: '1. \u4e0b\u5473\n2. \u8863\n3. \u63da\u3052\u308b' },
-                exact: null,
-                candidates: [
-                  { code: '9002', name: '\u7279\u88fd\u304b\u3089\u63da\u3052', category: '\u60e3\u83dc', score: 0.86, reason: '\u5546\u54c1\u540d\u304c\u3088\u304f\u4f3c\u3066\u3044\u307e\u3059', updatedAt: '2026-08-01' },
-                  { code: '9003', name: '\u304b\u3089\u63da\u3052\uff08\u5897\u91cf\uff09', category: '\u60e3\u83dc', score: 0.62, reason: '\u5546\u54c1\u540d\u304c\u4f3c\u3066\u3044\u307e\u3059', updatedAt: '2026-08-01' }
-                ]
-              });
             case 'commitRecipe':
               MOCK_PENDING = MOCK_PENDING.filter(function(p) { return p.id !== args[0]; });
               var cr = MOCK_RECIPES.find(function(r) { return String(r.Code) === String(args[3] || ''); });
@@ -2207,7 +2238,7 @@
         }).catch(function () {});
       }
       // 2026-11-18a: 本部の人は、ガルーンを最後に確かめた日も同時に頼む（知らせを出すため・一覧の読み込みを待たせない＝直列にしない）
-      if (isAdmin) gsCall('getSavedSettings').then(function (s) { renderGaroonStatus_(s && s.garoon); }).catch(function () {});
+      if (isAdmin) gsCall('getSavedSettings').then(applySettings_).catch(function () {});
       return loadUserPreferencesAndInit().then(autoGuide_);
     }
 
@@ -2373,7 +2404,7 @@
       box.appendChild(d); box.appendChild(t);
     }
 
-    function renderGaroonStatus_(g) {
+    function renderGaroonStatus_(g, daily) {
       var box = document.getElementById('garoon-check-box'), notice = document.getElementById('garoon-notice');
       if (!g || typeof g !== 'object') {
         if (box) { box.textContent = ''; var t0 = document.createElement('span'); t0.className = 'gchk-t'; t0.textContent = '窓口がまだ前の版のため、最後に確かめた日を出せません。'; box.appendChild(t0); }
@@ -2395,7 +2426,11 @@
         if (openUrl) { var a = document.createElement('a'); a.href = openUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = 'ガルーンを開く ↗'; box.appendChild(a); }
       }
       renderGaroonFull_(g.full);
+      if (notice && daily && typeof daily === 'object') { renderDaily_(daily); return; }   // 2026-11-24a: 管理者には毎日の帯
       if (notice) {
+        notice.dataset.mode = 'stale'; notice.classList.remove('is-done');
+        document.getElementById('garoon-notice-manage').textContent = 'データ管理で見る'; document.getElementById('garoon-notice-manage').hidden = false;
+        document.getElementById('garoon-notice-open').textContent = 'ガルーンを開く ↗'; document.getElementById('garoon-notice-open').classList.remove('gn-main');
         var hidden = false;
         try { hidden = localStorage.getItem('recipe_garoon_notice_hidden') === todayKey_(); } catch (e) {}
         notice.hidden = !(isAdmin && g.stale) || hidden;
@@ -2406,26 +2441,59 @@
       }
     }
 
+    /**
+     * 2026-11-24a 管理者の毎日の帯（PO「毎日どこかで更新したい」「アラートが出る→案内どおりに取り込む→反映」）。
+     *   まだ: 「今日はまだ取り込んでいません（前回 11/23 9時05分・届いた 3件）」＋「取り込む ↗」（ガルーンのレシピのフォルダを新しいタブで）
+     *   済み: 「今日 9時05分に取り込み済み（確定待ち 3件）」（緑・頭に ✓）
+     *   確定待ちが1件以上: 「確定待ちを開く（◯件）」＝データ管理の確定待ちへ
+     * 中身は窓口が管理者にだけ返す（getSavedSettings の daily）。字は textContent。ガルーンの場所は窓口から来た https の cybozu.com だけを使う。
+     */
+    function renderDaily_(d) {
+      var notice = document.getElementById('garoon-notice');
+      if (!notice) return;
+      var at = function (s) { var m = String(s || '').match(/^\d{4}-(\d{2})-(\d{2}) (\d{2}):(\d{2})/); return m ? { md: (+m[1]) + '/' + (+m[2]), t: (+m[3]) + '時' + m[4] + '分' } : null; };
+      var num = function (v) { v = Number(v); return isFinite(v) && v >= 0 ? Math.floor(v) : -1; };
+      var today = d.today ? at(d.today.at) : null, last = d.last ? at(d.last.at) : null, pend = num(d.pending);
+      var openUrl = /^https:\/\/[a-z0-9-]+\.cybozu\.com\/g\/cabinet\/[^\s"'<>]*$/.test(String(d.openUrl || '')) ? String(d.openUrl) : '';
+      notice.dataset.mode = 'daily';
+      notice.classList.toggle('is-done', !!today);
+      document.getElementById('garoon-notice-text').textContent = today
+        ? '✓ 今日 ' + today.t + 'に取り込み済み' + (pend >= 0 ? '（確定待ち ' + pend + '件）' : '')
+        : '📋 今日はまだ取り込んでいません' + (last ? '（前回 ' + last.md + ' ' + last.t + '・届いた ' + Math.max(0, num(d.last.sent)) + '件）' : '（前回の記録はまだありません）');
+      var o = document.getElementById('garoon-notice-open');
+      o.textContent = '📋 取り込む ↗'; o.classList.add('gn-main');
+      if (openUrl) { o.href = openUrl; o.hidden = false; } else { o.hidden = true; }
+      var mg = document.getElementById('garoon-notice-manage');
+      mg.textContent = '📥 確定待ちを開く（' + pend + '件）'; mg.hidden = !(pend > 0);
+      var hidden = false;
+      try { hidden = localStorage.getItem('recipe_garoon_notice_hidden') === todayKey_(); } catch (e) {}
+      notice.hidden = hidden;
+    }
+
+    /**
+     * 窓口の getSavedSettings の返事を画面に当てる（起動のとき・データ管理を開いたとき・タブに戻ってきたとき）。
+     *   garoon     … ガルーンを最後に確かめた日・全件の照合（本部）
+     *   daily      … 毎日の帯（管理者だけ。窓口が管理者にだけ載せる）
+     *   canRestore … JSON の戻しの欄を出すか（管理者だけ。表示だけ＝窓口が importRecipes のたびに確かめる）
+     */
+    var settingsAt_ = 0;
+    var dailyNow_ = null;
+    var canRestoreNow_ = false;   // 管理者か（表示だけ・窓口が毎回確かめる）   // 管理者の毎日の帯の中身（確定待ちの一覧を読み直したら、件数だけ手元で合わせる＝窓口を呼ばない）
+    function applySettings_(settings) {
+      settings = settings || {};
+      settingsAt_ = Date.now();
+      dailyNow_ = (settings.daily && typeof settings.daily === 'object') ? settings.daily : null;
+      renderGaroonStatus_(settings.garoon, settings.daily);
+      var can = settings.canRestore === true;
+      canRestoreNow_ = can;
+      ['import-card', 'side-import-link', 'history-card', 'side-history-link'].forEach(function (id) { var el = document.getElementById(id); if (el) el.hidden = !can; });
+      historyMaybeLoad_();
+    }
     function loadSavedSettings() {
       return gsCall('getSavedSettings')
-        .then(function(settings) {
-          settings = settings || {};
-          renderGaroonStatus_(settings.garoon);
-          if (settings.folderId) {
-            document.getElementById('drive-folder-id').value = settings.folderId;
-          }
-          hasSavedApiKey = !!settings.hasApiKey;
-          var statusLabel = document.getElementById('api-status-label');
-          if (hasSavedApiKey) {
-            statusLabel.textContent = "\u767b\u9332\u6e08\u307f\uff08GAS\u306e\u30b9\u30af\u30ea\u30d7\u30c8\u30d7\u30ed\u30d1\u30c6\u30a3\u306b\u683c\u7d0d\u6e08\uff09";
-            statusLabel.style.color = "var(--accent)";
-          } else {
-            statusLabel.textContent = "\u672a\u767b\u9332\uff08GAS\u306e\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u8a2d\u5b9a\u3067 GEMINI_API_KEY \u3092\u767b\u9332\u3057\u3066\u304f\u3060\u3055\u3044\uff09";
-            statusLabel.style.color = "#ef4444";
-          }
-        })
+        .then(applySettings_)
         .catch(function(err) {
-          console.error("\u8a2d\u5b9a\u306e\u53d6\u5f97\u306b\u5931\u6557:", err);
+          console.error("設定の取得に失敗:", err);
         });
     }
 
@@ -2445,10 +2513,10 @@
        ・「← ひとつ前に戻る」「↑ はじめへ」を上の帯にいつも出す。移るときは滑らせて、着いた見出しを光らせる
        ========================================================= */
     var GUIDE_NAME = 'レシピの本棚利用ガイド';
-    var GUIDE_ASSET_VER = 'recipe-web-2026-11-19b';   // guide-img/figs.js を読み直す印（画面の版と同じ）
+    var GUIDE_ASSET_VER = 'recipe-web-2026-11-24a';   // guide-img/figs.js を読み直す印（画面の版と同じ）
     var GUIDE_READERS = { store: '店舗向け', hq: '本部向け', admin: '本部・管理者向け' };
     // 図解（写真でない図）。流れの箱の絵は、並びの順に1つずつ
-    var GUIDE_FLOWS = { 'flow-register': ['📤', '🤖', '🔍', '📁'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-full': ['🔍', '🔐', '🔢', '☑️', '🗂'] };
+    var GUIDE_FLOWS = { 'flow-daily': ['🔔', '📋', '📥', '✅'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-full': ['🔍', '🔐', '🔢', '☑️', '🗂'] };
     var _gSecs = [];        // 目次（本文の見出しから組み立てる）
     var _gForce = null;     // 目次で押した見出し（利用者が自分で送るまで優先）
     var _gAnim = null;
@@ -2899,7 +2967,10 @@
       modal.classList.add('active');
       if (!wasOpen) document.getElementById('settings-main').scrollTop = 0;
       loadSavedSettings();
+      if (historyState_.loaded) historyState_.stale = true;   // 2026-11-24a: 記録は見えたときに読み直す（開いただけでは読まない）
+      historyState_.gate = false;   // 確定待ちの表が描けるまでは、記録の節が上の方に見えていても読まない（開いた直後は確定待ちが空で、記録が見えてしまう）
       var ready = loadPendingList();
+      Promise.resolve(ready).then(function () { historyState_.gate = true; historyMaybeLoad_(); });   // 2026-11-24a: 確定待ちが描けたあと、記録の節が見えていれば読む（見えていなければ、送ったときに）
       if (opts.focus) rbFocus_('settings-main', opts.focus, ready);
       else rbSpy_(document.getElementById('settings-main'));
     }
@@ -2935,9 +3006,11 @@
     var GUIDE_GO = {
       lastcheck: { label: '🕒 ガルーンを最後に確かめた日を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'garoon-check' }); } },
       pending:   { label: '📥 データ管理の確定待ちを開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'pending-card' }); } },
+      history:   { label: '📜 更新の記録を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'history-card' }); } },
       confirm:   { label: '📥 確定待ちを開く（行の「確認して登録」で確認画面）', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'pending-card' }); } },
       manage:    { label: '⚙️ データ管理を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'garoon-check' }); } },
-      upload:    { label: '📤 PDF を落とす欄を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'upload-card' }); } },
+      fullcheck: { label: '🔍 全件の照合を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'garoon-full' }); } },
+      daily:     { label: '🔔 毎日の帯を見る（一覧のいちばん上）', hq: true, go: function () { mainTop_(); var n = document.getElementById('garoon-notice'); if (n && !n.hidden) rbFlash_(n); } },
       search:    { label: '🔍 探す欄へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); var s = document.getElementById('search-input'); if (s) { s.focus(); rbFlash_(s.closest('.search-wrapper') || s); } } },
       map:       { label: '📚 一覧の画面へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); rbFlash_(document.getElementById('recipe-table-wrap')); } },
       sort:      { label: '↕ 一覧の見出し（並べ替え）へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); rbFlash_(document.querySelector('#recipe-table thead')); } }
@@ -3033,41 +3106,6 @@
           rbShowIfHidden_('similar-main', 'sim-search-box');
         });
       })();
-      // PDF\u76f4\u63a5\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u306e\u30a4\u30d9\u30f3\u30c8\u30ea\u30b9\u30ca\u30fc
-      var dropzone = document.getElementById('pdf-upload-dropzone');
-      var fileInput = document.getElementById('pdf-upload-file-input');
-      
-      if (dropzone && fileInput) {
-        // \u900f\u660e\u306ainput\u8981\u7d20\u304c\u524d\u9762\u306b\u3042\u308a\u76f4\u63a5\u30af\u30ea\u30c3\u30af\u3055\u308c\u308b\u305f\u3081\u3001dropzone\u306e\u30d7\u30ed\u30b0\u30e9\u30e0\u30af\u30ea\u30c3\u30af\u306f\u5b8c\u5168\u306b\u524a\u9664\u3057\u307e\u3059
-        fileInput.addEventListener('dragover', function(e) {
-          e.preventDefault();
-          dropzone.style.borderColor = 'var(--accent)';
-          dropzone.style.background = 'rgba(16, 185, 129, 0.05)';
-        });
-        
-        fileInput.addEventListener('dragleave', function(e) {
-          e.preventDefault();
-          dropzone.style.borderColor = 'var(--border-color)';
-          dropzone.style.background = 'rgba(0, 0, 0, 0.2)';
-        });
-        
-        fileInput.addEventListener('drop', function(e) {
-          e.preventDefault();
-          dropzone.style.borderColor = 'var(--border-color)';
-          dropzone.style.background = 'rgba(0, 0, 0, 0.2)';
-          var files = e.dataTransfer.files;
-          if (files.length > 0) {
-            handlePdfUploads(files);
-          }
-        });
-        
-        fileInput.addEventListener('change', function(e) {
-          var files = e.target.files;
-          if (files.length > 0) {
-            handlePdfUploads(files);
-          }
-        });
-      }
       // \u4e26\u3073\u9806\u5207\u308a\u66ff\u3048\u30dc\u30bf\u30f3
       // 2026-11-19b: 並びは表の見出しで替える（同じ見出しをもう一度押すと逆向き）。選んだ並びはアカウントに保存（今までどおり）
       document.querySelector('#recipe-table thead').addEventListener('click', function(e) {
@@ -3133,38 +3171,7 @@
       // \u30a2\u30b3\u30fc\u30c7\u30a3\u30aa\u30f3\u306e\u30c8\u30b0\u30eb
       
 
-      // \u30c9\u30e9\u30a4\u30d6\u540c\u671f\u30dc\u30bf\u30f3
-      var syncBtn = document.getElementById('sync-btn');
-      var syncStatus = document.getElementById('sync-status');
-      syncBtn.addEventListener('click', function() {
-        var folderId = document.getElementById('drive-folder-id').value.trim();
-        if (!folderId) {
-          showToast('\u30d5\u30a9\u30eb\u30c0ID\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002', true);
-          return;
-        }
-        syncBtn.disabled = true;
-        syncStatus.textContent = '\u540c\u671f\u30b9\u30ad\u30e3\u30f3\u4e2d\uff08\u5927\u5bb9\u91cf\u30d5\u30a9\u30eb\u30c0\u306f1\u5206\u307b\u3069\u304b\u304b\u308a\u307e\u3059\uff09...';
-        
-        gsCall('syncDriveFileIds', folderId)
-          .then(function(res) {
-            syncBtn.disabled = false;
-            var msg = '\u540c\u671f\u5b8c\u4e86\uff01 \u65b0\u898f\u767b\u9332: ' + res.newParsedCount + ' \u4ef6 \uff0f \u30d5\u30a1\u30a4\u30ebID\u306e\u66f4\u65b0: ' + res.count +
-                      ' \u4ef6\uff08\u30d5\u30a9\u30eb\u30c0\u5185\u3067 ' + res.totalFound + ' \u4ef6\u306ePDF\u3092\u691c\u51fa\uff09';
-            if (res.failed && res.failed.length) {
-              msg += '\n\u8aad\u307f\u53d6\u308c\u306a\u304b\u3063\u305f\u30d5\u30a1\u30a4\u30eb ' + res.failed.length + ' \u4ef6: ' + res.failed.join(' / ');
-            }
-            syncStatus.textContent = msg;
-            showToast('Google\u30c9\u30e9\u30a4\u30d6\u306ePDF\u3068\u540c\u671f\u3057\u307e\u3057\u305f\u3002');
-            loadRecipes();
-          })
-          .catch(function(err) {
-            syncBtn.disabled = false;
-            syncStatus.textContent = '\u30a8\u30e9\u30fc: ' + (err && err.message || err);
-            showToast('\u540c\u671f\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002', true);
-          });
-      });
-
-      // \u30c9\u30e9\u30c3\u30b0\uff06\u30c9\u30ed\u30c3\u30d7JSON\u30a4\u30f3\u30dd\u30fc\u30c8
+      // JSON の取り込み（バックアップの戻し・管理者だけ。欄は canRestore のときだけ出る・窓口も毎回確かめる）
       var dropzone = document.getElementById('dropzone');
       var fileInput = document.getElementById('file-input');
       var importStatus = document.getElementById('import-status');
@@ -3261,7 +3268,16 @@
       document.getElementById('main-top-btn').addEventListener('click', mainTop_);
       document.getElementById('main-back-btn').addEventListener('click', mainBackOne_);
       // 本部の画面の上の知らせ（ガルーンを確かめていない）
-      document.getElementById('garoon-notice-manage').addEventListener('click', function () { rbOpenSettings_({ from: 'list', focus: 'garoon-check' }); });
+      document.getElementById('garoon-notice-manage').addEventListener('click', function () {
+        var daily = document.getElementById('garoon-notice').dataset.mode === 'daily';
+        rbOpenSettings_({ from: 'list', focus: daily ? 'pending-card' : 'garoon-check' });
+      });
+      // 2026-11-24a: ガルーンで取り込んで、このタブに戻ってきたら、帯を新しくする（管理者・30秒に1回まで・窓口1本）
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState !== 'visible' || !isAdmin || !appLoaded || Date.now() - settingsAt_ < 30000) return;
+        settingsAt_ = Date.now();
+        gsCall('getSavedSettings').then(applySettings_).catch(function () {});
+      });
       document.getElementById('garoon-notice-hide').addEventListener('click', function () {
         try { localStorage.setItem('recipe_garoon_notice_hidden', todayKey_()); } catch (e) {}
         document.getElementById('garoon-notice').hidden = true;
@@ -3938,28 +3954,12 @@
       renderPage(pageNum);
     }
 
-    // PDF\u30d5\u30a1\u30a4\u30eb\u3092\u975e\u540c\u671f\u3067\u8aad\u307f\u8fbc\u3093\u3067Base64\u306b\u5909\u63db\u3059\u308bPromise
-    function readFileAsBase64(file) {
-      return new Promise(function(resolve, reject) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var dataUrl = e.target.result;
-          var base64 = dataUrl.split(',')[1];
-          resolve(base64);
-        };
-        reader.onerror = function(err) {
-          reject(err);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
     /* =========================================================
-       PDF\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\uff083\u6bb5\u69cb\u3048\uff09
-         \u2460 \u89e3\u6790      \u2026 AI\u304cPDF\u3092\u8aad\u3080\u3002\u3053\u306e\u6642\u70b9\u3067\u306f\u307e\u3060\u767b\u9332\u3057\u306a\u3044
-         \u2461 \u985e\u4f3c\u7167\u5408  \u2026 \u4f3c\u305f\u540d\u524d\u306e\u65e2\u5b58\u30ec\u30b7\u30d4\u3092\u63a2\u3059
-         \u2462 \u4eba\u304c\u6c7a\u5b9a  \u2026 \u5dee\u3057\u66ff\u3048\u308b\u304b\u3001\u65b0\u3057\u304f\u767b\u9332\u3059\u308b\u304b\u3001\u3084\u3081\u308b\u304b
-       \u4f3c\u305f\u30ec\u30b7\u30d4\u304c1\u4ef6\u3082\u7121\u3044\u3068\u304d\u306f\u2461\u2462\u3092\u98db\u3070\u3057\u3066\u305d\u306e\u307e\u307e\u767b\u9332\u3059\u308b\uff08\u8ff7\u3044\u3088\u3046\u304c\u306a\u3044\u305f\u3081\uff09\u3002
+       確定待ちの「確認して登録」（入口はガルーンの取り込みだけ・2026-11-24a）
+         ① AI の読み（覚えた読みがあれば使う）と今の登録との違い … analyzePending
+         ② 確認画面で人が決める（PDF だけ差し替える・中身ごと差し替える・新しい1件・登録しない・決めずに戻る）
+         ③ 決めたとおりに確定 … commitRecipe（不要は discardPending）
+       似たレシピが無くても、確認画面は毎回出す（2026-09-07 PO）。
        ========================================================= */
 
     /** \u78ba\u8a8d\u30e2\u30fc\u30c0\u30eb\u306e\u5fdc\u7b54\u5f85\u3061\u3002\u4eba\u304c\u30dc\u30bf\u30f3\u3092\u62bc\u3059\u307e\u3067 resolve \u3055\u308c\u306a\u3044\u3002 */
@@ -4593,10 +4593,12 @@
     /** モーダル表示中の解析結果（編集された値とマージするために保持する）。 */
     var currentParsed_ = {};
 
-    /** アップロードの進捗を1行追記する（字は呼ぶ側で無害にしてある）。 */
-    function upLog_(statusEl, html, color) {
-      statusEl.insertAdjacentHTML('beforeend', '<div style="font-size: 0.78rem; padding-left: 0.3rem; margin-bottom: 0.25rem;' +
-        (color ? 'color:' + color + ';' : '') + '">' + html + '</div>');
+    /** 「確認して登録」の記録に1行足す（字として入れる＝ファイル名・AI が読んだ名前を HTML として扱わない）。 */
+    function upLog_(statusEl, text, color) {
+      var row = document.createElement('div');
+      row.textContent = text;
+      if (color) row.style.color = color;
+      statusEl.appendChild(row);
       // 記録は新しい 60 行まで（開いたまま何度も使っても、画面の要素が増え続けないように）
       while (statusEl.children.length > 60) statusEl.removeChild(statusEl.firstChild);
       statusEl.scrollTop = statusEl.scrollHeight;
@@ -4604,7 +4606,7 @@
 
     /**
      * 解析結果を受けて「差し替えるか・新しく登録するか・やめるか・保留するか」を決め、確定まで行う。
-     * 画面からのアップロードと、Garoon から届いた確定待ちの処理で共通に使う。
+     * 確定待ちの「確認して登録」（processPending_）から呼ぶ。
      * @return 'ok' | 'skip' | 'hold'
      */
     async function decideAndCommit_(analyzed, statusEl, progressText) {
@@ -4620,68 +4622,26 @@
       var decision = await showSimilarDialog_(analyzed, progressText);
 
       if (decision.action === 'hold') {
-        upLog_(statusEl, '－ 「' + escapeHtml_(analyzed.fileName) + '」は決めずに戻りました（確定待ちに残っています）。', 'var(--text-muted)');
+        upLog_(statusEl, '－ 「' + analyzed.fileName + '」は決めずに戻りました（確定待ちに残っています）。', 'var(--text-muted)');
         return 'hold';
       }
       if (decision.action === 'skip') {
         await gsCall('discardPending', analyzed.pendingId);
-        upLog_(statusEl, '－ 「' + escapeHtml_(analyzed.fileName) + '」は登録しませんでした。', 'var(--text-muted)');
+        upLog_(statusEl, '－ 「' + analyzed.fileName + '」は登録しませんでした。', 'var(--text-muted)');
         return 'skip';
       }
 
       var res = await gsCall('commitRecipe', analyzed.pendingId, decision.parsed, decision.mode, decision.targetCode);
       if (res.mode === 'pdfonly') {
-        upLog_(statusEl, '↻ PDF だけ差し替え: 「' + escapeHtml_(res.name) + '」(' + escapeHtml_(res.code) + ')（読み取った中身は今の登録のまま）', '#10b981');
+        upLog_(statusEl, '↻ PDF だけ差し替え: 「' + res.name + '」(' + res.code + ')（読み取った中身は今の登録のまま）', '#10b981');
       } else if (res.mode === 'replace') {
-        upLog_(statusEl, '✓ 差し替え完了: 「' + escapeHtml_(res.replacedName) + '」(' + escapeHtml_(res.replacedCode) +
-          ') → 「' + escapeHtml_(res.name) + '」(' + escapeHtml_(res.code) + ')', '#10b981');
+        upLog_(statusEl, '✓ 差し替え完了: 「' + res.replacedName + '」(' + res.replacedCode +
+          ') → 「' + res.name + '」(' + res.code + ')', '#10b981');
       } else {
-        upLog_(statusEl, '✓ 新規登録: ' + escapeHtml_(res.code) + ' ' + escapeHtml_(res.name) +
-          '（' + escapeHtml_(res.category) + '）', '#10b981');
+        upLog_(statusEl, '✓ 新規登録: ' + res.code + ' ' + res.name +
+          '（' + res.category + '）', '#10b981');
       }
       return 'ok';
-    }
-
-    async function handlePdfUploads(files) {
-      var statusEl = document.getElementById('pdf-upload-status');
-      if (!statusEl) return;
-
-      statusEl.style.display = 'block';
-      statusEl.innerHTML = '<div style="font-weight: bold; margin-bottom: 0.4rem; color: var(--text-primary);">読み込みを開始します…</div>';
-
-      var okCount = 0, skipCount = 0, ngCount = 0, holdCount = 0;
-
-      for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        var progress = '[' + (i + 1) + '/' + files.length + ']';
-
-        if (!file.name.toLowerCase().endsWith('.pdf')) {
-          upLog_(statusEl, '✗ 「' + escapeHtml_(file.name) + '」はPDFではありません。とばします。', '#ef4444');
-          ngCount++;
-          continue;
-        }
-
-        upLog_(statusEl, progress + ' 「' + escapeHtml_(file.name) + '」をAIが読み取り中…', 'var(--accent)');
-
-        try {
-          var base64 = await readFileAsBase64(file);
-          var analyzed = await gsCall('analyzeRecipePdf', file.name, base64);
-          analyzed.pdf = base64;   // 届いた PDF は手元にある＝確認画面で窓口へもう1往復しない
-          var result = await decideAndCommit_(analyzed, statusEl, progress + ' ' + file.name);
-          if (result === 'ok') okCount++; else if (result === 'hold') holdCount++; else skipCount++;
-        } catch (e) {
-          upLog_(statusEl, '✗ 「' + escapeHtml_(file.name) + '」の処理に失敗: ' +
-            escapeHtml_(String(e && e.message || e)), '#ef4444');
-          ngCount++;
-        }
-      }
-
-      statusEl.innerHTML += '<div style="font-weight: bold; margin-top: 0.6rem; color: var(--text-primary); border-top: 1px solid var(--border-color); padding-top: 0.4rem;">' +
-        '処理完了　登録: ' + okCount + '件 ／ 見送り: ' + skipCount + '件' + (holdCount ? ' ／ 保留: ' + holdCount + '件' : '') + ' ／ 失敗: ' + ngCount + '件</div>';
-      statusEl.scrollTop = statusEl.scrollHeight;
-
-      if (okCount > 0) loadRecipes();
-      loadPendingList();
     }
 
     /* ── 確定待ち（2026-11-18a: 表にした・仕分け〈今の登録と比べた結果〉を出す・中身も変わった物は ⚠ で上に集める）──
@@ -4751,6 +4711,8 @@
       bulkEl_('pending-count').textContent = list.length + ' 件';
       var sideCount = document.getElementById('side-pending-count');
       if (sideCount) sideCount.textContent = list.length ? String(list.length) : '';
+      // 2026-11-24a: 管理者の毎日の帯の「確定待ち ◯件」も、読み直した数に合わせる（まとめて実行のあと 0件に・窓口は呼ばない）
+      if (dailyNow_) { dailyNow_.pending = list.length; renderDaily_(dailyNow_); }
       card.style.display = 'block';
       listEl.textContent = '';
       var names = recipeNameByCode_();
@@ -4976,9 +4938,12 @@
       statusEl.textContent = (bulkStop_ ? '止めました（もう一度押すと続きから）' : '終わりました') + ': 中身ごと ' + replaced + '件 ／ PDF だけ ' + swapped + '件 ／ 新規 ' + added + '件' +
         (dropped ? ' ／ 不要 ' + dropped + '件' : '') + (already ? ' ／ 済み ' + already + '件' : '') +
         (review ? ' ／ ⚠ 中身も変わった ' + review + '件は差し替えていません（窓口が前の版）' : '') +
-        (left ? ' ／ 確定待ちに残り ' + left + '件' : '') + (starred ? ' ／ ★ 名前・売価・原価が変わった ' + starred + '件（結果の上）' : '') + (flagged ? ' ／ ⚠ 見直し ' + flagged + '件' : '') +
+        (left ? ' ／ 確定待ちに残り ' + left + '件' : '') +
+        // 2026-11-24a（PO「ほしのけっかというのがどこにでているのかわからない」）: ★ は 0件のときも 0件と書く。★ の行は結果のいちばん上・「更新の記録」にも残る
+        ' ／ ★ 名前・売価・原価が変わった ' + starred + '件' + (starred ? '（結果のいちばん上）' : '') + (flagged ? ' ／ ⚠ 見直し ' + flagged + '件' : '') +
         (heldWarn ? ' ／ ⚠ 中身も変わった ' + heldWarn + '件は保留のまま' : '');
-      if (added || swapped || replaced) await loadRecipes();
+      bulkEl_('bulk-history').hidden = !(canRestoreNow_ && (added || swapped || replaced));
+      if (added || swapped || replaced) { await loadRecipes(); historyState_.stale = true; }
       loadPendingList();
     }
 
@@ -4991,11 +4956,163 @@
       bulkEl_('bulk-all-add').addEventListener('click', function () { setAll('default'); });
       bulkEl_('bulk-all-hold').addEventListener('click', function () { setAll('hold'); });
       bulkEl_('bulk-go').addEventListener('click', bulkRun_);
+      // 2026-11-24a: 終わったら「更新の記録で見る ▸」＝同じ画面の記録の節へ滑らせて、読み直す（★ と前と後は記録に残っている）
+      bulkEl_('bulk-history').addEventListener('click', function () {
+        historyState_.stale = true;
+        rbFocus_('settings-main', 'history-card');
+        loadHistory_();
+      });
       bulkEl_('bulk-stop').addEventListener('click', function () {
         bulkStop_ = true;
         bulkEl_('bulk-status').textContent = 'いまの1件が終わったら止まります…';
       });
     })();
+
+    /* ── 更新の記録と「この差し替えを戻す」（2026-11-24a・管理者だけ）──
+       PO（11/24）「どんな違いが更新されたかは後からもわかりますか？前の版へ戻すこともできるのですか？」
+       記録は窓口の getRecipeHistory（管理者だけ）。データ管理の「📜 更新の記録」が見えたときに初めて読む（開いただけでは読まない＝まとめて実行の邪魔をしない）。
+       戻すのは窓口の revertRecipeChange（管理者だけ・戻せるかは窓口が記録を読み直して決める・2回押しても1回）。字はすべて textContent。 */
+    var historyState_ = { loaded: false, loading: false, stale: false };
+    var HIST_WD_ = '日月火水木金土';
+    function historyDay_(at) {
+      var m = String(at || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (!m) return '日付なし';
+      return (+m[2]) + '月' + (+m[3]) + '日（' + HIST_WD_[new Date(+m[1], +m[2] - 1, +m[3]).getDay()] + '）';
+    }
+    function historyTime_(at) { var m = String(at || '').match(/ (\d{2}):(\d{2})/); return m ? (+m[1]) + ':' + m[2] : ''; }
+    /** 前と後の値の見せ方（名前・区分はそのまま・値段は円・値入率は％・無ければ「―」） */
+    function histVal_(label, v) {
+      if (v === '' || v == null) return '―';
+      if (label === '商品名' || label === '区分') return String(v);
+      var n = Number(v);
+      if (!isFinite(n)) return String(v);
+      return label === '値入率' ? n + '%' : n.toLocaleString('ja-JP') + '円';
+    }
+    function loadHistory_() {
+      if (historyState_.loading || !canRestoreNow_) return;
+      historyState_.loading = true;
+      var meta = document.getElementById('history-meta');
+      meta.textContent = '⏳ 読み込んでいます…';
+      gsCall('getRecipeHistory').then(function (r) {
+        historyState_.loaded = true; historyState_.stale = false;
+        renderHistory_(r || { rows: [] });
+      }).catch(function (e) { meta.textContent = '読めませんでした: ' + String(e && e.message || e); })
+        .then(function () { historyState_.loading = false; });
+    }
+    function renderHistory_(r) {
+      var box = document.getElementById('history-list'), meta = document.getElementById('history-meta');
+      var rows = Array.isArray(r.rows) ? r.rows : [];
+      meta.textContent = rows.length + ' 件' + (r.truncated ? '（新しい ' + rows.length + ' 件だけ）' : '');
+      box.textContent = '';
+      if (!rows.length) { var none = el_('div', '', 'まだ記録がありません。'); none.style.cssText = 'font-size:.82rem;color:var(--text-muted);padding:.4rem .2rem;'; box.appendChild(none); rbSpy_(document.getElementById('settings-main')); return; }
+      var wrap = el_('div', 'ptable-wrap'), table = el_('table', 'ptable htable'), thead = el_('thead'), hr = el_('tr');
+      ['時刻', '何をした', '商品（番号・名前）', '変わった所（★ 前 → 後）', 'だれ', '戻す'].forEach(function (t) { hr.appendChild(el_('th', '', t)); });
+      thead.appendChild(hr); table.appendChild(thead);
+      var tbody = el_('tbody'), lastDay = null;
+      // 日ごとに、前と後の値が記録に無い行（11-24a より前の差し替え）の数を数えて、その日の行に注記を1つ
+      var noVal = {}, dayN = {};
+      rows.forEach(function (x) { var d = historyDay_(x.at); dayN[d] = (dayN[d] || 0) + 1; if (x.noValues) noVal[d] = (noVal[d] || 0) + 1; });
+      rows.forEach(function (x) {
+        var day = historyDay_(x.at);
+        if (day !== lastDay) {
+          var dr = el_('tr', 'hday'), dc = el_('td', '', day); dc.colSpan = 6;
+          if (noVal[day]) dc.appendChild(el_('span', 'hnote', noVal[day] === dayN[day] ? '　この日の記録には前と後の値がありません（11-24a から残します）'
+            : '　この日の記録のうち ' + noVal[day] + '件には前と後の値がありません（11-24a から残します）'));
+          dr.appendChild(dc); tbody.appendChild(dr); lastDay = day;
+        }
+        var tr = el_('tr');
+        tr.appendChild(el_('td', '', historyTime_(x.at)));
+        var ta = el_('td', '', String(x.action || ''));
+        if (x.oldCode) ta.appendChild(el_('div', 'psub', '番号 ' + x.oldCode + ' → ' + x.code));
+        tr.appendChild(ta);
+        var tn = el_('td'); tn.appendChild(el_('div', 'pname', String(x.code || '') + ' ' + String(x.name || ''))); tr.appendChild(tn);
+        var tc = el_('td');
+        (x.stars || []).forEach(function (st) { tc.appendChild(el_('div', 'hstar', '★ ' + st.label + ': ' + histVal_(st.label, st.b) + ' → ' + histVal_(st.label, st.a))); });
+        if (x.others && x.others.length) tc.appendChild(el_('div', 'psub', (x.stars && x.stars.length ? 'ほかに: ' : '') + x.others.join('・')));
+        if (x.noValues && (x.stars || []).length) tc.appendChild(el_('div', 'hdash', '売価・原価: ―（記録なし）'));
+        if (!x.known) tc.appendChild(el_('span', 'hdash', '―'));
+        else if (!(x.stars || []).length && !(x.others || []).length) tc.appendChild(el_('span', 'hdash', '―'));
+        tr.appendChild(tc);
+        var by = String(x.by || ''); var tb = el_('td', '', by.indexOf('@') > 0 ? by.slice(0, by.indexOf('@')) : by); tb.title = by; tr.appendChild(tb);
+        var tv = el_('td');
+        if (x.revert && x.revert.ok && x.cmp) {
+          var b = el_('button', 'pgo', '↩ この差し替えを戻す'); b.type = 'button';
+          b.addEventListener('click', function () { openRevert_(x); });
+          tv.appendChild(b);
+        } else if (x.revert && x.revert.already) { tv.appendChild(el_('span', 'hdone', '↩ ' + x.revert.why)); }
+        else if (x.revert) { tv.appendChild(el_('span', 'psub', x.revert.why)); }
+        tr.appendChild(tv);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody); wrap.appendChild(table); box.appendChild(wrap);
+      rbSpy_(document.getElementById('settings-main'));
+    }
+    var revertTarget_ = null, revertBusy_ = false;
+    /** 確認の小窓: いまと戻したあとを並べる（違う行は色の面と ★）。押した釦のそばで待たせず、小窓の中に進み具合を出す */
+    function openRevert_(x) {
+      revertTarget_ = x;
+      var c = x.cmp || {}, now = c.now || {}, back = c.back || {};
+      document.getElementById('revert-sub').textContent = String(x.code || '') + ' ' + String(x.name || '') + '（' + historyDay_(x.at) + ' ' + historyTime_(x.at) + ' の' + x.action + 'を戻します）';
+      var tb = document.getElementById('revert-rows'); tb.textContent = '';
+      [['商品名', 'name'], ['区分', 'cat'], ['売価', 'sell'], ['原価', 'cost'], ['値入率', 'margin']].forEach(function (f) {
+        var a = histVal_(f[0], now[f[1]]), z = histVal_(f[0], back[f[1]]), diff = a !== z;
+        var tr = el_('tr', diff ? 'rv-diff' : ''); tr.appendChild(el_('th', '', (diff ? '★ ' : '') + f[0])); tr.appendChild(el_('td', '', a)); tr.appendChild(el_('td', '', z)); tb.appendChild(tr);
+      });
+      var nt = document.getElementById('revert-note'); nt.textContent = '';
+      var others = (c.others || []).filter(function (o) { return o !== 'PDF'; });
+      if ((c.others || []).indexOf('PDF') >= 0) nt.appendChild(el_('li', '', 'PDF も前の版に戻ります（いまの PDF は「_差し替え前」フォルダへ・消えません）。'));
+      if (others.length) nt.appendChild(el_('li', '', 'ほかに前の値に戻る所: ' + others.join('・')));
+      nt.appendChild(el_('li', '', 'ガルーンで次に更新されるまで、戻した形のままです。戻したことも記録に1行残ります。'));
+      document.getElementById('revert-msg').textContent = '';
+      var go = document.getElementById('revert-go'); go.disabled = false; go.textContent = '前に戻す';
+      document.getElementById('revert-modal').classList.add('active');
+      go.focus();
+    }
+    function closeRevert_() { if (revertBusy_) return; document.getElementById('revert-modal').classList.remove('active'); revertTarget_ = null; }
+    (function () {
+      var go = document.getElementById('revert-go');
+      document.getElementById('revert-cancel').addEventListener('click', closeRevert_);
+      document.getElementById('revert-modal').addEventListener('click', function (e) { if (e.target === this) closeRevert_(); });
+      document.getElementById('revert-modal').addEventListener('keydown', function (e) { if (e.key === 'Escape') closeRevert_(); });
+      go.addEventListener('click', function () {
+        var x = revertTarget_;
+        if (!x || revertBusy_) return;
+        revertBusy_ = true; go.disabled = true; go.textContent = '⏳ 戻しています…';
+        gsCall('revertRecipeChange', x.id).then(function (res) {
+          revertBusy_ = false;
+          if (res && res.success) {
+            closeRevert_();
+            showToast('「' + String(res.name || x.name || '') + '」を前に戻しました（記録に1行残りました）。');
+            loadRecipes(); loadHistory_();   // 一覧と記録を同時に読み直す
+            return;
+          }
+          document.getElementById('revert-msg').textContent = (res && res.reason) || '戻せませんでした。';
+          go.textContent = '前に戻す';
+          if (res && res.already) loadHistory_();
+        }).catch(function (e) {
+          revertBusy_ = false; go.disabled = false; go.textContent = '前に戻す';
+          document.getElementById('revert-msg').textContent = '戻せませんでした: ' + String(e && e.message || e);
+        });
+      });
+      document.getElementById('history-reload').addEventListener('click', loadHistory_);
+      // 見えたときに初めて読む（データ管理を開いただけでは読まない）。開き直したあと・まとめて実行のあとは、見えたときに読み直す。
+      // 小窓は閉じても透明なだけ（display は残る）なので、IntersectionObserver では「閉じた小窓の中で見えている」と数えてしまう
+      // （開く前に読み込みが走った・11-24a の測りで見つけた）→ 本文を送ったとき・開いたときに、小窓が開いているかも見て決める
+      var main = document.getElementById('settings-main'), queued = false;
+      if (main) main.addEventListener('scroll', function () {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(function () { queued = false; historyMaybeLoad_(); });
+      }, { passive: true });
+    })();
+    /** 更新の記録の節が、開いているデータ管理の本文に見えていて（下に 200px の余裕）、まだ読んでいないか古ければ読む */
+    function historyMaybeLoad_() {
+      var modal = document.getElementById('settings-modal'), card = document.getElementById('history-card'), main = document.getElementById('settings-main');
+      if (!modal || !modal.classList.contains('active') || !historyState_.gate || !card || card.hidden || !main) return;
+      if (historyState_.loading || (historyState_.loaded && !historyState_.stale)) return;
+      var m = main.getBoundingClientRect(), c = card.getBoundingClientRect();
+      if (c.top < m.bottom + 200 && c.bottom > m.top) loadHistory_();
+    }
 
     var pendingBusy_ = false;
     /** 「確認して登録」: 押したボタンのそばに「読み込み中…」を出し（固まって見せない）、確認画面を開く。二重には開かない */
@@ -5004,9 +5121,9 @@
       pendingBusy_ = true;
       var label = btn ? btn.textContent : '';
       if (btn) { btn.disabled = true; btn.textContent = '⏳ 読み込み中…'; }
-      var statusEl = document.getElementById('pdf-upload-status');
-      statusEl.style.display = 'block';
-      upLog_(statusEl, '「' + escapeHtml_(fileName) + '」を読んでいます…（今の登録と比べます）', 'var(--accent)');
+      var statusEl = document.getElementById('pending-log');
+      statusEl.hidden = false;
+      upLog_(statusEl, '「' + fileName + '」を読んでいます…（今の登録と比べます）', 'var(--accent)');
       var slow = setTimeout(function () { if (btn) btn.textContent = '⏳ AI が読んでいます…（10〜20秒）'; }, 4000);
       try {
         var analyzed = await gsCall('analyzePending', pendingId);
@@ -5015,8 +5132,7 @@
         var result = await decideAndCommit_(analyzed, statusEl, fileName);
         if (result === 'ok') loadRecipes();
       } catch (e) {
-        upLog_(statusEl, '✗ 「' + escapeHtml_(fileName) + '」の処理に失敗: ' +
-          escapeHtml_(String(e && e.message || e)), '#ef4444');
+        upLog_(statusEl, '✗ 「' + fileName + '」の処理に失敗: ' + String(e && e.message || e), '#ef4444');
         showToast('読み込めませんでした: ' + String(e && e.message || e), true);
       } finally {
         clearTimeout(slow);
