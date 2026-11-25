@@ -1150,6 +1150,17 @@
   .mcount b{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums;color:var(--text-primary);}
   .mcount span{font-size:.75rem;color:var(--text-secondary);line-height:1.45;display:block;}
   .mcount.m-add b{color:#1d4ed8;} .mcount.m-res b{color:#b45309;} .mcount.m-rem b{color:#b42318;} .mcount.m-same b{color:#0f766e;}
+  /* 2026-11-26a ガルーンと同じにする: 結論（違い 0 か）を数の上に1行。色だけにしない（字で「違い ◯件」「✓ ガルーンと同じ」） */
+  .mres{display:inline-flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-radius:10px;padding:8px 12px;margin:6px 0 8px;max-width:100%;border:1px solid;}  /* 字の幅（横に伸ばさない） */
+  .mres b{font-size:1.15rem;font-variant-numeric:tabular-nums;}
+  .mres span{font-size:.8rem;color:var(--text-secondary);}
+  .mres.m-ok{background:#ecfdf5;border-color:#6ee7b7;} .mres.m-ok b{color:#0f766e;}
+  .mres.m-diff{background:#fff7ed;border-color:#fdba74;} .mres.m-diff b{color:#9a3412;}
+  .mlast{font-weight:700;color:var(--text-primary);}
+  .mnext{font-size:.82rem;font-weight:700;color:#9a3412;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:6px 10px;max-width:62em;margin:4px 0 6px;line-height:1.6;}
+  .mwarn{font-size:.82rem;color:#7f1d1d;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:6px 10px;max-width:62em;margin:4px 0 6px;line-height:1.65;}  /* 2026-11-26a 同じ番号のファイル（⚑ の印と同じ色） */
+  .mwarn b{color:#b42318;}
+  .mleft{font-size:.78rem;color:var(--text-secondary);line-height:1.6;max-width:62em;margin:2px 0 8px;padding-left:1.2em;}
   .mlist{max-width:62em;margin:4px 0 10px;}
   .mlist summary{cursor:pointer;font-size:.82rem;font-weight:700;color:var(--text-secondary);padding:4px 0;}
   .mnote{font-size:.8rem;color:var(--text-secondary);line-height:1.65;max-width:62em;margin:4px 0 8px;}
@@ -1401,7 +1412,7 @@
           <span id="recipe-count-badge">読込中...</span>
         </div>
         <!-- 画面と窓口（GAS）の版（連絡するときに添える字）。窓口の版は、ログインしたあとの返事で分かる -->
-        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-25a ／ 窓口 <span id="api-build">（確認中）</span></div>
+        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-26a ／ 窓口 <span id="api-build">（確認中）</span></div>
       </aside>
 
       <div class="lmain">
@@ -1475,7 +1486,7 @@
           <a href="#garoon-check" data-sec="garoon-check">🕒 ガルーンを確かめた日</a>
           <a href="#garoon-full" data-sec="garoon-full">🔍 全件の照合</a>
           <a href="#pending-card" data-sec="pending-card">📥 確定待ち <span class="rb-count" id="side-pending-count"></span></a>
-          <a href="#mirror-card" data-sec="mirror-card" id="side-mirror-link" hidden>🪞 ガルーンとそろえる（管理者） <span class="rb-count" id="side-mirror-count"></span></a>
+          <a href="#mirror-card" data-sec="mirror-card" id="side-mirror-link" hidden>🪞 ガルーンと同じにする（管理者） <span class="rb-count" id="side-mirror-count"></span></a>
           <a href="#history-card" data-sec="history-card" id="side-history-link" hidden>📜 更新の記録（管理者）</a>
           <a href="#import-card" data-sec="import-card" id="side-import-link" hidden>🗄 JSON の戻し（管理者）</a>
         </nav>
@@ -1530,15 +1541,16 @@
           <div id="pending-list"></div>
         </section>
 
-        <!-- 2026-11-25a ガルーンとそろえる（管理者だけ・窓口も毎回確かめる）: ① 毎日のそろえ（消えた物の確かめ待ち・外した物と戻す口）② 一度だけのミラーリング（数を先に → 確かめて実行）。
+        <!-- 2026-11-25a〜 管理者だけの節（窓口も毎回確かめる）: ① ガルーンと同じにする（2026-11-26a・数を先に → 押すのは1つ・選ばせない）② 毎日のそろえ（消えた物の確かめ待ち・外した物と戻す口）。
              字はすべて textContent。ガルーンのファイルの番号は「実行」で選んだ物を確かめるためだけに持つ（画面には出さない） -->
         <section class="rb-sec" id="mirror-card" hidden>
-          <div class="rb-h">🪞 ガルーンとそろえる（管理者だけ） <small>本棚の並びは、毎日の取り込みでガルーンの並びにそろいます</small></div>
+          <!-- 2026-11-26a「ガルーンと同じにする」（PO 11/25「とにかく一度ガルーンの中と、本棚の中を100％一致させたい」）。選ばせない・押すのは1つ・窓口が毎回管理者かを確かめる・答えは窓口が出し直す -->
+          <div class="rb-h">🪞 ガルーンと同じにする（管理者だけ） <small id="mirror-meta"></small> <button type="button" class="rb-btn" id="mirror-reload">数を読み直す</button></div>
+          <p class="mnote">ガルーンの並び（いちばん新しい突き合わせ）と本棚を、<b>1件ずつ同じにします。選ぶ所はありません。</b>結ぶのは、<b>同じファイル</b>か、<b>番号（ファイル名の4桁）も中身（指紋）も同じ前からの1件</b>だけ。結べない本棚の1件は「_削除済み」へ（消さない・更新の記録から戻せる）、本棚に無いガルーンのファイルは登録、中身が違う物は取り直します。終わったら自動で数え直します。</p>
+          <div id="mirror-box"><span class="mnote">見えたときに読み込みます</span></div>
+          <div class="rb-h" style="margin-top:14px;">🧹 毎日のそろえ <small>毎日の取り込みで、ガルーンで消したファイルの1件を本棚から外します</small></div>
           <p class="mnote">1件＝ガルーンのファイル1つ。<b>同じファイルが更新されたら、その1件を差し替えます</b>（積み上がりません）。<b>ガルーンからファイルが消えたら、本棚からも外します</b>（「_削除済み」へ移すだけ・更新の記録から戻せます）。一度に <b id="sync-max">5</b> 件以上消えたとき・一覧を最後まで読めなかった日は、自動では外さず、下で確かめてから外します。</p>
           <div id="sync-box"></div>
-          <div class="rb-h" style="margin-top:14px;">🔍 ガルーンと本棚を突き合わせる（ミラーリング・1回） <small id="mirror-meta"></small> <button type="button" class="rb-btn" id="mirror-reload">数を読み直す</button></div>
-          <p class="mnote">ガルーンで「📋 レシピ取り込み」を押し、小窓のいちばん下の「🪞 ガルーンと本棚を突き合わせる」を押すと、全部の PDF の指紋を集めます（PDF は送りません）。そのあと、ここで <b>数を見て、確かめてから「実行」</b>を押します。①②は次の「📋 レシピ取り込み」で送られ、確定待ちの「まとめて実行」で入ります（AI が1件10〜20秒で読みます）。</p>
-          <div id="mirror-box"><span class="mnote">見えたときに読み込みます</span></div>
         </section>
 
         <!-- 更新の記録（2026-11-24a・管理者だけ＝窓口の getSavedSettings の canRestore が true のときだけ hidden を外す・窓口も getRecipeHistory のたびに管理者かを確かめる）。
@@ -1857,7 +1869,7 @@
 
   <!-- 探す欄の共通の部品（全部の資料・システムの標準。字の直し方だけで、データは無い。写しの元は weather_pos_analysis/tools/report_base/search_norm.js）。
        🔴 下のアプリの本体より先に読む（後ろに置くと、本体が SearchNorm を見つけられず、ゆれを吸収しない探し方に静かに落ちる） -->
-  <script src="search-norm.js?v=recipe-web-2026-11-25a"></script>
+  <script src="search-norm.js?v=recipe-web-2026-11-26a"></script>
 
   <!-- =========================================================
        5. クライアントサイド アプリケーション・ロジック (JavaScript)
@@ -2520,7 +2532,7 @@
       var t = document.createElement('span'); t.className = 'gchk-t';
       // 2026-11-25a: 全件の照合は「🪞 ガルーンと本棚を突き合わせる（ミラーリング）」に替わった（新しいお気に入りの小窓のいちばん下・数と実行は下の「ガルーンとそろえる」）
       t.textContent = (state === 'done' ? '同じ ' + num(f.same) + '件。' : '') +
-        '11月25日の版から、全件の照合は「🪞 ガルーンと本棚を突き合わせる」に替わりました（ガルーンで「📋 レシピ取り込み」の小窓のいちばん下・数と実行はこの画面の「ガルーンとそろえる」で）。';
+        '11月25日の版から、全件の照合は「🪞 ガルーンと本棚を突き合わせる」に替わりました（ガルーンで「📋 レシピ取り込み」の小窓のいちばん下・数と実行はこの画面の「🪞 ガルーンと同じにする」で）。';
       box.appendChild(d); box.appendChild(t);
     }
 
@@ -2675,10 +2687,10 @@
        ・「← ひとつ前に戻る」「↑ はじめへ」を上の帯にいつも出す。移るときは滑らせて、着いた見出しを光らせる
        ========================================================= */
     var GUIDE_NAME = 'レシピの本棚利用ガイド';
-    var GUIDE_ASSET_VER = 'recipe-web-2026-11-25a';   // guide-img/figs.js を読み直す印（画面の版と同じ）
+    var GUIDE_ASSET_VER = 'recipe-web-2026-11-26a';   // guide-img/figs.js を読み直す印（画面の版と同じ）
     var GUIDE_READERS = { store: '店舗向け', hq: '本部向け', admin: '本部・管理者向け' };
     // 図解（写真でない図）。流れの箱の絵は、並びの順に1つずつ
-    var GUIDE_FLOWS = { 'flow-daily': ['🔔', '📋', '📥', '✅'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-mirror': ['🪞', '🔐', '🔢', '☑️', '🗂'], 'flow-sync': ['📋', '⇄', '📤', '✋', '↩'], 'flow-alerts': ['📄', '⚑', '◇', '🕰', '🛠'], 'flow-old': ['🔖', '▸', '✅'] };
+    var GUIDE_FLOWS = { 'flow-daily': ['🔔', '📋', '📥', '✅'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-mirror': ['🔐', '🔢', '🪞', '📋', '✅'], 'flow-sync': ['📋', '⇄', '📤', '✋', '↩'], 'flow-alerts': ['📄', '⚑', '◇', '🕰', '🛠'], 'flow-old': ['🔖', '▸', '✅'] };
     var _gSecs = [];        // 目次（本文の見出しから組み立てる）
     var _gForce = null;     // 目次で押した見出し（利用者が自分で送るまで優先）
     var _gAnim = null;
@@ -3177,7 +3189,7 @@
       history:   { label: '📜 更新の記録を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'history-card' }); } },
       confirm:   { label: '📥 確定待ちを開く（行の「確認して登録」で確認画面）', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'pending-card' }); } },
       manage:    { label: '⚙️ データ管理を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'garoon-check' }); } },
-      mirror:    { label: '🪞 ガルーンとそろえるを開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'mirror-card' }); } },
+      mirror:    { label: '🪞 ガルーンと同じにするを開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'mirror-card' }); } },
       daily:     { label: '🔔 毎日の帯を見る（一覧のいちばん上）', hq: true, go: function () { mainTop_(); var n = document.getElementById('garoon-notice'); if (n && !n.hidden) rbFlash_(n); } },
       search:    { label: '🔍 探す欄へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); var s = document.getElementById('search-input'); if (s) { s.focus(); rbFlash_(s.closest('.search-wrapper') || s); } } },
       map:       { label: '📚 一覧の画面へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); rbFlash_(document.getElementById('recipe-table-wrap')); } },
@@ -5421,7 +5433,7 @@
     /* ── 2026-11-25a ガルーンとそろえる（管理者だけ）──
        ① 毎日のそろえ: ガルーンから消えて確かめ待ちの1件（一覧の知らせ gone から）→「外す」「残す」（decideSyncRemoval・窓口が毎回管理者かを確かめる）
           ガルーンで片付けると直る物（一覧の知らせ dup・size・old から・すること つき）・きのう／今日 外した物（窓口の daily.sync）
-       ② 一度だけのミラーリング: getMirrorPlan（数と一覧）→ 選んで「この内容で実行」→ runMirror を残りが 0 になるまで（続きから・2回押しても1回分）
+       ② ガルーンと同じにする（2026-11-26a）: getMirrorPlan（数と一覧・見るだけ）→「ガルーンと同じにする」→ mirrorApply を残りが 0 になるまで（選ばせない・続きから・2回押しても1回分）
        字はすべて textContent。ガルーンのファイルの番号は、実行で選んだ物を窓口へ返すためだけに持つ（画面に出さない） */
     function syncEl_(tag, cls, text) { return el_(tag, cls, text); }
     function renderSyncBox_() {
@@ -5432,8 +5444,9 @@
       (allRecipes || []).forEach(function (r) {
         (r.Alerts || []).forEach(function (a) { if (a.t === 'gone') gone.push(r); else if (a.count) fix.push({ r: r, a: a }); });
       });
+      // 2026-11-26a: 目次の数は「ガルーンと同じにする」の違いの件数（数を読んだあと）。読む前だけ、確かめ待ちの数
       var side = document.getElementById('side-mirror-count');
-      if (side) side.textContent = (gone.length + fix.length) ? String(gone.length + fix.length) : '';
+      if (side && !(mirrorState_.plan && mirrorState_.plan.counts)) side.textContent = gone.length ? String(gone.length) : '';
       // 確かめ待ち
       var h1 = syncEl_('div', 'rb-h', '⚠ ガルーンから消えた物（確かめ待ち ' + gone.length + '件）');
       box.appendChild(h1);
@@ -5504,8 +5517,14 @@
       }
     }
 
-    var mirrorState_ = { loaded: false, loading: false, plan: null, running: false };
-    var MIRROR_HOW_ = { over: '別のファイルの中身で上書きされている', stale: '古い版のまま', name: '名前で結んだ・中身が違う', noread: '本棚の PDF を読めない' };
+    /* ── 2026-11-26a 🪞 ガルーンと同じにする（管理者だけ・選ばせない・押すのは1つ）──
+       PO 11/25「とにかく一度ガルーンの中と、本棚の中を100％一致させたい」「いちいち確認をこちらにさせるのではなく」
+       数（getMirrorPlan）→「ガルーンと同じにする」→ 窓口の mirrorApply を残りが 0 になるまで（外す・結ぶ・番号を直す・送る待ち）
+       → 確定待ちにガルーンの版があれば、まとめて実行（bulkRun_・AI が1件10〜20秒）→ 自動で数え直す（違い 0 か・残った物は1件ずつ訳を1行）。
+       ガルーンの PDF は、ガルーンの中のお気に入りでしか受け取れない（鍵を外に置かない）＝足す・取り直すの PDF がまだなら、その1手を訳に出す。
+       字はすべて textContent。fid・指紋・ドライブの番号は窓口が返さない */
+    var mirrorState_ = { loaded: false, loading: false, plan: null, running: false, result: null };
+    var MIRROR_HOW_ = { stale: 'ガルーンの版と中身が違う', noread: '本棚の PDF の指紋が分からない（取り直して確かめる）' };
     function mirrorMaybeLoad_() {
       var modal = document.getElementById('settings-modal'), card = document.getElementById('mirror-card'), main = document.getElementById('settings-main');
       // 確定待ちの表が描けるまでは読まない（開いた直後は確定待ちが空で、この節が上に見えてしまう＝確定待ちと同時に窓口を呼ばない）
@@ -5514,90 +5533,173 @@
       if (c.top < m.bottom + 200 && c.bottom > m.top) loadMirror_();
     }
     function loadMirror_() {
-      if (mirrorState_.loading || !canRestoreNow_) return;
+      if (mirrorState_.loading || !canRestoreNow_) return Promise.resolve(null);
       mirrorState_.loading = true;
       document.getElementById('mirror-meta').textContent = '⏳ 読み込んでいます…';
-      gsCall('getMirrorPlan').then(function (p) { mirrorState_.loaded = true; mirrorState_.plan = p; renderMirror_(p); })
-        .catch(function (e) { document.getElementById('mirror-meta').textContent = '読めませんでした: ' + String(e && e.message || e); })
-        .then(function () { mirrorState_.loading = false; });
+      return gsCall('getMirrorPlan').then(function (p) { mirrorState_.loaded = true; mirrorState_.plan = p; renderMirror_(p); return p; })
+        .catch(function (e) { document.getElementById('mirror-meta').textContent = '読めませんでした: ' + String(e && e.message || e); return null; })
+        .then(function (p) { mirrorState_.loading = false; return p; });
+    }
+    /** 残った1件の訳（PO に確かめさせるのでなく、なぜ残ったかを1行で） */
+    function mirrorWhyLeft_(kind, x) {
+      if (kind === 'remove') return String(x.why || '') + (mirrorState_.plan && mirrorState_.plan.exec && mirrorState_.plan.exec.left ? '（時間の上限で途中・もう一度押すと続き）' : '');
+      if (kind === 'recode') return '番号・区分を ' + (x.to ? '番号 ' + x.to : '') + (x.cat ? ' 区分 ' + x.cat : '') + ' に直す前です（押すと直ります）';
+      if (x.status === 'pending') return '確定待ちにあります（登録に失敗した・保留にした）→ データ管理の確定待ちの行で確かめてください';
+      if (x.waiting) return 'ガルーンの PDF がまだ届いていません（ガルーンで「📋 レシピ取り込み」→「確定待ちへ送る」で届く）';
+      return kind === 'restore' ? (MIRROR_HOW_[x.how] || 'ガルーンの版と違う') + '（押すと、取り直しの印を付けます）' : 'まだ送る待ちにしていません（押すと付けます）';
     }
     function renderMirror_(p) {
       var box = document.getElementById('mirror-box'), meta = document.getElementById('mirror-meta');
       box.textContent = '';
       if (!p || p.state === 'none' || !p.counts) {
-        meta.textContent = 'まだ突き合わせていません';
-        box.appendChild(el_('p', 'mnote', 'ガルーンのファイル管理で「📋 レシピ取り込み」を押し、小窓のいちばん下の「🪞 ガルーンと本棚を突き合わせる」を押してください。終わったら、ここに数が出ます。'));
+        meta.textContent = p && p.state === 'noids' ? '読み込み直してください' : 'まだ突き合わせていません';
+        box.appendChild(el_('p', 'mnote', '先にガルーンで「📋 レシピ取り込み」を押し、小窓のいちばん下の「🪞 ガルーンと本棚を突き合わせる」を押してください（全部の PDF の指紋を集めるだけ・数分・本棚は変えません）。終わったら、ここに数が出ます。'));
         return;
       }
       var c = p.counts;
-      meta.textContent = p.state === 'done' ? (String(p.finishedAt || '').slice(0, 16) + ' に突き合わせた（ガルーン ' + c.garoon + '件・本棚 ' + c.shelf + '件）') : ('途中（' + p.checked + ' / ' + p.total + '件）');
+      meta.textContent = p.state === 'done' ? (String(p.finishedAt || '').slice(5, 16).replace('-', '/') + ' の突き合わせ（ガルーン ' + c.garoon + '件・本棚 ' + c.shelf + '件）') : ('突き合わせが途中（' + p.checked + ' / ' + p.total + '件）');
+      // 結論を先に（違い 0 か）
+      var head = el_('div', 'mres ' + (c.diff ? 'm-diff' : 'm-ok'));
+      head.appendChild(el_('b', '', c.diff ? '違い ' + c.diff + '件' : '✓ ガルーンと同じです'));
+      head.appendChild(el_('span', '', 'ガルーン ' + c.garoon + '件・本棚 ' + c.shelf + '件' + (c.later ? '（突き合わせの後に届いた ' + c.later + '件は、次の突き合わせで見ます）' : '')));
+      box.appendChild(head);
       var grid = el_('div', 'mcounts');
-      [['m-add', c.add, '① ガルーンにあって本棚に無い → 登録する'], ['m-res', c.restore, '② 本棚の1件の中身がガルーンと違う → そのファイルを取り直して戻す（うち別のファイルで上書き ' + c.over + '件）'],
-       ['m-rem', c.remove, '③ 本棚にあってガルーンに無い → 「_削除済み」へ（消さない・戻せる。結べない前からの1件 ' + c.unlinked + '件を含む）'], ['m-same', c.same, '④ 同じ（結ぶだけ）'], ['', c.pending, '確定待ちにある（確定待ちで登録）']].forEach(function (x) {
+      [['m-rem', c.remove, '外す（本棚にあってガルーンに無い・結べない）→「_削除済み」へ・戻せる' + (c.defer ? '・うち ' + c.defer + '件は、同じ番号のガルーンの版を登録してから' : '')], ['m-add', c.add + c.pending, '足す（ガルーンにあって本棚に無い）' + (c.pending ? '・うち確定待ち ' + c.pending + '件' : '')],
+       ['m-res', c.restore, '取り直す（同じファイルだが中身がガルーンの版と違う）'], ['m-same', c.same, 'そのまま（同じファイル・中身も同じ）' + (c.recode ? '・うち番号/区分を直す ' + c.recode + '件' : '')]].forEach(function (x) {
         var d = el_('div', 'mcount ' + x[0]); d.appendChild(el_('b', '', String(x[1]) + '件')); d.appendChild(el_('span', '', x[2])); grid.appendChild(d);
       });
       box.appendChild(grid);
+      // 2026-11-26a 同じ番号のファイルがガルーンに2つ以上（PO 11/25 夕「アラートで重複しているけど取り込むよ と警告したうえで、きちんと両方取り込めないと」）
+      //   知らせたうえで、どちらも別々の1件として取り込む（上書きしない）。違いには数えない（ガルーンで直すまで出し続ける）。すること・なぜ を対で
+      var dups = p.dups || [];
+      if (dups.length) {
+        var nDup = dups.filter(function (d) { return d.t === 'dup'; }).length, nSize = dups.length - nDup;
+        var w = el_('p', 'mwarn');
+        w.appendChild(el_('b', '', (nDup ? '⚑ 番号の重複かも ' + nDup + '組' : '') + (nDup && nSize ? '・' : '') + (nSize ? '◇ サイズ違いかも ' + nSize + '組' : '')));
+        w.appendChild(document.createTextNode('（同じ番号のファイルがガルーンに2つ以上）: ' + (c.diff ? 'どちらも別々の1件として取り込みます（上書きしません）。' : 'どちらも別々の1件として取り込んであります（上書きしていません）。') +
+          (nDup ? 'ガルーンで、番号を付け間違えた方のファイル名の番号を直してください。直すと次の取り込みで、その1件の番号だけが直り（増えも消えもしない）、この知らせは消えます。店が番号で探したときに、別の料理のレシピを開かないためです。' : 'サイズ違いの商品なら、そのままで正しい形です。')));
+        box.appendChild(w);
+        var dd = el_('details', 'mlist'); dd.appendChild(el_('summary', '', '同じ番号のファイル（' + dups.length + '組・押すと一覧）'));
+        if (dups.length <= 3) dd.open = true;   // 少ないときは初めから見せる（どのファイルかが結論に要る）
+        var dw = el_('div', 'ptable-wrap'), dt = el_('table', 'ptable pfit'), dh = el_('thead'), dr = el_('tr');
+        ['番号', 'ガルーンのファイル', '知らせ'].forEach(function (t) { dr.appendChild(el_('th', '', t)); });
+        dh.appendChild(dr); dt.appendChild(dh);
+        var db = el_('tbody');
+        dups.forEach(function (d) {
+          var tr = el_('tr');
+          tr.appendChild(el_('td', '', String(d.code || '')));
+          tr.appendChild(el_('td', '', (d.files || []).map(function (f) { return '「' + String(f) + '」'; }).join(' ')));
+          tr.appendChild(el_('td', '', d.t === 'dup' ? '⚑ 番号の重複かも（料理が違う）' : '◇ サイズ違いかも'));
+          db.appendChild(tr);
+        });
+        dt.appendChild(db); dw.appendChild(dt); dd.appendChild(dw); box.appendChild(dd);
+      }
       var ai = c.ai, lo = Math.ceil(ai * 10 / 60), hi = Math.ceil(ai * 20 / 60);
-      box.appendChild(el_('p', 'mnote', '🤖 AI が読む件数: ' + ai + '件（①＋②＋確定待ち）・見込み 約' + lo + '〜' + hi + '分（1件 10〜20秒）。読むのは、次の「📋 レシピ取り込み」で送ったあとの「まとめて実行」のときです。' + (c.waiting ? '（うち ' + c.waiting + '件はもう送る待ち）' : '')));
-      if (p.state !== 'done') { box.appendChild(el_('p', 'mnote', 'ガルーンで「続きから」を押して、最後まで突き合わせてから実行できます。')); return; }
-      var sel = { add: {}, restore: {}, remove: {} };
-      var sec = function (key, title, items, line) {
-        if (!items.length) return;
+      if (ai) box.appendChild(el_('p', 'mnote', '🤖 足す・取り直すは、AI が1件10〜20秒で読んで登録します（' + ai + '件・見込み 約' + lo + '〜' + hi + '分・画面はそのまま開いておいてください）。' +
+        (c.waiting ? 'うち ' + c.waiting + '件は、ガルーンの PDF がまだ届いていません（ガルーンで「📋 レシピ取り込み」→「確定待ちへ送る」）。' : '')));
+      if (p.state !== 'done') { box.appendChild(el_('p', 'mnote', 'ガルーンで「続きから突き合わせる」を押して、最後まで突き合わせてから押せます。')); return; }
+      // 一覧（見るだけ・選ばない）
+      var sec = function (kind, title, items) {
+        if (!items || !items.length) return;
         var det = el_('details', 'mlist'); det.appendChild(el_('summary', '', title + '（' + items.length + '件・押すと一覧）'));
         var wrap = el_('div', 'ptable-wrap'), tb = el_('table', 'ptable pfit'), th = el_('thead'), hr = el_('tr');
-        ['選ぶ', '番号', '名前', 'わけ'].forEach(function (t) { hr.appendChild(el_('th', '', t)); });
+        ['番号', '名前', 'わけ'].forEach(function (t) { hr.appendChild(el_('th', '', t)); });
         th.appendChild(hr); tb.appendChild(th);
         var body = el_('tbody');
         items.forEach(function (x) {
-          var id = key === 'add' ? x.fid : x.rid;
-          var tr = el_('tr'), td = el_('td'), cb = document.createElement('input');
-          cb.type = 'checkbox'; cb.checked = !x.waiting; cb.disabled = !!x.waiting; sel[key][id] = !x.waiting;
-          cb.addEventListener('change', function () { sel[key][id] = cb.checked; refresh(); });
-          td.appendChild(cb); tr.appendChild(td);
-          var l = line(x);
-          tr.appendChild(el_('td', '', String(x.code || ''))); tr.appendChild(el_('td', '', l[0])); tr.appendChild(el_('td', '', l[1] + (x.waiting ? '（もう送る待ち）' : '')));
+          var tr = el_('tr');
+          tr.appendChild(el_('td', '', String(x.code || ''))); tr.appendChild(el_('td', '', String(x.name || '')));
+          var dupMark = x.dup === 'dup' ? '⚑ 番号の重複かも（両方取り込みます）・' : x.dup === 'size' ? '◇ サイズ違いかも（両方取り込みます）・' : '';
+          tr.appendChild(el_('td', '', dupMark + (kind === 'add' && !x.waiting && x.status !== 'pending' ? String(x.folder || '') + '・ガルーンの更新 ' + String(x.stamp || '') + '「' + String(x.file || '') + '」' : mirrorWhyLeft_(kind, x))));
           body.appendChild(tr);
         });
         tb.appendChild(body); wrap.appendChild(tb); det.appendChild(wrap); box.appendChild(det);
       };
-      sec('add', '① 登録する', p.items.add, function (x) { return [String(x.name || ''), String(x.folder || '') + '・ガルーンの更新 ' + String(x.stamp || '') + (x.status === 'discarded' ? '・前に見送った' : '')]; });
-      sec('restore', '② 取り直して戻す', p.items.restore, function (x) { return [String(x.name || ''), (MIRROR_HOW_[x.how] || x.how) + '・戻すファイル「' + String(x.file || '') + '」' + (x.from ? '・上書きしたファイル「' + x.from + '」は ① で別の1件に' : '')]; });
-      sec('remove', '③ 「_削除済み」へ', p.items.remove, function (x) { return [String(x.name || ''), String(x.why || '')]; });
-      var bar = el_('div', 'mbar'), go = el_('button', 'mgo'), msg = el_('span', 'mnote');
-      go.type = 'button';
-      var count = function (k) { return Object.keys(sel[k]).filter(function (x) { return sel[k][x]; }); };
-      function refresh() {
-        var a = count('add').length, r = count('restore').length, m = count('remove').length;
-        // 実行する物が無い（全部もう送る待ち・結ぶ物も無い）ときは、釦を薄くして残し、次にすることを釦のすぐ横に出す
-        var none = !a && !r && !m && !c.bind;
-        go.disabled = none;
-        // 釦は字の幅だけ（横に伸ばさない）。何をするかの数は、釦のすぐ横の字で
-        go.textContent = none ? '実行する物はありません' : 'この内容で実行';
-        what.textContent = none ? '' : '①送る待ち ' + a + '件・②送る待ち ' + r + '件・③外す ' + m + '件・④結ぶ ' + (c.bind || 0) + '件';
-        if (!mirrorState_.running) msg.textContent = none && c.waiting ? '送る待ちの ' + c.waiting + '件は、次にガルーンで「📋 レシピ取り込み」を押すと届きます。届いたら、確定待ちの「まとめて実行」を押してください。' : '';
-      }
-      var what = el_('span', 'mwhat');
-      refresh();
-      go.addEventListener('click', function () { runMirror_(p.runId, { add: count('add'), restore: count('restore'), remove: count('remove') }, go, msg); });
+      sec('remove', '外す', p.items.remove);
+      sec('add', '足す', (p.items.add || []).concat(p.items.pending || []));
+      sec('restore', '取り直す', p.items.restore);
+      sec('recode', '番号・区分を直す', p.items.recode);
+      var bar = el_('div', 'mbar'), go = el_('button', 'mgo'), what = el_('span', 'mwhat'), msg = el_('span', 'mnote');
+      go.type = 'button'; go.id = 'mirror-go'; msg.id = 'mirror-msg'; msg.setAttribute('role', 'status');
+      go.textContent = c.diff ? 'ガルーンと同じにする' : 'ガルーンと同じです';
+      go.disabled = !c.diff || mirrorState_.running;
+      what.textContent = c.diff ? '外す ' + c.remove + '・足す ' + (c.add + c.pending) + '・取り直す ' + c.restore + (c.recode ? '・番号を直す ' + c.recode : '') + ' を全部やります' : '';
+      go.addEventListener('click', function () { mirrorApplyRun_(p, go, msg); });
       bar.appendChild(go); bar.appendChild(what); bar.appendChild(msg); box.appendChild(bar);
-      if (p.exec) box.appendChild(el_('p', 'mnote', '前に実行した数: 結んだ ' + p.exec.bound + '件・送る待ち ' + p.exec.marked + '件・外した ' + p.exec.removed + '件（' + String(p.exec.at || '').slice(0, 16) + '）'));
+      var side = document.getElementById('side-mirror-count');
+      if (side) side.textContent = c.diff ? String(c.diff) : '';
+      // 押したあとの結果は、押した釦のすぐ下に。残った物は1件ずつ訳を1行（上の一覧を開かせない・PO に確かめさせない）
+      if (mirrorState_.result) {
+        box.appendChild(el_('p', 'mnote mlast', mirrorState_.result));
+        if (c.diff) {
+          if (c.waiting) box.appendChild(el_('p', 'mnext', 'あと1手: ガルーンで「📋 レシピ取り込み」→「確定待ちへ送る」（足す・取り直すの ' + c.waiting + '件の PDF を届ける）。届いたら、ここでもう一度「ガルーンと同じにする」（AI が読んで登録し、数え直します）。'));
+          var left = [];
+          [['remove', p.items.remove], ['add', (p.items.add || []).concat(p.items.pending || [])], ['restore', p.items.restore], ['recode', p.items.recode]].forEach(function (k) {
+            (k[1] || []).forEach(function (x) { left.push({ kind: k[0], x: x }); });
+          });
+          var ul = el_('ul', 'mleft');
+          left.slice(0, 20).forEach(function (o) { ul.appendChild(el_('li', '', String(o.x.code || '') + ' ' + String(o.x.name || '') + ' — ' + mirrorWhyLeft_(o.kind, o.x))); });
+          if (left.length > 20) ul.appendChild(el_('li', '', 'ほか ' + (left.length - 20) + '件は上の一覧（押すと開く）'));
+          box.appendChild(ul);
+        }
+      }
     }
-    /** 実行（残りが 0 になるまで続ける・押した釦は止めて進み具合を出す）。2回押しても窓口が1回分だけ行う */
-    function runMirror_(runId, pick, btn, msg) {
+    /**
+     * 押したあと（2回押しても窓口が1回分だけ行う・止まっても、もう一度押すと続きから）:
+     *   ① mirrorApply を残りが 0 になるまで ② 一覧を読み直す ③ 確定待ちがあれば、まとめて実行 ④ 数え直して結果を残す
+     */
+    function mirrorApplyRun_(p, btn, msg) {
       if (mirrorState_.running) return;
       mirrorState_.running = true; btn.disabled = true;
-      var total = { bound: 0, marked: 0, removed: 0 }, rounds = 0;
+      var total = { bound: 0, recoded: 0, marked: 0, removed: 0 }, rounds = 0, t0 = Date.now();
+      var say = function (t) { var m = document.getElementById('mirror-msg') || msg; m.textContent = t; };
+      // 数え直し（getMirrorPlan）は、一覧の読み直しと同時に呼ぶ（直列に並べない＝窓口の往復を1本ぶん減らす）
+      var finish = function (text, planP) {
+        mirrorState_.running = false; mirrorState_.result = text;
+        historyState_.stale = true;
+        return Promise.resolve(planP).then(function (p2) {
+          if (!p2 || !p2.counts) { mirrorState_.loaded = false; return loadMirror_(); }
+          mirrorState_.loaded = true; mirrorState_.plan = p2; return p2;
+        }).then(function (p2) {
+          if (!p2 || !p2.counts) return;
+          var c2 = p2.counts;
+          mirrorState_.result = text + ' → 数え直し: ガルーン ' + c2.garoon + '件・本棚 ' + c2.shelf + '件・違い ' + c2.diff + '件' + (c2.diff ? '（残った訳は下）' : '（✓ ガルーンと同じ）') +
+            (c2.dup ? '・同じ番号のファイル ' + c2.dup + '組は、知らせを付けて両方取り込み（上書きなし）' : '') + '・' + Math.round((Date.now() - t0) / 1000) + '秒';
+          renderMirror_(p2);
+          renderSyncBox_();   // 外した物の知らせ（片付けると直る物）も今の本棚で描き直す
+        });
+      };
+      var recount = function () { return gsCall('getMirrorPlan').catch(function () { return null; }); };
       (function step() {
-        msg.textContent = '⏳ 実行しています…（' + (++rounds) + '回め）';
-        gsCall('runMirror', Object.assign({ runId: runId }, pick)).then(function (r) {
-          if (!r || !r.success) throw new Error((r && r.reason) || '実行できませんでした');
-          total.bound += r.bound; total.marked += r.marked; total.removed += r.removed;
+        say('⏳ ガルーンと同じにしています（外す・結ぶ・番号を直す・送る待ち）…（' + (++rounds) + '回め）');
+        gsCall('mirrorApply', { runId: p.runId }).then(function (r) {
+          if (!r || !r.success) throw new Error((r && r.reason) || 'できませんでした');
+          total.bound += r.bound; total.recoded += r.recoded || 0; total.marked += r.marked; total.removed += r.removed;
           if (!r.done && rounds < 30) return step();
-          mirrorState_.running = false;
-          msg.textContent = (r.already && !total.bound && !total.marked && !total.removed ? 'もう実行してあります（何もしていません）。' : '済みました: 結んだ ' + total.bound + '件・送る待ち ' + total.marked + '件・外した ' + total.removed + '件。') +
-            'ガルーンで「📋 レシピ取り込み」を押すと、送る待ちの物が届きます。届いたら、確定待ちの「まとめて実行」を押してください。';
-          mirrorState_.loaded = false; loadRecipes(); loadMirror_(); historyState_.stale = true;
-        }).catch(function (e) { mirrorState_.running = false; btn.disabled = false; msg.textContent = '止まりました: ' + String(e && e.message || e) + '（もう一度押すと続きから）'; });
+          var line = '外した ' + total.removed + '件・結んだ ' + total.bound + '件・番号を直した ' + total.recoded + '件・送る待ち ' + total.marked + '件';
+          say('⏳ 一覧を読み直して、数え直しています…');
+          var planP = recount();
+          return Promise.all([loadRecipes(), loadPendingList(), planP]).then(function () {
+            var n = (pendingItems_ || []).length;
+            if (!n || bulkRunning_) return finish(line, planP);
+            say('⏳ 確定待ちのガルーンの版 ' + n + '件を登録しています（AI が1件10〜20秒・見込み 約' + Math.ceil(n * 10 / 60) + '〜' + Math.ceil(n * 20 / 60) + '分）…');
+            var watch = setInterval(function () { var s = document.getElementById('bulk-status'); if (s && s.textContent) say('⏳ ' + s.textContent); }, 500);
+            // 登録のあとにもう一度だけ窓口を通す＝同じ番号のガルーンの版を待っていた前からの1件（差し替えられなかった物）を、ここで外す
+            var applyAgain = function () {
+              return gsCall('mirrorApply', { runId: p.runId }).then(function (r2) {
+                if (!r2 || !r2.success) return;
+                total.removed += r2.removed; total.bound += r2.bound; total.recoded += r2.recoded || 0; total.marked += r2.marked;
+                if (!r2.done) return applyAgain();
+              });
+            };
+            return Promise.resolve(bulkRun_()).then(function () { clearInterval(watch); say('⏳ 登録が済みました。残りを外して、数え直しています…'); return applyAgain(); }, function (e) { clearInterval(watch); throw e; })
+              .then(function () { var p3 = recount(); return Promise.all([loadRecipes(), p3]).then(function () { return p3; }); })
+              .then(function (p3) { return finish('外した ' + total.removed + '件・結んだ ' + total.bound + '件・番号を直した ' + total.recoded + '件・送る待ち ' + total.marked + '件・確定待ちから登録 ' + n + '件', p3); });
+          });
+        }).catch(function (e) {
+          mirrorState_.running = false; btn.disabled = false;
+          say('止まりました: ' + String(e && e.message || e) + '（もう一度押すと続きから）');
+        });
       })();
     }
 
