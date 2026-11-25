@@ -1492,7 +1492,7 @@
           <span id="recipe-count-badge">読込中...</span>
         </div>
         <!-- 画面と窓口（GAS）の版（連絡するときに添える字）。窓口の版は、ログインしたあとの返事で分かる -->
-        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-26b ／ 窓口 <span id="api-build">（確認中）</span></div>
+        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-26c ／ 窓口 <span id="api-build">（確認中）</span></div>
       </aside>
 
       <div class="lmain">
@@ -1643,7 +1643,7 @@
           <div class="qhelp" id="fix-help" hidden>
             <p>どれも本棚には同じ形で残しています（登録は止めていません）。ガルーンで直すと、次の取り込みで知らせが消えます。</p>
             <p>ガルーンですぐ直せないときは「見比べる」から本棚だけ直せます（「本棚で直した物」に残り、戻せます）。</p>
-            <p>「修正のお願いを書き出す」で、ガルーンの担当者さんへ渡す Excel（Word）が作れます。絞り込みと行のチェックで、入れる件を選べます。</p>
+            <p>「内容確認のお願いを書き出す」で、ガルーンの担当者さんへ渡す Excel（Word）が作れます。絞り込みと行のチェックで、入れる件を選べます。</p>
           </div>
           <div class="fx-bar" id="fix-bar"></div>
           <div id="sync-box"></div>
@@ -1967,7 +1967,7 @@
 
   <!-- 探す欄の共通の部品（全部の資料・システムの標準。字の直し方だけで、データは無い。写しの元は weather_pos_analysis/tools/report_base/search_norm.js）。
        🔴 下のアプリの本体より先に読む（後ろに置くと、本体が SearchNorm を見つけられず、ゆれを吸収しない探し方に静かに落ちる） -->
-  <script src="search-norm.js?v=recipe-web-2026-11-26b"></script>
+  <script src="search-norm.js?v=recipe-web-2026-11-26c"></script>
 
   <!-- =========================================================
        5. クライアントサイド アプリケーション・ロジック (JavaScript)
@@ -2824,7 +2824,7 @@
        ・「← ひとつ前に戻る」「↑ はじめへ」を上の帯にいつも出す。移るときは滑らせて、着いた見出しを光らせる
        ========================================================= */
     var GUIDE_NAME = 'レシピの本棚利用ガイド';
-    var GUIDE_ASSET_VER = 'recipe-web-2026-11-26b';   // guide-img/figs.js を読み直す印（画面の版と同じ）
+    var GUIDE_ASSET_VER = 'recipe-web-2026-11-26c';   // guide-img/figs.js を読み直す印（画面の版と同じ）
     var GUIDE_READERS = { store: '店舗向け', hq: '本部向け', admin: '本部・管理者向け' };
     // 図解（写真でない図）。流れの箱の絵は、並びの順に1つずつ
     var GUIDE_FLOWS = { 'flow-daily': ['🔔', '📋', '📥', '✅'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-sync': ['📋', '⇄', '📤', '✋', '↩'], 'flow-alerts': ['📄', '⚑', '◇', '🕰', '🛠'], 'flow-old': ['🔖', '▸', '✅'] };
@@ -5576,7 +5576,7 @@
        ② 直すとよい物: 種類ごとに件数・1行＝1組・列は 番号・商品名・何が・ガルーンで直す所・見比べる。なぜ・直し方は「？」を押したときだけ
        ③ 見比べる: 押した行のすぐ下に2件を左右に（項目の表・ページの画像の赤い枠・日付とファイル名）と、本棚で直す釦（押した所に結果）
        ④ 本棚で直した物: 直したこと・いま・だれ・いつ・戻す
-       ⑤ 修正のお願いを書き出す（Excel・Word）: 画面の中で作る（窓口を呼ばない・外の部品を読まない）
+       ⑤ 内容確認のお願いを書き出す（Excel・Word）: 画面の中で作る（窓口を呼ばない・外の部品を読まない）
        字はすべて textContent。窓口は毎回管理者かを確かめる（getMirrorPlan・mirrorApply・getFixBoard・comparePair・shelfFix・shelfFixUndo・shelfFixKeep） */
     function syncEl_(tag, cls, text) { return el_(tag, cls, text); }
     var FIX_KIND_ = {
@@ -5589,9 +5589,9 @@
       nodate: { icon: '❔', label: 'どちらが新しいか分からない', xl: 'どちらが新しいか分からない', unit: '組', chip: 'a-old', what: '同じ名前・日付の無い物がある', where: '見比べて、古い方のファイルを消す',
                 why: '日付の無い物があり、どちらが古いか決められないためです（古いと決めつけません）。',
                 how: '「見比べる」で中身と PDF を見て、古い方をガルーンで消します。両方とも正しいなら「両方とも正しい」にします。' },
-      size:   { icon: '◇', label: 'サイズ違いかも', xl: 'サイズ違い', unit: '組', chip: 'a-size', what: '同じ番号にサイズ違い', where: '上げ直しなら古い方のファイルを消す（別サイズならそのまま）',
+      size:   { icon: '◇', label: 'サイズ違いかも', xl: 'サイズ違い', unit: '組', chip: 'a-size', what: '同じ番号にサイズ違い', where: '同じ番号なので、大と小を1つのファイルにまとめる',
                 why: '同じ番号のレシピが2つあると、店で取り違えるおそれがあるためです。',
-                how: 'サイズ違いの商品なら、このままで正しい形です（「両方とも正しい」で知らせを消せます）。同じ物の上げ直しなら、ガルーンで古い方のファイルを消します。' }
+                how: 'ガルーンで、大と小を1つのファイルにまとめると、店で取り違えにくくなります（まとめたら、もう一方のファイルは消します）。別の商品として分けておくなら「両方とも正しい」で知らせを消せます。' }
     };
     var FIX_ORDER_ = ['dup', 'old', 'nodate', 'size'];
     var fixUi_ = { kinds: { dup: true, old: true, nodate: true, size: true }, off: {}, open: '', done: {}, withFixed: false, pairs: null };
@@ -5740,8 +5740,8 @@
       tr.dataset.key = p.key; tr.dataset.kind = p.t;
       if (done) tr.classList.add('fx-done');
       var t1 = el_('td', 'fx-code'), lab = el_('label'), cb = document.createElement('input');
-      cb.type = 'checkbox'; cb.className = 'fx-pick'; cb.checked = !fixUi_.off[p.key] && !done; cb.disabled = !!done; cb.setAttribute('aria-label', '修正のお願いに入れる');
-      cb.title = '修正のお願い（Excel・Word）に入れる';
+      cb.type = 'checkbox'; cb.className = 'fx-pick'; cb.checked = !fixUi_.off[p.key] && !done; cb.disabled = !!done; cb.setAttribute('aria-label', '内容確認のお願いに入れる');
+      cb.title = '内容確認のお願い（Excel・Word）に入れる';
       cb.addEventListener('change', function () { if (cb.checked) delete fixUi_.off[p.key]; else fixUi_.off[p.key] = 1; renderFixBar_(); });
       lab.appendChild(cb); lab.appendChild(el_('span', 'fx-num', String(p.a.Code) + (String(p.b.Code) !== String(p.a.Code) ? ' ／ ' + String(p.b.Code) : '')));
       t1.appendChild(lab); tr.appendChild(t1);
@@ -6157,7 +6157,7 @@
       return p;
     }
 
-    /* ── 修正のお願いを書き出す（Excel .xlsx／Word .doc）: 画面の中で作る（窓口を呼ばない・外の部品を読まない）──
+    /* ── 内容確認のお願いを書き出す（Excel .xlsx／Word .doc）: 画面の中で作る（窓口を呼ばない・外の部品を読まない）──
        選ぶ件: 絞り込み（種類）× 行のチェック（既定＝全部の知らせ・本棚で直した物は除く・「本棚で直した物も入れる」で足す）
        Excel は字を「字の欄」（inlineStr）で書く＝式にならない。先頭が = + - @ の字は、さらに「字として扱う」印（quotePrefix）を付ける */
     function applyKindFilter_() {
@@ -6184,7 +6184,7 @@
       var wl = el_('label', 'fx-wf'), wf = document.createElement('input'); wf.type = 'checkbox'; wf.checked = fixUi_.withFixed;
       wf.addEventListener('change', function () { fixUi_.withFixed = wf.checked; renderFixBar_(); });
       wl.appendChild(wf); wl.appendChild(document.createTextNode(' 本棚で直した物も入れる'));
-      var x1 = el_('button', 'fx-xbtn', '📄 修正のお願いを書き出す（Excel・' + rows.length + '件）'); x1.type = 'button'; x1.disabled = !rows.length; x1.id = 'fix-xlsx';
+      var x1 = el_('button', 'fx-xbtn', '📄 内容確認のお願いを書き出す（Excel・' + rows.length + '件）'); x1.type = 'button'; x1.disabled = !rows.length; x1.id = 'fix-xlsx';
       var x2 = el_('button', 'rb-btn', 'Word で書き出す'); x2.type = 'button'; x2.disabled = !rows.length; x2.id = 'fix-doc';
       var msg = el_('span', 'mnote fx-exmsg'); msg.setAttribute('role', 'status');
       x1.addEventListener('click', function () { fixExport_('xlsx', msg); });
@@ -6213,17 +6213,19 @@
       });
       return out;
     }
-    var FIX_XL_HEAD_ = ['No.', '番号', '商品名', '何が', '相手のレシピ（番号・名前・日付）', 'ガルーンで直す所', 'ガルーンのファイル名', '本棚の状態', '直した日', '直した人', 'メモ'];
+    /* 2026-11-26c: PO が直したひな形（内容確認のお願い_2026-11-25.xlsx）に合わせた。題と頭の1行は PO の字のまま・「直した日」「直した人」の列は外した・担当者が書く欄はメモだけ */
+    var FIX_XL_HEAD_ = ['No.', '番号', '商品名', '何が', '相手のレシピ（番号・名前・日付）', 'ガルーンで直す所（案／予測）', 'ガルーンのファイル名', '本棚の状態', 'メモ'];
+    var FIX_XL_NAME_ = '内容確認のお願い';
+    var FIX_XL_SUB_ = '【ご担当者様へ】レシピの本棚へファイルをコピーした際に、機械的な検出とAI分析の結果、気付いた齟齬です。内容のご確認よろしくお願いします。';
     var FIX_CREDIT_ = '生成物の作成にAIを利用しています。';
     function fixExport_(kind, msg) {
       var rows = fixExportRows_();
       if (!rows.length) { msg.textContent = '書き出す件がありません（絞り込み・行のチェックを見てください）。'; return; }
-      var dd = new Date(), day = dd.getFullYear() + '-' + ('0' + (dd.getMonth() + 1)).slice(-2) + '-' + ('0' + dd.getDate()).slice(-2), title = 'レシピの本棚：ガルーンのレシピの直しのお願い（' + day + '）';
-      var sub = 'ガルーンの担当者さんへ：「ガルーンで直す所」を直したら、右の「直した日・直した人」を書いて返してください（' + rows.length + '件）。';
-      var data = rows.map(function (r, i) { return [String(i + 1), r.code, r.name, r.what, r.other, r.where, r.file, r.state, '', '', '']; });
+      var dd = new Date(), day = dd.getFullYear() + '-' + ('0' + (dd.getMonth() + 1)).slice(-2) + '-' + ('0' + dd.getDate()).slice(-2), title = 'レシピの本棚：ガルーンのレシピの' + FIX_XL_NAME_ + '（' + day + '）';
+      var data = rows.map(function (r, i) { return [String(i + 1), r.code, r.name, r.what, r.other, r.where, r.file, r.state, '']; });
       try {
-        var blob = kind === 'xlsx' ? xlsxBlob_('直しのお願い', title, sub, FIX_XL_HEAD_, data, FIX_CREDIT_) : docBlob_(title, sub, FIX_XL_HEAD_, data, FIX_CREDIT_);
-        fixDownload_(blob, '直しのお願い_' + day + (kind === 'xlsx' ? '.xlsx' : '.doc'));
+        var blob = kind === 'xlsx' ? xlsxBlob_(FIX_XL_NAME_, title, FIX_XL_SUB_, FIX_XL_HEAD_, data, FIX_CREDIT_) : docBlob_(title, FIX_XL_SUB_, FIX_XL_HEAD_, data, FIX_CREDIT_);
+        fixDownload_(blob, FIX_XL_NAME_ + '_' + day + (kind === 'xlsx' ? '.xlsx' : '.doc'));
         msg.textContent = '✓ 書き出しました（' + rows.length + '件・' + (kind === 'xlsx' ? 'Excel' : 'Word') + '）';
       } catch (e) { msg.textContent = '書き出せませんでした: ' + String(e && e.message || e); }
     }
@@ -6262,7 +6264,7 @@
       var end = new Uint8Array([].concat(u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length), u32(cSize), u32(offset), u16(0)));
       return new Blob(parts.concat(central, [end]), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     }
-    /** 1枚の表の .xlsx（題・ひとこと・見出し・行・いちばん下に小さくクレジット）。見出しの行と左の2列を固定・見出しに絞り込み */
+    /** 1枚の表の .xlsx（題・ひとこと〈太字〉・見出し・行・いちばん下に小さくクレジット）。見出しの行と左の3列を固定・見出しに絞り込み・いちばん右の列（メモ）だけ書く欄の色 */
     function xlsxBlob_(sheetName, title, sub, head, rows, credit) {
       var enc = new TextEncoder(), cols = head.length, last = String.fromCharCode(64 + cols);
       var cell = function (ref, v, s) {
@@ -6272,17 +6274,17 @@
       };
       var x = [], r = 1;
       x.push('<row r="1" ht="24" customHeight="1">' + cell('A1', title, 1) + '</row>');
-      x.push('<row r="2">' + cell('A2', sub, 7) + '</row>');
+      x.push('<row r="2" ht="23.25" customHeight="1">' + cell('A2', sub, 7) + '</row>');
       r = 4;
-      x.push('<row r="4" ht="30" customHeight="1">' + head.map(function (h, i) { return cell(String.fromCharCode(65 + i) + '4', h, 2); }).join('') + '</row>');
+      x.push('<row r="4" ht="25.5" customHeight="1">' + head.map(function (h, i) { return cell(String.fromCharCode(65 + i) + '4', h, 2); }).join('') + '</row>');
       rows.forEach(function (row) {
         r++;
-        x.push('<row r="' + r + '">' + row.map(function (v, i) { return cell(String.fromCharCode(65 + i) + r, v, i >= cols - 3 ? 6 : 3); }).join('') + '</row>');
+        x.push('<row r="' + r + '">' + row.map(function (v, i) { return cell(String.fromCharCode(65 + i) + r, v, i === cols - 1 ? 6 : 3); }).join('') + '</row>');
       });
       var lastData = r;
       r += 2;
       x.push('<row r="' + r + '">' + cell('A' + r, credit, 5) + '</row>');
-      var widths = [5, 8, 30, 20, 34, 30, 40, 18, 12, 12, 24];
+      var widths = [5, 8, 30, 20, 34, 30, 40, 18, 24];
       var sheet = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
         '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
         '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>' +
@@ -6316,7 +6318,7 @@
         '<xf numFmtId="49" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1" applyNumberFormat="1" quotePrefix="1"><alignment vertical="top" wrapText="1"/></xf>' +
         '<xf numFmtId="49" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyNumberFormat="1" quotePrefix="1"/>' +
         '<xf numFmtId="49" fontId="0" fillId="3" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1" applyNumberFormat="1" quotePrefix="1"><alignment vertical="top" wrapText="1"/></xf>' +
-        '<xf numFmtId="49" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1" applyNumberFormat="1" quotePrefix="1"><alignment vertical="top" wrapText="1"/></xf>' +
+        '<xf numFmtId="49" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1" applyNumberFormat="1" quotePrefix="1"><alignment vertical="top" wrapText="1"/></xf>' +
         '</cellXfs><cellStyles count="1"><cellStyle name="標準" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
       var sn = xmlEsc_(sheetName);
       var book = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
@@ -6347,8 +6349,8 @@
       var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>' + e(title) + '</title>' +
         '<style>@page{size:A4 landscape;margin:12mm}body{font-family:"游ゴシック","Yu Gothic",sans-serif;font-size:10pt}h1{font-size:14pt}table{border-collapse:collapse;width:100%}' +
         'th,td{border:1px solid #94a3b8;padding:4px 6px;vertical-align:top;font-size:9pt}th{background:#e2e8f0}td.in{background:#fff7d6}.credit{font-size:7pt;color:#64748b;text-align:right;margin-top:12pt}</style></head><body>' +
-        '<h1>' + e(title) + '</h1><p>' + e(sub) + '</p><table><thead><tr>' + head.map(function (h) { return '<th>' + e(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
-        rows.map(function (r) { return '<tr>' + r.map(function (v, i) { return '<td' + (i >= head.length - 3 ? ' class="in"' : '') + '>' + e(v) + '</td>'; }).join('') + '</tr>'; }).join('') +
+        '<h1>' + e(title) + '</h1><p><b>' + e(sub) + '</b></p><table><thead><tr>' + head.map(function (h) { return '<th>' + e(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        rows.map(function (r) { return '<tr>' + r.map(function (v, i) { return '<td' + (i === head.length - 1 ? ' class="in"' : '') + '>' + e(v) + '</td>'; }).join('') + '</tr>'; }).join('') +
         '</tbody></table><p class="credit">' + e(credit) + '</p></body></html>';
       return new Blob([String.fromCharCode(0xFEFF) + html], { type: 'application/msword' });
     }
