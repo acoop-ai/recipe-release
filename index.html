@@ -1071,6 +1071,9 @@
   .gchk a,.gnote-bar a{color:#1669c9;font-weight:700;text-decoration:underline;}
   #garoon-notice{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 .5rem;padding:.45rem .9rem;border:1px solid #f59e0b;background:#fffbeb;color:#92400e;border-radius:10px;font-size:.8rem;font-weight:600;}
   #garoon-notice[hidden]{display:none;}
+  #garoon-notice-fix{font-weight:600;color:#7c2d12;}
+  #garoon-notice-fix[hidden]{display:none;}
+  #garoon-notice-fix b{font-variant-numeric:tabular-nums;}
   #garoon-notice .gn-act{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap;}
   #garoon-notice button,#garoon-notice a.gn-btn{background:#fff;border:1px solid #f59e0b;color:#92400e;border-radius:7px;padding:4px 10px;font-size:.75rem;font-weight:700;cursor:pointer;text-decoration:none;}
   #garoon-notice button[hidden],#garoon-notice a.gn-btn[hidden]{display:none;}
@@ -1123,6 +1126,61 @@
   .kbadge.k-nocode{background:#f1f5f9;color:#64748b;border-color:#e2e8f0;}
   .pgo{background:transparent;color:#b45309;border:1px solid #b45309;border-radius:6px;padding:.3rem .7rem;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;}
   .ptable tr.is-warn .pgo{background:#b45309;color:#fff;}
+  /* ── 2026-11-25a 知らせの印（一覧の行・確定待ち・結果）と帯（1件の画面・確認画面）。色だけにせず字で（決まり6） ── */
+  .achip{display:inline-flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;border-radius:5px;padding:1px 6px;margin:2px 4px 0 0;white-space:nowrap;border:1px solid;vertical-align:middle;line-height:1.5;}
+  .achip.a-dup{background:#fef2f2;color:#b42318;border-color:#fca5a5;}
+  .achip.a-size{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;}
+  .achip.a-old{background:#fff7ed;color:#9a3412;border-color:#fdba74;}
+  .achip.a-gone{background:#fef2f2;color:#b42318;border-color:#fca5a5;}
+  .achip.a-info{background:#f1f5f9;color:#475569;border-color:#cbd5e1;font-weight:600;}
+  .rtable .rt-fold{all:unset;cursor:pointer;display:inline-block;min-height:24px;line-height:24px;padding:0 4px;font-size:.72rem;font-weight:700;color:#9a3412;margin-left:2px;white-space:nowrap;text-decoration:underline dotted #9a3412;text-underline-offset:3px;}
+  .rtable .rt-fold:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .rtable tbody tr.rt-kid td{background:#fffbf5;}
+  .rtable tbody tr.rt-kid td.rt-name{padding-left:1.6rem;}
+  .aband{border:1px solid #fdba74;background:#fff7ed;border-radius:10px;padding:8px 12px;margin:0 0 8px;font-size:.82rem;line-height:1.6;color:#7c2d12;max-width:62em;}
+  .aband[hidden]{display:none;}
+  .aband .ab-h{font-weight:800;margin-right:6px;}
+  .aband .ab-do{display:block;color:#7c2d12;margin-top:2px;}
+  .aband .ab-why{display:block;color:#9a3412;font-size:.76rem;}
+  .aband .ab-one + .ab-one{border-top:1px dashed #fdba74;margin-top:6px;padding-top:6px;}
+  .aband.ab-info{border-color:#cbd5e1;background:#f8fafc;color:#334155;}
+  /* そろえ・ミラーリング（データ管理・管理者だけ） */
+  .mcounts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-width:980px;margin:6px 0 10px;}
+  .mcount{border:1px solid var(--border-color);border-radius:10px;padding:8px 10px;background:var(--bg-secondary);}
+  .mcount b{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums;color:var(--text-primary);}
+  .mcount span{font-size:.75rem;color:var(--text-secondary);line-height:1.45;display:block;}
+  .mcount.m-add b{color:#1d4ed8;} .mcount.m-res b{color:#b45309;} .mcount.m-rem b{color:#b42318;} .mcount.m-same b{color:#0f766e;}
+  .mlist{max-width:62em;margin:4px 0 10px;}
+  .mlist summary{cursor:pointer;font-size:.82rem;font-weight:700;color:var(--text-secondary);padding:4px 0;}
+  .mnote{font-size:.8rem;color:var(--text-secondary);line-height:1.65;max-width:62em;margin:4px 0 8px;}
+  .mbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;}
+  .mgo{background:#b42318;color:#fff;border:none;border-radius:8px;padding:.5rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer;}
+  .mgo:disabled{opacity:.5;cursor:default;}
+  .mwhat{font-size:.8rem;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;}
+  /* そろえ・ミラーリングの表は、細い画面でも幅に収める（折り返す）。横に送る表は確定待ちの1つだけにして、左の列が残る形を崩さない */
+  @media (max-width: 768px) {
+    .ptable.pfit{table-layout:fixed;}
+    .ptable.pfit th{white-space:normal;}
+    .ptable.pfit td,.ptable.pfit th{overflow-wrap:anywhere;padding:.4rem .4rem;}
+    .ptable.pfit th:first-child,.ptable.pfit td:first-child{width:3.4em;}
+    .ptable.pfit .achip{white-space:normal;}
+  }
+  /* 更新の記録の1行の中身（小窓） */
+  #hdetail-modal .rv-dialog{background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border-color);border-radius:14px;box-shadow:0 25px 50px -12px rgba(0,0,0,.5);width:min(980px,96vw);max-height:90vh;overflow:auto;padding:18px 20px;}
+  #hdetail-modal .rv-title{font-size:1.05rem;margin:0 0 4px;}
+  #hdetail-modal .rv-sub{font-size:.85rem;color:var(--text-secondary);margin:0 0 10px;}
+  #hdetail-modal .rv-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+  #hdetail-modal .rv-table th,#hdetail-modal .rv-table td{border-bottom:1px solid var(--border-color);padding:6px 8px;text-align:left;vertical-align:top;white-space:pre-wrap;word-break:break-all;}
+  #hdetail-modal .rv-table thead th{background:var(--bg-primary);position:sticky;top:-18px;z-index:2;}
+  #hdetail-modal .rv-table tbody th{white-space:nowrap;}
+  #hdetail-modal .rv-table tr.rv-diff td{background:#fff7ed;}
+  #hdetail-modal .rv-msg{font-size:.85rem;font-weight:700;color:#b42318;min-height:1.2em;margin:8px 0 0;}
+  #hdetail-modal .rv-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;}
+  #hdetail-modal canvas{max-width:100%;border:1px solid var(--border-color);border-radius:6px;background:#fff;}
+  .ptable tbody tr.h-click{cursor:pointer;}
+  .ptable tbody tr.h-click:hover td{background:#f0fdf4;}
+  .imp-check{border:1px solid #fca5a5;background:#fef2f2;border-radius:10px;padding:10px 12px;margin-top:8px;font-size:.82rem;line-height:1.7;}
+  .imp-check[hidden]{display:none;}
   /* 確認画面: 3つの札（今の登録との違い）・変わった項目・ページの画像の見比べ */
   .kcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
   .kcard{border:2px dashed var(--border-color);border-radius:12px;padding:10px 12px;background:var(--bg-primary);}
@@ -1152,7 +1210,7 @@
   .rtable thead th[aria-sort="ascending"],.rtable thead th[aria-sort="descending"]{color:var(--accent);background:#ecfdf5;}
   .rtable .rt-ar{font-size:.68rem;min-width:.8em;}
   .rtable .rt-pick{width:44px;text-align:center;}
-  .rtable .rt-code{width:66px;font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent);}
+  .rtable .rt-code{width:84px;font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent);}   /* 2026-11-25a:「コード無し」が入る幅 */
   .rtable .rt-cat{width:62px;}
   .rtable .rt-num{width:78px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
   .rtable thead th.rt-num{text-align:right;}
@@ -1343,7 +1401,7 @@
           <span id="recipe-count-badge">読込中...</span>
         </div>
         <!-- 画面と窓口（GAS）の版（連絡するときに添える字）。窓口の版は、ログインしたあとの返事で分かる -->
-        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-24a ／ 窓口 <span id="api-build">（確認中）</span></div>
+        <div class="main-ver lside-ver" title="画面と窓口（GAS）の版。窓口の版は、ログインしたあとの返事で分かります">build recipe-web-2026-11-25a ／ 窓口 <span id="api-build">（確認中）</span></div>
       </aside>
 
       <div class="lmain">
@@ -1351,8 +1409,12 @@
              2026-11-24a: 管理者（ADMIN_EMAILS）には、代わりに毎日の帯（今日はまだ／今日 ◯時◯分に取り込み済み・確定待ち ◯件）。中身は窓口が管理者にだけ返す（getSavedSettings の daily） -->
         <div id="garoon-notice" role="status" hidden>
           <span id="garoon-notice-text"></span>
+          <!-- 2026-11-25a（管理者だけ）: ガルーンで片付けると直る物の数・きのう外した物・確かめ待ち。数は一覧の知らせから数える（窓口を呼ばない） -->
+          <span id="garoon-notice-fix" hidden></span>
           <span class="gn-act">
             <a class="gn-btn" id="garoon-notice-open" href="#" target="_blank" rel="noopener noreferrer" hidden>ガルーンを開く ↗</a>
+            <button type="button" id="garoon-notice-sync" hidden>🪞 そろえを見る</button>
+            <button type="button" id="garoon-notice-removed" hidden>📜 外した物・戻す</button>
             <button type="button" id="garoon-notice-manage">データ管理で見る</button>
             <button type="button" id="garoon-notice-hide" title="今日はこの知らせを隠します（この端末だけ）">今日は隠す</button>
           </span>
@@ -1413,6 +1475,7 @@
           <a href="#garoon-check" data-sec="garoon-check">🕒 ガルーンを確かめた日</a>
           <a href="#garoon-full" data-sec="garoon-full">🔍 全件の照合</a>
           <a href="#pending-card" data-sec="pending-card">📥 確定待ち <span class="rb-count" id="side-pending-count"></span></a>
+          <a href="#mirror-card" data-sec="mirror-card" id="side-mirror-link" hidden>🪞 ガルーンとそろえる（管理者） <span class="rb-count" id="side-mirror-count"></span></a>
           <a href="#history-card" data-sec="history-card" id="side-history-link" hidden>📜 更新の記録（管理者）</a>
           <a href="#import-card" data-sec="import-card" id="side-import-link" hidden>🗄 JSON の戻し（管理者）</a>
         </nav>
@@ -1467,11 +1530,22 @@
           <div id="pending-list"></div>
         </section>
 
+        <!-- 2026-11-25a ガルーンとそろえる（管理者だけ・窓口も毎回確かめる）: ① 毎日のそろえ（消えた物の確かめ待ち・外した物と戻す口）② 一度だけのミラーリング（数を先に → 確かめて実行）。
+             字はすべて textContent。ガルーンのファイルの番号は「実行」で選んだ物を確かめるためだけに持つ（画面には出さない） -->
+        <section class="rb-sec" id="mirror-card" hidden>
+          <div class="rb-h">🪞 ガルーンとそろえる（管理者だけ） <small>本棚の並びは、毎日の取り込みでガルーンの並びにそろいます</small></div>
+          <p class="mnote">1件＝ガルーンのファイル1つ。<b>同じファイルが更新されたら、その1件を差し替えます</b>（積み上がりません）。<b>ガルーンからファイルが消えたら、本棚からも外します</b>（「_削除済み」へ移すだけ・更新の記録から戻せます）。一度に <b id="sync-max">5</b> 件以上消えたとき・一覧を最後まで読めなかった日は、自動では外さず、下で確かめてから外します。</p>
+          <div id="sync-box"></div>
+          <div class="rb-h" style="margin-top:14px;">🔍 ガルーンと本棚を突き合わせる（ミラーリング・1回） <small id="mirror-meta"></small> <button type="button" class="rb-btn" id="mirror-reload">数を読み直す</button></div>
+          <p class="mnote">ガルーンで「📋 レシピ取り込み」を押し、小窓のいちばん下の「🪞 ガルーンと本棚を突き合わせる」を押すと、全部の PDF の指紋を集めます（PDF は送りません）。そのあと、ここで <b>数を見て、確かめてから「実行」</b>を押します。①②は次の「📋 レシピ取り込み」で送られ、確定待ちの「まとめて実行」で入ります（AI が1件10〜20秒で読みます）。</p>
+          <div id="mirror-box"><span class="mnote">見えたときに読み込みます</span></div>
+        </section>
+
         <!-- 更新の記録（2026-11-24a・管理者だけ＝窓口の getSavedSettings の canRestore が true のときだけ hidden を外す・窓口も getRecipeHistory のたびに管理者かを確かめる）。
              見えたときに初めて読む（開いただけでは読まない）。日ごと（新しい日が上）・★＝名前・売価・原価の前と後・「この差し替えを戻す」は、その商品のいちばん新しい差し替えだけ -->
         <section class="rb-sec" id="history-card" hidden>
           <div class="rb-h">📜 更新の記録（管理者だけ） <small id="history-meta">見えたときに読み込みます</small> <button type="button" class="rb-btn" id="history-reload">読み直す</button></div>
-          <p style="max-width:60em;font-size:.8rem;color:var(--text-muted);line-height:1.6;margin:0 0 .6rem;">登録・差し替え・戻しを、新しい日から1行ずつ。<b>★</b> は名前・売価・原価が変わった物（前 → 後）。「↩ この差し替えを戻す」は、その商品のいちばん新しい差し替えだけ（前の PDF と前の値に戻ります・今の PDF は「_差し替え前」へ）。11月24日の版より前の記録は、前の値が無い所が「―」です（戻せません）。</p>
+          <p style="max-width:60em;font-size:.8rem;color:var(--text-muted);line-height:1.6;margin:0 0 .6rem;">登録・差し替え・外した・戻しを、新しい日から1行ずつ。<b>行を押すと、変わった項目（原材料・配分・工程も）と前の PDF が開きます</b>（そこから「ガルーンからこの1件を取り直す」も）。<b>★</b> は名前・売価・原価が変わった物（前 → 後）。「↩ この差し替えを戻す」は、その1件のいちばん新しい差し替えだけ。外した・削除した1件は「↩ 本棚に戻す」。11月24日の版より前の記録は、前の値が無い所が「―」です（戻せません）。</p>
           <div id="history-list"></div>
         </section>
 
@@ -1480,7 +1554,7 @@
         <section class="info-card rb-sec" id="import-card" hidden style="background: rgba(0,0,0,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem; max-width: 560px;">
           <div class="info-card-title" style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem;">🗄 JSON の取り込み（バックアップの戻し・管理者だけ）</div>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem; line-height: 1.45;">
-            バックアップの <code>recipes_data.json</code> を読み込み、<b>今の一覧を全部、ファイルの中身に入れ替えます。</b>PDF は商品コードで今の物を引き継ぎます。
+            バックアップの <code>recipes_data.json</code> を読み込み、<b>今の一覧を全部、ファイルの中身に入れ替えます。</b>読み込むと、入れ替える前に「いま ◯件 → 取り込むと ◯件・消える ◯件・増える ◯件」を出します。確かめてから「入れ替える」を押してください。PDF は1件の目印（無ければ、1件だけの番号）で今の物を引き継ぎます。
           </p>
           <div class="dropzone" id="dropzone" style="border: 2px dashed var(--border-color); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: var(--transition-smooth); background: rgba(0,0,0,0.01);">
             <span style="font-size: 1.8rem; display: block; margin-bottom: 0.5rem;">📥</span>
@@ -1491,10 +1565,30 @@
             <input type="file" id="file-input" accept=".json" style="display: none;">
           </div>
           <div id="import-status" style="margin-top: 0.6rem; font-size: 0.8rem; color: var(--text-muted); min-height: 1.2rem;"></div>
+          <!-- 2026-11-25a: 件数の確かめ（取り込む前に・消える・増える件数）。窓口も、確かめたときの件数と今の件数が違えば書かない -->
+          <div class="imp-check" id="import-check" hidden>
+            <div id="import-check-text"></div>
+            <div class="mbar"><button type="button" class="rb-btn" id="import-cancel">やめる</button><button type="button" class="mgo" id="import-go">入れ替える</button></div>
+          </div>
         </section>
 
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- 2026-11-25a: 更新の記録の1行の中身（変わった項目の前と後・前の PDF・ガルーンから取り直す）。開けるのは管理者だけ（窓口も確かめる） -->
+  <div id="hdetail-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="hdetail-title">
+    <div class="rv-dialog">
+      <h2 id="hdetail-title" class="rv-title">📜 この記録の中身</h2>
+      <p class="rv-sub" id="hdetail-sub"></p>
+      <table class="rv-table"><thead><tr><th>項目</th><th>前</th><th>後</th></tr></thead><tbody id="hdetail-rows"></tbody></table>
+      <div class="rb-h" style="margin-top:12px;">📄 前の PDF <small id="hdetail-prev-why"></small></div>
+      <div id="hdetail-prev"></div>
+      <div class="rb-h" style="margin-top:12px;">🔁 ガルーンからこの1件を取り直す <small>次の「📋 レシピ取り込み」で、変わっていなくても送られます（確定待ちで1件ずつ登録）</small></div>
+      <div id="hdetail-refetch"></div>
+      <p class="rv-msg" id="hdetail-msg" role="status"></p>
+      <div class="rv-acts"><button type="button" class="rb-btn" id="hdetail-close">閉じる</button></div>
     </div>
   </div>
 
@@ -1537,6 +1631,8 @@
         <!-- .modal-body は既定が display:flex（詳細画面用）。ここは縦積み -->
         <div class="modal-body rb-main" id="similar-main">
           <section class="rb-sec" id="sim-sec-kind">
+            <!-- 2026-11-25a: 入れたら出る知らせ（番号の重複・サイズ違い・削除漏れ）。止めない・既定で差し替えない（同じファイルの1件だけ差し替える） -->
+            <div class="aband" id="sim-alerts" hidden></div>
             <div class="rb-h">🏷 今の登録との違い <small id="cmp-target-label"></small></div>
             <div id="cmp-kind"></div>
           </section>
@@ -1602,6 +1698,9 @@
           <button id="modal-close" class="close-btn">✕</button>
         </div>
       </div>
+
+      <!-- 2026-11-25a: この1件の知らせ（本部・管理者には、すること・なぜ。店には「旧の可能性」など短く） -->
+      <div class="aband" id="modal-alerts" hidden style="margin:0;border-radius:0;border-left:0;border-right:0;max-width:none;"></div>
 
       <!-- 情報修正（AIの読み取り間違いをPDFを再アップロードせずその場で直す） -->
       <div id="recipe-edit-panel" style="display: none; background: rgba(16, 185, 129, 0.04); border-bottom: 1px solid var(--border-color); padding: 0.9rem 1.5rem;">
@@ -1758,7 +1857,7 @@
 
   <!-- 探す欄の共通の部品（全部の資料・システムの標準。字の直し方だけで、データは無い。写しの元は weather_pos_analysis/tools/report_base/search_norm.js）。
        🔴 下のアプリの本体より先に読む（後ろに置くと、本体が SearchNorm を見つけられず、ゆれを吸収しない探し方に静かに落ちる） -->
-  <script src="search-norm.js?v=recipe-web-2026-11-24a"></script>
+  <script src="search-norm.js?v=recipe-web-2026-11-25a"></script>
 
   <!-- =========================================================
        5. クライアントサイド アプリケーション・ロジック (JavaScript)
@@ -2036,7 +2135,8 @@
               return resolve({ email: MOCK_PREF.email, isAdmin: true, role: '\u5168\u4f53\u7ba1\u7406\u8005' });
             case 'getRecipes':
               // 作り物の更新日時（番号から決める＝毎回同じ）
-              return resolve(MOCK_RECIPES.map(function (r) { var n = parseInt(r.Code, 10) || 0; return Object.assign({ UpdatedAt: '2026-' + ('0' + (8 + n % 3)).slice(-2) + '-' + ('0' + (1 + n % 27)).slice(-2) + ' 09:00:00' }, r); }));
+              // 2026-11-25a: 1件の目印（作り物・番号から作る）を付ける（窓口の getRecipes と同じ形）
+              return resolve(MOCK_RECIPES.map(function (r) { var n = parseInt(r.Code, 10) || 0; return Object.assign({ UpdatedAt: '2026-' + ('0' + (8 + n % 3)).slice(-2) + '-' + ('0' + (1 + n % 27)).slice(-2) + ' 09:00:00', RecipeId: r.RecipeId || ('r' + ('000000000000' + n.toString(16)).slice(-12)), Bound: false }, r); }));
             case 'getSearchTable':
               // 手元の検証モードの作り物の読みの表（作り物のレシピの名前に出る字だけ・本物の表は窓口の中）
               return resolve({ yomi: { '特製': 'とくせい', '唐揚': 'からあげ', '揚': 'あげ', '増量': 'ぞうりょう', '三色': 'さんしょく', '弁当': 'べんとう', '重': 'じゅう', '握': 'にぎり',
@@ -2049,7 +2149,7 @@
               MOCK_PREF.sortOption = args[1] || 'code';
               return resolve({ success: true, email: MOCK_PREF.email });
             case 'getSavedSettings':
-              return resolve(Object.assign({ build: 'local-mock', garoon: Object.assign({}, MOCK_GAROON), canRestore: MOCK_SYSADMIN },
+              return resolve(Object.assign({ build: 'local-mock', garoon: Object.assign({}, MOCK_GAROON), canRestore: MOCK_SYSADMIN, canDelete: MOCK_SYSADMIN },
                 MOCK_SYSADMIN ? { daily: Object.assign({ pending: MOCK_PENDING.length }, MOCK_DAILY) } : {}));
             case 'getRecipeHistory':
               return resolve(JSON.parse(JSON.stringify(MOCK_HISTORY)));
@@ -2104,11 +2204,12 @@
               MOCK_PENDING = MOCK_PENDING.filter(function(p) { return p.id !== args[0]; });
               return resolve({ success: true });
             case 'deleteRecipe':
-              var gone = MOCK_RECIPES.find(function(r) { return String(r.Code) === String(args[0]); });
-              MOCK_RECIPES = MOCK_RECIPES.filter(function(r) { return String(r.Code) !== String(args[0]); });
+              var mk = function (r) { return 'r' + ('000000000000' + (parseInt(r.Code, 10) || 0).toString(16)).slice(-12); };
+              var gone = MOCK_RECIPES.find(function(r) { return mk(r) === String(args[0]) || String(r.Code) === String(args[0]); });
+              MOCK_RECIPES = MOCK_RECIPES.filter(function(r) { return r !== gone; });
               return resolve({ success: true, code: args[0], name: gone ? gone.Name : '', movedPdf: false });
             case 'updateRecipeFields':
-              var target = MOCK_RECIPES.find(function(r) { return String(r.Code) === String(args[0]); });
+              var target = MOCK_RECIPES.find(function(r) { return ('r' + ('000000000000' + (parseInt(r.Code, 10) || 0).toString(16)).slice(-12)) === String(args[0]) || String(r.Code) === String(args[0]); });
               if (target) Object.assign(target, args[1]);
               return resolve({ success: true, code: args[0] });
             default:
@@ -2314,6 +2415,23 @@
       }
     }
 
+    /**
+     * 2026-11-25a: 「使う」を外した控えのうち、前の版の番号（同じ番号の全部の1件を指していた）を、その番号の1件ずつの目印に置き換える。
+     * 置き換えた物があれば true（呼び手が保存する）。窓口が前の版（目印が無い）なら何もしない。
+     */
+    function migrateUnchecked_() {
+      if (!allRecipes.length || !allRecipes[0].RecipeId) return false;
+      var byCode = {}, out = [], seen = {}, changed = false;
+      allRecipes.forEach(function (r) { (byCode[String(r.Code)] = byCode[String(r.Code)] || []).push(rkOf_(r)); });
+      uncheckedCodes.forEach(function (c) {
+        c = String(c);
+        if (/^r[0-9a-f]{12}$/.test(c)) { if (!seen[c]) { seen[c] = 1; out.push(c); } return; }
+        changed = true;
+        (byCode[c] || []).forEach(function (k) { if (!seen[k]) { seen[k] = 1; out.push(k); } });
+      });
+      if (changed) uncheckedCodes = out;
+      return changed;
+    }
     /** 通信できなかった時だけ使う控え（画面が空になるのを防ぐ）。 */
     function applyLocalPreferences_() {
       try {
@@ -2353,6 +2471,8 @@
         .then(function(recipes) {
           allRecipes = recipes || [];
           appLoaded = true;
+          if (migrateUnchecked_()) saveUserPreferencesDebounced();   // 2026-11-25a: 前の版の番号の控えを、1件の目印に置き換えて保存（1回だけ）
+          if (typeof renderFixBand_ === 'function') renderFixBand_();   // 管理者の帯の「ガルーンで片付けると直る物」
           badge.textContent = allRecipes.length + ' \u4ef6\u306e\u30ec\u30b7\u30d4\u3092\u8aad\u8fbc\u6e08';
           totalCountEl.textContent = allRecipes.length;
           renderRecipeGrid();
@@ -2398,9 +2518,9 @@
         : state === 'running' ? '… 全件の照合: 途中（' + num(f.checked) + ' / ' + num(f.total) + '件）'
         : '全件の照合: まだ';
       var t = document.createElement('span'); t.className = 'gchk-t';
-      t.textContent = (state === 'done' ? '同じ ' + num(f.same) + '件。違った物は、ガルーンの小窓で選んで送ると、下の「確定待ち」に入ります。'
-        : state === 'running' ? 'ガルーンで「📋 レシピ取り込み」を押し、小窓のいちばん下の「続きから照らし合わせる」で続きができます。'
-        : 'ガルーンで「📋 レシピ取り込み」を押し、小窓のいちばん下の「🔍 全部を照らし合わせる（1回だけ）」を押すと、全部の PDF を今の登録と1バイトずつ比べます（数を見てから送れます）。');
+      // 2026-11-25a: 全件の照合は「🪞 ガルーンと本棚を突き合わせる（ミラーリング）」に替わった（新しいお気に入りの小窓のいちばん下・数と実行は下の「ガルーンとそろえる」）
+      t.textContent = (state === 'done' ? '同じ ' + num(f.same) + '件。' : '') +
+        '11月25日の版から、全件の照合は「🪞 ガルーンと本棚を突き合わせる」に替わりました（ガルーンで「📋 レシピ取り込み」の小窓のいちばん下・数と実行はこの画面の「ガルーンとそろえる」で）。';
       box.appendChild(d); box.appendChild(t);
     }
 
@@ -2468,6 +2588,43 @@
       var hidden = false;
       try { hidden = localStorage.getItem('recipe_garoon_notice_hidden') === todayKey_(); } catch (e) {}
       notice.hidden = hidden;
+      if (typeof renderFixBand_ === 'function') renderFixBand_();   // 2026-11-25a: 片付けると直る物・きのう外した物
+    }
+
+    /**
+     * 2026-11-25a 管理者の毎日の帯の2つめの字（PO「ガルーンで片付けると直る物 ◯件（削除漏れ ◯・番号の重複 ◯・サイズ違い ◯）」「きのう外した物 ◯件」「外した物から戻せる口」）。
+     * 片付けると直る物は、一覧の知らせ（窓口の _shelfAlerts_ の答え・count の物）から数える＝窓口を呼ばない。同じ番号の組は1つと数える（窓口の数え方と同じ）。
+     */
+    function fixCounts_() {
+      var dup = {}, size = {}, old = 0, gone = 0;
+      (allRecipes || []).forEach(function (r) {
+        (r.Alerts || []).forEach(function (a) {
+          if (!a.count) return;
+          if (a.t === 'dup') dup[String(r.Code)] = 1;
+          else if (a.t === 'size') size[String(r.Code)] = 1;
+          else if (a.t === 'old') old++;
+          else if (a.t === 'gone') gone++;
+        });
+      });
+      var d = Object.keys(dup).length, s = Object.keys(size).length;
+      return { dup: d, size: s, old: old, gone: gone, fix: d + s + old };
+    }
+    function renderFixBand_() {
+      var box = document.getElementById('garoon-notice-fix');
+      if (!box) return;
+      var d = dailyNow_, sync = d && d.sync;
+      box.textContent = '';
+      if (!d || !appLoaded) { box.hidden = true; ['garoon-notice-sync', 'garoon-notice-removed'].forEach(function (id) { document.getElementById(id).hidden = true; }); return; }
+      var c = fixCounts_(), y = sync && Array.isArray(sync.yesterday) ? sync.yesterday.length : 0, t = sync && Array.isArray(sync.today) ? sync.today.length : 0;
+      var add = function (text, strong) { var e = document.createElement(strong ? 'b' : 'span'); e.textContent = text; box.appendChild(e); };
+      add('／ ガルーンで片付けると直る物 '); add(c.fix + '件', true);
+      add('（削除漏れ ' + c.old + '・番号の重複 ' + c.dup + '・サイズ違い ' + c.size + '）');
+      add('／ きのう外した物 '); add(y + '件', true);
+      if (t) add('・今日 ' + t + '件');
+      if (c.gone) { add('／ ⚠ ガルーンから消えた・確かめ待ち '); add(c.gone + '件', true); }
+      box.hidden = false;
+      document.getElementById('garoon-notice-sync').hidden = !(c.fix || c.gone);
+      document.getElementById('garoon-notice-removed').hidden = !(y || t);
     }
 
     /**
@@ -2479,6 +2636,7 @@
     var settingsAt_ = 0;
     var dailyNow_ = null;
     var canRestoreNow_ = false;   // 管理者か（表示だけ・窓口が毎回確かめる）   // 管理者の毎日の帯の中身（確定待ちの一覧を読み直したら、件数だけ手元で合わせる＝窓口を呼ばない）
+    var canDeleteNow_ = false;    // 2026-11-25a: 削除の釦を出すか（管理者だけ・表示だけ）
     function applySettings_(settings) {
       settings = settings || {};
       settingsAt_ = Date.now();
@@ -2486,8 +2644,12 @@
       renderGaroonStatus_(settings.garoon, settings.daily);
       var can = settings.canRestore === true;
       canRestoreNow_ = can;
-      ['import-card', 'side-import-link', 'history-card', 'side-history-link'].forEach(function (id) { var el = document.getElementById(id); if (el) el.hidden = !can; });
+      canDeleteNow_ = settings.canDelete === true;
+      ['import-card', 'side-import-link', 'history-card', 'side-history-link', 'mirror-card', 'side-mirror-link'].forEach(function (id) { var el = document.getElementById(id); if (el) el.hidden = !can; });
       historyMaybeLoad_();
+      renderFixBand_();
+      renderSyncBox_();
+      mirrorMaybeLoad_();
     }
     function loadSavedSettings() {
       return gsCall('getSavedSettings')
@@ -2513,10 +2675,10 @@
        ・「← ひとつ前に戻る」「↑ はじめへ」を上の帯にいつも出す。移るときは滑らせて、着いた見出しを光らせる
        ========================================================= */
     var GUIDE_NAME = 'レシピの本棚利用ガイド';
-    var GUIDE_ASSET_VER = 'recipe-web-2026-11-24a';   // guide-img/figs.js を読み直す印（画面の版と同じ）
+    var GUIDE_ASSET_VER = 'recipe-web-2026-11-25a';   // guide-img/figs.js を読み直す印（画面の版と同じ）
     var GUIDE_READERS = { store: '店舗向け', hq: '本部向け', admin: '本部・管理者向け' };
     // 図解（写真でない図）。流れの箱の絵は、並びの順に1つずつ
-    var GUIDE_FLOWS = { 'flow-daily': ['🔔', '📋', '📥', '✅'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-full': ['🔍', '🔐', '🔢', '☑️', '🗂'] };
+    var GUIDE_FLOWS = { 'flow-daily': ['🔔', '📋', '📥', '✅'], 'flow-garoon': ['📋', '🔎', '🔐', '🗂', '✅'], 'flow-mirror': ['🪞', '🔐', '🔢', '☑️', '🗂'], 'flow-sync': ['📋', '⇄', '📤', '✋', '↩'], 'flow-alerts': ['📄', '⚑', '◇', '🕰', '🛠'], 'flow-old': ['🔖', '▸', '✅'] };
     var _gSecs = [];        // 目次（本文の見出しから組み立てる）
     var _gForce = null;     // 目次で押した見出し（利用者が自分で送るまで優先）
     var _gAnim = null;
@@ -2870,6 +3032,12 @@
     function autoGuide_() {
       if (/[?&]guide=1/.test(location.search)) openGuide();
       else if (/[?&]manage=1/.test(location.search) && isAdmin) rbOpenSettings_({ from: 'list', focus: 'pending-card' });
+      // 2026-11-25a: ?manage=mirror（お気に入りの突き合わせのあとの「レシピの本棚で数を見る」）＝データ管理の「ガルーンとそろえる」（管理者だけに出る節・窓口も確かめる）
+      else if (/[?&]manage=mirror/.test(location.search) && isAdmin) {
+        var waitCard = gsCall('getSavedSettings').then(applySettings_).catch(function () {});
+        rbOpenSettings_({ from: 'list', focus: 'mirror-card' });
+        waitCard.then(function () { mirrorState_.loaded = false; loadMirror_(); rbFocus_('settings-main', 'mirror-card'); });
+      }
     }
 
     /* =========================================================
@@ -2970,7 +3138,7 @@
       if (historyState_.loaded) historyState_.stale = true;   // 2026-11-24a: 記録は見えたときに読み直す（開いただけでは読まない）
       historyState_.gate = false;   // 確定待ちの表が描けるまでは、記録の節が上の方に見えていても読まない（開いた直後は確定待ちが空で、記録が見えてしまう）
       var ready = loadPendingList();
-      Promise.resolve(ready).then(function () { historyState_.gate = true; historyMaybeLoad_(); });   // 2026-11-24a: 確定待ちが描けたあと、記録の節が見えていれば読む（見えていなければ、送ったときに）
+      Promise.resolve(ready).then(function () { historyState_.gate = true; historyMaybeLoad_(); mirrorMaybeLoad_(); });   // 2026-11-24a: 確定待ちが描けたあと、記録の節が見えていれば読む（見えていなければ、送ったときに）。11-25a: ミラーリングの数も同じ
       if (opts.focus) rbFocus_('settings-main', opts.focus, ready);
       else rbSpy_(document.getElementById('settings-main'));
     }
@@ -3009,7 +3177,7 @@
       history:   { label: '📜 更新の記録を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'history-card' }); } },
       confirm:   { label: '📥 確定待ちを開く（行の「確認して登録」で確認画面）', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'pending-card' }); } },
       manage:    { label: '⚙️ データ管理を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'garoon-check' }); } },
-      fullcheck: { label: '🔍 全件の照合を開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'garoon-full' }); } },
+      mirror:    { label: '🪞 ガルーンとそろえるを開く', hq: true, go: function () { rbOpenSettings_({ from: 'guide', focus: 'mirror-card' }); } },
       daily:     { label: '🔔 毎日の帯を見る（一覧のいちばん上）', hq: true, go: function () { mainTop_(); var n = document.getElementById('garoon-notice'); if (n && !n.hidden) rbFlash_(n); } },
       search:    { label: '🔍 探す欄へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); var s = document.getElementById('search-input'); if (s) { s.focus(); rbFlash_(s.closest('.search-wrapper') || s); } } },
       map:       { label: '📚 一覧の画面へ', hq: false, go: function () { mainPush_({ type: 'guide' }); window.scrollTo(0, 0); rbFlash_(document.getElementById('recipe-table-wrap')); } },
@@ -3125,7 +3293,10 @@
       });
       recipeTbody.addEventListener('click', function(e) {
         if (e.target.closest('.rt-pick')) return;
-        var tr = e.target.closest('tr[data-code]');
+        // 2026-11-25a: 「▸ 旧の可能性 ◯件を見る」＝その行のすぐ下に古い版を開く（もう一度でたたむ）
+        var fb = e.target.closest('button.rt-fold');
+        if (fb) { foldOpen_[fb.dataset.fold] = !foldOpen_[fb.dataset.fold]; renderRecipeGrid(); return; }
+        var tr = e.target.closest('tr[data-rk]');
         if (tr && tr._recipe) openModal(tr._recipe);
       });
 
@@ -3142,7 +3313,7 @@
         showToast('\u3059\u3079\u3066\u306e\u30ec\u30b7\u30d4\u3092\u9078\u629e\uff08\u512a\u5148\u5316\uff09\u3057\u307e\u3057\u305f\u3002');
       });
       document.getElementById('deselect-all-btn').addEventListener('click', function() {
-        uncheckedCodes = allRecipes.map(function(r) { return String(r.Code); });
+        uncheckedCodes = allRecipes.map(function(r) { return rkOf_(r); });   // 2026-11-25a: 1件の目印で
         saveUserPreferencesDebounced();
         lastToggle = null;
         hideUndoToast_();
@@ -3208,22 +3379,45 @@
         importStatus.textContent = '\u30d5\u30a1\u30a4\u30eb\u3092\u8aad\u307f\u8fbc\u307f\u4e2d...';
         var reader = new FileReader();
         reader.onload = function(event) {
-          var content = event.target.result;
-          importStatus.textContent = 'Google\u30b9\u30d7\u30ec\u30c3\u30c9\u30b7\u30fc\u30c8\u3078\u30a4\u30f3\u30dd\u30fc\u30c8\u4e2d...';
-          
-          gsCall('importRecipes', content)
-            .then(function(res) {
-              importStatus.textContent = '\u30a4\u30f3\u30dd\u30fc\u30c8\u6210\u529f\uff01' + res.count + ' \u4ef6\u306e\u30c7\u30fc\u30bf\u3092\u767b\u9332\u3057\u307e\u3057\u305f\u3002';
-              showToast('\u30c7\u30fc\u30bf\u30d9\u30fc\u30b9\u306e\u53d6\u308a\u8fbc\u307f\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f\u3002');
-              loadRecipes();
-            })
-            .catch(function(err) {
-              importStatus.textContent = '\u30a8\u30e9\u30fc: ' + (err && err.message || err);
-              showToast('\u30a4\u30f3\u30dd\u30fc\u30c8\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002', true);
-            });
+          var content = String(event.target.result || '');
+          // 2026-11-25a: \u53d6\u308a\u8fbc\u3080\u524d\u306b\u4ef6\u6570\u3092\u78ba\u304b\u3081\u308b\uff08\u3044\u307e \u25ef\u4ef6 \u2192 \u53d6\u308a\u8fbc\u3080\u3068 \u25ef\u4ef6\u30fb\u6d88\u3048\u308b\u30fb\u5897\u3048\u308b\uff09\u3002\u7a93\u53e3\u3082\u3001\u78ba\u304b\u3081\u305f\u3068\u304d\u306e\u4ef6\u6570\u3068\u4eca\u304c\u9055\u3048\u3070\u66f8\u304b\u306a\u3044
+          var rows = null;
+          try { rows = JSON.parse(content); } catch (e) { rows = null; }
+          if (!Array.isArray(rows)) { importStatus.textContent = 'JSON \u306e\u5f62\u304c\u9055\u3044\u307e\u3059\uff08\u914d\u5217\u3067\u306f\u3042\u308a\u307e\u305b\u3093\uff09\u3002'; return; }
+          var now = allRecipes.length, nowKey = {}, inKey = {}, same = 0;
+          allRecipes.forEach(function (r) { nowKey[rkOf_(r)] = 1; });
+          rows.forEach(function (r) {
+            r = r || {};
+            var rid = String(r.recipe_id || r.RecipeId || ''), code = String(r.code || r.Code || '');
+            var k = /^r[0-9a-f]{12}$/.test(rid) ? rid : (allRecipes.filter(function (x) { return String(x.Code) === code; }).length === 1 ? rkOf_(allRecipes.find(function (x) { return String(x.Code) === code; })) : '');
+            if (k && nowKey[k] && !inKey[k]) { inKey[k] = 1; same++; }
+          });
+          var gone = now - same, added = rows.length - same;
+          document.getElementById('import-check-text').textContent = '\u3044\u307e ' + now + '\u4ef6 \u2192 \u53d6\u308a\u8fbc\u3080\u3068 ' + rows.length + '\u4ef6\uff08\u305d\u306e\u307e\u307e ' + same + '\u4ef6\u30fb\u6d88\u3048\u308b ' + gone + '\u4ef6\u30fb\u5897\u3048\u308b ' + added + '\u4ef6\uff09\u3002' +
+            (gone ? '\u6d88\u3048\u308b ' + gone + '\u4ef6\u306e PDF \u306f\u6b8b\u308a\u307e\u3059\u304c\u3001\u4e00\u89a7\u304b\u3089\u898b\u3048\u306a\u304f\u306a\u308a\u307e\u3059\u3002' : '') + '\u3088\u3051\u308c\u3070\u300c\u5165\u308c\u66ff\u3048\u308b\u300d\u3092\u62bc\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+          document.getElementById('import-check').hidden = false;
+          importStatus.textContent = '';
+          pendingImport_ = { content: content, current: now };
         };
         reader.readAsText(file);
       }
+      var pendingImport_ = null;
+      document.getElementById('import-cancel').addEventListener('click', function () { pendingImport_ = null; document.getElementById('import-check').hidden = true; importStatus.textContent = '\u3084\u3081\u307e\u3057\u305f\uff08\u4f55\u3082\u5909\u308f\u3063\u3066\u3044\u307e\u305b\u3093\uff09\u3002'; fileInput.value = ''; });
+      document.getElementById('import-go').addEventListener('click', function () {
+        var p = pendingImport_, btn = document.getElementById('import-go');
+        if (!p) return;
+        btn.disabled = true; btn.textContent = '\u23f3 \u5165\u308c\u66ff\u3048\u3066\u3044\u307e\u3059\u2026';
+        gsCall('importRecipes', p.content, { current: p.current })
+          .then(function (res) {
+            if (!res || !res.success) { importStatus.textContent = (res && res.reason) || '\u5165\u308c\u66ff\u3048\u3089\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002'; return loadRecipes(); }
+            importStatus.textContent = '\u5165\u308c\u66ff\u3048\u307e\u3057\u305f: ' + res.before + '\u4ef6 \u2192 ' + res.count + '\u4ef6\u3002';
+            showToast('JSON \u306e\u623b\u3057\u304c\u6e08\u307f\u307e\u3057\u305f\u3002');
+            document.getElementById('import-check').hidden = true; pendingImport_ = null;
+            return loadRecipes();
+          })
+          .catch(function (err) { importStatus.textContent = '\u30a8\u30e9\u30fc: ' + (err && err.message || err); })
+          .then(function () { btn.disabled = false; btn.textContent = '\u5165\u308c\u66ff\u3048\u308b'; fileInput.value = ''; });
+      });
 
       // \u8a73\u7d30\u30e2\u30fc\u30c0\u30eb\u306e\u30bf\u30d6\u5207\u308a\u66ff\u3048
       document.querySelectorAll('.modal-tab-btn').forEach(function(btn) {
@@ -3318,11 +3512,11 @@
         var btn = document.getElementById('recipe-edit-save');
         btn.disabled = true;
         btn.textContent = '保存中…';
-        gsCall('updateRecipeFields', activeRecipe.Code, fields)
+        gsCall('updateRecipeFields', activeRecipe.RecipeId || activeRecipe.Code, fields)   // 2026-11-25a: 1件の目印で（同じ番号の2件を取り違えない）
           .then(function() {
             // 画面側の状態（詳細モーダル・カード一覧）にも同じ内容を反映する
             Object.assign(activeRecipe, fields);
-            var inList = allRecipes.find(function(r) { return String(r.Code) === String(activeRecipe.Code); });
+            var inList = rkFind_(rkOf_(activeRecipe));
             if (inList) Object.assign(inList, fields);
             document.getElementById('recipe-edit-panel').style.display = 'none';
             openModal(activeRecipe);   // コード・名前・タブの表示をまとめて更新
@@ -3354,7 +3548,7 @@
         var btn = document.getElementById('recipe-delete-exec');
         btn.disabled = true;
         btn.textContent = '削除中…';
-        gsCall('deleteRecipe', target.Code)
+        gsCall('deleteRecipe', target.RecipeId || target.Code)   // 2026-11-25a: 1件の目印で
           .then(function(res) {
             document.getElementById('recipe-delete-confirm').style.display = 'none';
             closeModal();
@@ -3428,7 +3622,8 @@
           default: return numOrNull_(r.Code);
         }
       };
-      var keyed = out.map(function (r, n) { return { r: r, v: val(r), u: !!st.unchecked[String(r.Code)], c: numOrNull_(r.Code), n: n }; });
+      // 2026-11-25a: 「使う」を外したかは1件の目印（RecipeId）で見る（前の画面の番号の控えも当てる）
+      var keyed = out.map(function (r, n) { return { r: r, v: val(r), u: !!(st.unchecked[String(r.RecipeId || r.Code)] || st.unchecked[String(r.Code)]), c: numOrNull_(r.Code), n: n }; });
       keyed.sort(function (a, b) {
         if (a.u !== b.u) return a.u ? 1 : -1;
         if (a.v !== b.v) {
@@ -3445,9 +3640,9 @@
 
     /** 1件の、探す鍵・名前の並びの字・更新日時（覚えておき、名前や原材料が変わったら作り直す）。鍵は探すときに初めて作る */
     function recipeInfo_(r, what) {
-      var code = String(r.Code), src = code + ' ' + String(r.Name || '') + ' ' + String(r.RawMaterials || '');
-      var c = infoCache_[code];
-      if (!c || c.src !== src || c.at !== r.UpdatedAt) c = infoCache_[code] = { src: src, at: r.UpdatedAt, key: null, nameKey: null, updated: null };
+      var code = String(r.Code), rk = rkOf_(r), src = code + ' ' + String(r.Name || '') + ' ' + String(r.RawMaterials || '');
+      var c = infoCache_[rk];
+      if (!c || c.src !== src || c.at !== r.UpdatedAt) c = infoCache_[rk] = { src: src, at: r.UpdatedAt, key: null, nameKey: null, updated: null };
       if (what === 'key') {
         if (c.key === null) c.key = window.SearchNorm ? SearchNorm.key(src) : src.toLowerCase();
         return c.key;
@@ -3476,17 +3671,57 @@
       return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
     }
     function uncheckedSet_() { var o = {}; uncheckedCodes.forEach(function (c) { o[String(c)] = 1; }); return o; }
+    /** 2026-11-25a: 1件の指し方（目印。窓口が前の版で目印が無ければ番号）。同じ番号の2件・コード無しの何件でも取り違えない */
+    function rkOf_(r) { return String((r && r.RecipeId) || ('c:' + String(r && r.Code))); }
+    function rkFind_(rk) { rk = String(rk); for (var i = 0; i < allRecipes.length; i++) if (rkOf_(allRecipes[i]) === rk) return allRecipes[i]; return null; }
+    /** 知らせ（窓口の _shelfAlerts_ の答え）の短い印。本部・管理者は全部、店は「旧の可能性」だけ（迷わないように） */
+    var ALERT_CHIP_ = { dup: ['a-dup', '⚑ 番号の重複かも'], size: ['a-size', '◇ サイズ違いかも'], old: ['a-old', '旧の可能性'], gone: ['a-gone', '⚠ ガルーンから消えた'],
+                        kept: ['a-info', 'ガルーンに無い'], oldinfo: ['a-info', '古い版あり'], same97: ['a-info', '同じ名前あり'] };
+    function alertChips_(r, forStore) {
+      var out = [];
+      (r.Alerts || []).forEach(function (a) {
+        if (forStore && a.t !== 'old') return;
+        var c = ALERT_CHIP_[a.t];
+        if (!c) return;
+        var s = document.createElement('span');
+        s.className = 'achip ' + c[0]; s.textContent = c[1]; s.title = String(a.title || '') + '：' + String(a.text || '');
+        out.push(s);
+      });
+      return out;
+    }
+    /** 1件の帯（1件の画面・確認画面）。本部・管理者には、すること・なぜ。店には短く */
+    function renderAlertBand_(box, alerts, forStore) {
+      if (!box) return;
+      box.textContent = '';
+      var list = (alerts || []).filter(function (a) { return !forStore || a.t === 'old'; });
+      box.hidden = !list.length;
+      box.classList.toggle('ab-info', list.length > 0 && list.every(function (a) { return !a.count; }));
+      list.forEach(function (a) {
+        var one = document.createElement('div'); one.className = 'ab-one';
+        var h = document.createElement('span'); h.className = 'ab-h'; h.textContent = (a.count ? '⚠ ' : 'ⓘ ') + String(a.title || ''); one.appendChild(h);
+        one.appendChild(document.createTextNode(forStore ? 'この1件は古い版かもしれません。同じ名前の新しいレシピがあります（本部で確かめています）。' : String(a.text || '')));
+        if (!forStore) {
+          var d = document.createElement('span'); d.className = 'ab-do'; d.textContent = 'すること: ' + String(a.act || ''); one.appendChild(d);
+          var w = document.createElement('span'); w.className = 'ab-why'; w.textContent = 'なぜ: ' + String(a.why || ''); one.appendChild(w);
+        }
+        box.appendChild(one);
+      });
+    }
+    var foldOpen_ = {};   // たたんだ古い版を開いている新しい方の1件（この画面だけ・保存しない）
     function yen_(v) { var n = numOrNull_(v); return n == null ? '--' : n.toLocaleString('ja-JP') + '円'; }
     function pct_(v) { var n = numOrNull_(v); return n == null ? '--' : n.toFixed(1) + '%'; }
 
     /** 1件の行（覚えた行を使う。中身が変わっていれば作り直す）。チェックと薄い色は、描くたびに合わせる */
-    function rowFor_(r, unchecked) {
-      var code = String(r.Code);
-      var sig = [r.Name, r.Category, r.SellingPrice, r.CostPrice, r.MarginRate, r.UpdatedAt].join('\u0001');
-      var row = rowCache_[code];
+    function rowFor_(r, unchecked, fold) {
+      var code = String(r.Code), rk = rkOf_(r);
+      fold = fold || {};
+      // 2026-11-25a: 知らせの印・たたんだ古い版の数・開いているかも、行の作り直しの印に入れる
+      var sig = [r.Name, r.Code, r.Category, r.SellingPrice, r.CostPrice, r.MarginRate, r.UpdatedAt, (r.Alerts || []).map(function (a) { return a.t; }).join(','), fold.kids || 0, fold.open ? 1 : 0, fold.kid ? 1 : 0, isAdmin ? 1 : 0].join('\u0001');
+      var row = rowCache_[rk];
       if (!row || row._sig !== sig) {
         row = document.createElement('tr');
-        row._sig = sig; row.dataset.code = code;
+        row._sig = sig; row.dataset.rk = rk;
+        if (fold.kid) row.classList.add('rt-kid');
         var cell = function (cls, text) { var td = document.createElement('td'); td.className = cls; if (text != null) td.textContent = text; row.appendChild(td); return td; };
         var cb = document.createElement('input');
         cb.type = 'checkbox'; cb.className = 'card-pref-checkbox rt-check';
@@ -3495,7 +3730,16 @@
         cell('rt-code', code);
         var open = document.createElement('button');
         open.type = 'button'; open.className = 'rt-open'; open.textContent = String(r.Name || '（名前なし）');
-        cell('rt-name').appendChild(open);
+        var nameTd = cell('rt-name');
+        nameTd.appendChild(open);
+        alertChips_(r, !isAdmin).forEach(function (s) { nameTd.appendChild(document.createTextNode(' ')); nameTd.appendChild(s); });
+        if (fold.kids) {
+          var fb = document.createElement('button');
+          fb.type = 'button'; fb.className = 'rt-fold'; fb.dataset.fold = rk;
+          fb.textContent = (fold.open ? '▾ 旧の可能性 ' : '▸ 旧の可能性 ') + fold.kids + '件' + (fold.open ? 'をたたむ' : 'を見る');
+          fb.setAttribute('aria-expanded', fold.open ? 'true' : 'false');
+          nameTd.appendChild(fb);
+        }
         var tag = document.createElement('span');
         tag.className = 'recipe-cat-tag ' + (r.Category === '米飯' ? 'tag-maihan' : r.Category === '寿司' ? 'tag-sushi' : 'tag-sozai');
         tag.textContent = String(r.Category || '');
@@ -3504,10 +3748,10 @@
         cell('rt-num', yen_(r.CostPrice));
         cell('rt-num', pct_(r.MarginRate));
         cell('rt-upd', stampOf_(r.UpdatedAt).slice(0, 10));
-        rowCache_[code] = row;
+        rowCache_[rk] = row;
       }
       row._recipe = r;
-      var off = !!unchecked[code];
+      var off = !!(unchecked[rk] || unchecked[code]);
       row.classList.toggle('demoted', off);
       row.firstChild.firstChild.checked = !off;
       return row;
@@ -3539,7 +3783,18 @@
         recipeTbody.removeAttribute('aria-busy');
         return;
       }
-      var rows = list.map(function (r) { return rowFor_(r, unchecked); });
+      // 2026-11-25a: 同じ名前の古い版（窓口の知らせ old・Fold＝新しい方の目印）は、新しい方の下にたたむ（店の人が迷わないように）。
+      //   探している間はたためない（当たった物は全部見せる）。新しい方が区分・探す字で外れていれば、古い版もその場所に出す
+      var foldOn = !searchTerms_, inList = {}, kids = {}, seq = [];
+      list.forEach(function (r) { inList[rkOf_(r)] = 1; });
+      if (foldOn) list.forEach(function (r) { if (r.Fold && inList[r.Fold]) (kids[r.Fold] = kids[r.Fold] || []).push(r); });
+      list.forEach(function (r) {
+        if (foldOn && r.Fold && inList[r.Fold]) return;
+        var k = kids[rkOf_(r)], open = !!foldOpen_[rkOf_(r)];
+        seq.push(rowFor_(r, unchecked, { kids: k ? k.length : 0, open: open }));
+        if (k && open) k.forEach(function (x) { seq.push(rowFor_(x, unchecked, { kid: true })); });
+      });
+      var rows = seq;
       if (placeRowsInPlace_(rows)) { recipeTbody.removeAttribute('aria-busy'); return; }
       // 動く行が多い: 上から順に、少しずつ入れる
       var frag = document.createDocumentFragment(), at = Math.min(rows.length, RT_FIRST_);
@@ -3564,7 +3819,7 @@
      */
     function placeRowsInPlace_(rows) {
       var cur = recipeTbody.children, pos = new Map(), i;
-      for (i = 0; i < cur.length; i++) if (cur[i].dataset && cur[i].dataset.code) pos.set(cur[i], i);
+      for (i = 0; i < cur.length; i++) if (cur[i].dataset && cur[i].dataset.rk) pos.set(cur[i], i);
       if (!pos.size) return false;
       // rows の中で、今の位置が増えていく最長の並び（そのまま残せる行）を求める
       var seq = [], idx = [];
@@ -3613,7 +3868,10 @@
 
     /** 「使う」のチェックを替えた（外す＝下へ・入れる＝上へ）。外したときだけ「元に戻す」を出す */
     function togglePref_(r, checked) {
-      var codeStr = String(r.Code), idx = uncheckedCodes.indexOf(codeStr);
+      // 2026-11-25a: 1件の目印で持つ（同じ番号の2件を一緒に外さない）。前の番号の控えが残っていれば、この機会に消す
+      var codeStr = rkOf_(r), idx = uncheckedCodes.indexOf(codeStr), old = uncheckedCodes.indexOf(String(r.Code));
+      if (old !== -1 && r.RecipeId) uncheckedCodes.splice(old, 1);
+      idx = uncheckedCodes.indexOf(codeStr);
       if (checked) { if (idx !== -1) uncheckedCodes.splice(idx, 1); }
       else if (idx === -1) uncheckedCodes.push(codeStr);
       saveUserPreferencesDebounced();
@@ -3644,8 +3902,8 @@
       })();
     }
     /** 動いた行を少し光らせる（見えている所にあるときだけ。画面は送らない） */
-    function flashRow_(code) {
-      var row = rowCache_[String(code)];
+    function flashRow_(rk) {
+      var row = rowCache_[String(rk)];
       if (!row || !row.isConnected) return;
       row.classList.remove('rt-flash'); void row.offsetWidth; row.classList.add('rt-flash');
     }
@@ -3724,11 +3982,12 @@
       document.getElementById('modal-recipe-code').textContent = recipe.Code;
       document.getElementById('modal-recipe-name').textContent = recipe.Name;
 
-      // 編集・削除は本部だけ。開き直すたびにパネルは畳んでおく
+      // 編集は本部だけ。2026-11-25a: 削除の釦は管理者（ADMIN_EMAILS）だけに出す（窓口の canDelete・窓口も削除のたびに確かめる）。開き直すたびにパネルは畳んでおく
       document.getElementById('recipe-edit-btn').style.display = isAdmin ? 'inline-block' : 'none';
       document.getElementById('recipe-edit-panel').style.display = 'none';
-      document.getElementById('recipe-delete-btn').style.display = isAdmin ? 'inline-block' : 'none';
+      document.getElementById('recipe-delete-btn').style.display = canDeleteNow_ ? 'inline-block' : 'none';
       document.getElementById('recipe-delete-confirm').style.display = 'none';
+      renderAlertBand_(document.getElementById('modal-alerts'), recipe.Alerts, !isAdmin);   // 2026-11-25a: この1件の知らせ
 
       var debugEl = document.getElementById('modal-debug-id');
       if (debugEl) {
@@ -4020,11 +4279,14 @@
     }
 
     /** 見比べる相手（今の登録）を決める。選んだ差し替え先、そうでなければコード一致、無ければ一番似ている候補。 */
+    /** 2026-11-25a: 相手は1件の目印（rid）で持つ（窓口が前の版なら番号） */
+    function simKey_(x) { return String((x && (x.rid || x.code)) || ''); }
+    function simRecipe_(key) { return key ? (rkFind_(key) || (allRecipes || []).find(function (r) { return String(r.Code).trim() === key; }) || null) : null; }
     function cmpPickOld_(item) {
       var checked = document.querySelector('input[name="sim-choice"]:checked');
       if (checked && /^(replace|pdfonly):/.test(checked.value)) return checked.value.replace(/^(replace|pdfonly):/, '');
-      if (item.exact) return item.exact.code;
-      return (item.candidates && item.candidates.length) ? item.candidates[0].code : '';
+      if (item.exact) return simKey_(item.exact);
+      return (item.candidates && item.candidates.length) ? simKey_(item.candidates[0]) : '';
     }
     /** 相手 code との違いの札（same / visual / content）。窓口の比べた結果が無ければ ''（前の窓口） */
     function cmpKindFor_(code) {
@@ -4048,7 +4310,7 @@
       if (!box) return;
       box.textContent = '';
       var it = cmp_.item, code = cmp_.oldCode;
-      var old = code ? (allRecipes || []).find(function (r) { return String(r.Code).trim() === code; }) : null;
+      var old = simRecipe_(code);
       label.textContent = old ? '（比べた相手: ' + old.Code + ' ' + (old.Name || '') + '）' : '';
       var kind = old ? cmpKindFor_(code) : '';
       var cards = el_('div', 'kcards');
@@ -4084,7 +4346,7 @@
       var box = document.getElementById('similar-compare');
       var p = item.parsed || {};
       var oldCode = cmpPickOld_(item);
-      var old = oldCode ? (allRecipes || []).find(function (r) { return String(r.Code).trim() === oldCode; }) : null;
+      var old = simRecipe_(oldCode);
       var oldChanged = oldCode !== cmp_.oldCode;
       cmp_.oldCode = oldCode;
       cmpRenderKind_();
@@ -4186,7 +4448,7 @@
 
       // 届いたPDFは1回だけ読む（確定待ちは窓口の返事に入っている）。今の登録のPDFは、相手が変わったときだけ読み直す
       if (oldChanged) { cmp_.docs.old = null; cmp_.blobs.old = null; cmp_.want.old = ''; cmp_.rend.old = null; cmp_.hits = {}; cmp_.scanSeq++; }
-      if (old && !cmp_.docs.old) cmpLoad_('old', old.FileId, item.oldPdf && String(item.oldPdf.code) === oldCode ? item.oldPdf.base64 : '', oldCode);
+      if (old && !cmp_.docs.old) cmpLoad_('old', old.FileId, item.oldPdf && String(item.oldPdf.rid || item.oldPdf.code) === oldCode ? item.oldPdf.base64 : '', oldCode);
       if (!cmp_.docs.neu) cmpLoad_('neu', item.pendingId, item.pdf || '', '');
       cmpDrawAll_();
       rbSpy_(document.getElementById('similar-main'));
@@ -4450,16 +4712,19 @@
         var terms = window.SearchNorm ? SearchNorm.terms(q) : null, hits = [];
         for (var i = 0; i < allRecipes.length && hits.length < 13; i++) {
           var r = allRecipes[i];
-          if (shown[String(r.Code)]) continue;
+          if (shown[rkOf_(r)] || shown[String(r.Code)]) continue;
           if (terms ? SearchNorm.hit(recipeInfo_(r, 'key'), terms) : recipeInfo_(r, 'key').indexOf(q.toLowerCase()) >= 0) hits.push(r);
         }
         count.textContent = hits.length > 12 ? '13件以上' : hits.length + '件';
         if (hits.length > 12) found.appendChild(el_('small', 'fcount', '13件以上当たりました。上の 12 件だけ出しています（字を足すと絞れます）'));
         else if (!hits.length) found.appendChild(el_('small', 'fcount', '当たるレシピがありません（字を短くするか、別の書き方で）'));
         hits.slice(0, 12).forEach(function (r) {
-          var v = 'replace:' + String(r.Code);
-          found.appendChild(simOption_(v, 'このレシピを差し替える（読み取った中身で）',
-            similarText_({ name: r.Name, code: r.Code, category: r.Category, updatedAt: stampOf_(r.UpdatedAt).slice(0, 10) }), '探して選んだレシピ', '', v === keep));
+          // 2026-11-25a: ガルーンの別のファイルに結んだ1件は差し替えられない（1件＝ファイル1つ・窓口も断る）＝選べない形で理由を出す
+          var v = 'replace:' + rkOf_(r), bound = r.Bound === true;
+          var o = simOption_(v, bound ? 'ガルーンの別のファイルの1件（差し替えられません）' : 'このレシピを差し替える（読み取った中身で・前からの1件をこのファイルに結ぶ）',
+            similarText_({ name: r.Name, code: r.Code, category: r.Category, updatedAt: stampOf_(r.UpdatedAt).slice(0, 10) }), bound ? '番号が同じでも、別のファイルなら別の1件です' : '探して選んだレシピ', bound ? 'is-off' : '', !bound && v === keep);
+          if (bound) o.querySelector('input').disabled = true;
+          found.appendChild(o);
         });
       };
       simSearchRun_ = run;
@@ -4507,31 +4772,38 @@
           (p.margin_rate != null && p.margin_rate !== '' ? p.margin_rate + '%' : '-');
 
         cmpReset_(item);
-        // 候補の並び: コード一致 → 名前が似ているもの
+        // 2026-11-25a: 入れたら出る知らせ（番号の重複・サイズ違い・削除漏れ）を画面のいちばん上に（止めない）
+        renderAlertBand_(document.getElementById('sim-alerts'), item.alerts, false);
+        // 候補の並び: 当てる1件（同じファイルの1件・結ぶ前からの1件）→ 名前が似ているもの・同じ番号の1件
         var all = [];
         if (item.exact) all.push(item.exact);
         (item.candidates || []).forEach(function(c) { all.push(c); });
-        var exactKind = item.exact ? cmpKindFor_(String(item.exact.code)) : '';
-        var defaultValue = item.exact ? ((exactKind === 'same' || exactKind === 'visual') ? 'pdfonly:' + item.exact.code : 'replace:' + item.exact.code) : 'new';
+        var ek = item.exact ? simKey_(item.exact) : '';
+        var exactKind = item.exact ? cmpKindFor_(ek) : '';
+        var sameFile = !!(item.target && item.target.kind === 'fid');   // このファイルの1件がもう本棚にある＝新しい1件にはしない（窓口も断る）
+        var defaultValue = item.exact ? ((exactKind === 'same' || exactKind === 'visual') ? 'pdfonly:' + ek : 'replace:' + ek) : 'new';
 
         var list = document.getElementById('similar-list');
         list.textContent = '';
-        var h = el_('div', 'rb-h', all.length ? '🔀 差し替える先（似たレシピ ' + all.length + ' 件）' : '🔀 似た名前の今の登録はありませんでした');
-        if (!all.length) h.appendChild(el_('small', '', '読み取り結果をご確認のうえ登録してください'));
+        var h = el_('div', 'rb-h', item.exact ? (sameFile ? '🔀 このファイルの1件（ガルーンの同じファイルの新しい版です）' : '🔀 前からの1件（番号・名前が同じ）に結べます') : (all.length ? '🔀 似たレシピ ' + all.length + ' 件（どれも別のファイルの1件）' : '🔀 似た名前の今の登録はありませんでした'));
+        if (!item.exact) h.appendChild(el_('small', '', '1件＝ガルーンのファイル1つ。別のファイルの1件は上書きせず、新しい1件として登録します（知らせは上に出ています）'));
         list.appendChild(h);
         var opts = el_('div', 'sim-opts');
         if (item.exact) {
-          opts.appendChild(simOption_('pdfonly:' + item.exact.code, 'PDF だけ差し替える（読み取った中身は今の登録のまま）', similarText_(item.exact),
-            '見た目だけ・1バイトも同じのときの既定。人が直した値も消えません', 'is-pdf', defaultValue === 'pdfonly:' + item.exact.code));
+          opts.appendChild(simOption_('pdfonly:' + ek, 'PDF だけ差し替える（読み取った中身は今の登録のまま）', similarText_(item.exact),
+            '見た目だけ・1バイトも同じのときの既定。人が直した値も消えません', 'is-pdf', defaultValue === 'pdfonly:' + ek));
         }
         all.forEach(function(c) {
-          opts.appendChild(simOption_('replace:' + c.code, 'このレシピを差し替える（読み取った中身で）', similarText_(c), c.reason || '', '', defaultValue === 'replace:' + c.code));
+          var k = simKey_(c), can = c.canReplace !== false;
+          var o = simOption_('replace:' + k, can ? 'このレシピを差し替える（読み取った中身で）' : 'ガルーンの別のファイルの1件（差し替えられません）', similarText_(c), c.reason || '', can ? '' : 'is-off', can && defaultValue === 'replace:' + k);
+          if (!can) o.querySelector('input').disabled = true;
+          opts.appendChild(o);
         });
-        opts.appendChild(simOption_('new', '新しい1件として登録する',
-          all.length ? '上の今の登録はそのまま残ります' : '一覧に1件追加されます',
-          all.length ? '原材料表示の省略版とフル版のように、両方持つ場合はこちら' : '', 'is-new', defaultValue === 'new'));
+        if (!sameFile) opts.appendChild(simOption_('new', '新しい1件として登録する',
+          all.length ? '上の今の登録はそのまま残ります（番号が同じでも、別のファイルなら別の1件）' : '一覧に1件追加されます',
+          all.length ? '規格違い（（小）など）・原材料表示の省略版とフル版のように、両方持つ場合もこちら' : '', 'is-new', defaultValue === 'new'));
         // 2026-11-19b: 似たレシピに無いときは、探して選ぶ（一覧と同じ探し方＝書き方のゆれを吸収）。選んだ物は「このレシピを差し替える」と同じ
-        opts.appendChild(simSearchBox_(all.map(function (c) { return String(c.code); })));
+        opts.appendChild(simSearchBox_(all.map(function (c) { return simKey_(c); }).concat(all.map(function (c) { return String(c.code); }))));
         list.appendChild(opts);
         var foot = el_('p', '', '※ 差し替えると、これまでのPDFは Google ドライブの「_差し替え前」フォルダへ移動します（消えません）。誰が・いつ・何を差し替えたかは「RecipeHistory」シートに残ります。');
         foot.style.cssText = 'font-size: 0.75rem; color: var(--text-muted); margin-top: 0.6rem; line-height: 1.7; max-width: 60em;';
@@ -4677,20 +4949,28 @@
     };
     /** 1行の見え方と既定の選び方（表示だけ。登録は窓口が比べ直して決める） */
     function pendingInfo_(p, names) {
-      var g = p.garoon || {}, code = pendingCode_(p.name), existing = !!(code && Object.prototype.hasOwnProperty.call(names, code));
+      // 2026-11-25a: 当てる1件は窓口が決めた target（同じファイルの1件＝fid／結ぶ前からの1件＝legacy／新しい1件＝new）。番号だけで「今の登録あり」としない
+      var g = p.garoon || {}, tg = p.target || null, code = tg ? String(tg.code || p.code || '') : pendingCode_(p.name);
+      var existing = tg ? !!tg.rid : !!(code && Object.prototype.hasOwnProperty.call(names, code));
       var kind = Object.prototype.hasOwnProperty.call(PENDING_KIND, g.check) ? g.check : (existing ? 'diff' : (code ? 'new' : 'nocode'));
-      if (kind === 'new' && existing) kind = 'diff';
+      if ((kind === 'new' || kind === 'nocode') && existing) kind = 'diff';
+      if (!existing && kind !== 'new') kind = code || tg ? 'new' : 'nocode';
       var why = String(g.reason || '');
-      var whyText = !why ? '' : why === '新しい' ? 'ガルーンに新しく足された' : why === '更新日時' ? 'ガルーンで日付だけ変わった' : why === '全件の照合' ? '全件の照合で、今の登録と中身が違った' : 'ガルーンで ' + why + ' が変わった';
-      // 2026-11-19b（PO「大元のガルーンデータが常に正です」）: 中身も変わった物も、既定は中身ごと差し替える。登録のしかたは窓口が比べ直して決める
-      var addLabel = !existing ? '新しく登録する' : kind === 'content' ? '中身ごと差し替える（読み取った中身で）' : kind === 'diff' ? '差し替える（中身が違えば中身ごと）' : 'PDF を差し替える';
+      var whyText = !why ? '' : why === '新しい' ? 'ガルーンに新しく足された' : why === '更新日時' ? 'ガルーンで日付だけ変わった' : why === '全件の照合' ? '全件の照合で、今の登録と中身が違った'
+        : /取り直し$/.test(why) ? '管理者が「ガルーンから取り直す」にした' : /ミラーリング$/.test(why) ? 'ミラーリング（ガルーンと本棚の突き合わせ）で送った' : /ガルーンに戻った$/.test(why) ? 'ガルーンにまた出てきた（前に本棚から外した物）' : 'ガルーンで ' + why + ' が変わった';
+      // 2026-11-19b（PO「大元のガルーンデータが常に正です」）: 同じファイルの新しい版は、中身も変わっていれば中身ごと差し替える（その1件だけ）。登録のしかたは窓口が比べ直して決める
+      // 選ぶ欄の字は短く（欄の幅が表を横にはみ出させない）。どの1件に当てるか（同じファイルの1件／結ぶ前からの1件）は、すぐ横のファイルの欄に出す
+      var addLabel = !existing ? (code === 'コード無し' ? '新しく登録する（コード無し）' : '新しく登録する')
+        : kind === 'content' ? '中身ごと差し替える' : kind === 'diff' ? '差し替える（中身が違えば中身ごと）' : 'PDF を差し替える';
+      var refetch = /取り直し$/.test(why);
       return {
-        code: code, existing: existing, kind: kind,
+        code: code, existing: existing, kind: kind, target: tg, alerts: p.alerts || [],
         badge: PENDING_KIND[kind], note: kind === 'content' ? (g.checkNote ? '変わった項目: ' + String(g.checkNote) : '') : PENDING_KIND[kind][2],
         why: whyText + (g.stamp ? '（更新 ' + g.stamp + '）' : ''),
         addLabel: addLabel,
-        addOk: !!code,
-        def: code ? 'add' : 'hold'
+        addOk: !!(code || tg),
+        // 管理者の「取り直し」は、まとめて実行の既定から外す（確認画面で1件ずつ・2026-11-25a）
+        def: (code || tg) && !refetch ? 'add' : 'hold'
       };
     }
 
@@ -4756,7 +5036,13 @@
 
         var td2 = el_('td'), nm = el_('div', 'pname', p.name);
         td2.appendChild(nm);
-        if (info.existing) td2.appendChild(el_('div', 'psub', '今の登録: ' + info.code + ' ' + names[info.code]));
+        if (info.existing) td2.appendChild(el_('div', 'psub', (info.target && info.target.kind === 'legacy' ? '結ぶ前からの1件: ' : '同じファイルの1件: ') + String(info.target ? info.target.code : info.code) + ' ' + String(info.target ? info.target.name : names[info.code])));
+        else if (info.target) td2.appendChild(el_('div', 'psub', '新しい1件（番号 ' + String(info.code || '―') + '）'));
+        // 2026-11-25a: 入れたら出る知らせ（止めない）。印と「すること」を1行ずつ
+        (info.alerts || []).filter(function (a) { return a.count; }).forEach(function (a) {
+          var line = el_('div', 'psub'); alertChips_({ Alerts: [a] }, false).forEach(function (s) { line.appendChild(s); });
+          line.appendChild(document.createTextNode(String(a.text || ''))); td2.appendChild(line);
+        });
         if (p.older) td2.appendChild(el_('div', 'psub', '同じファイルの新しい版も届いています（こちらは古い版）'));
         tr.appendChild(td2);
 
@@ -4771,7 +5057,7 @@
 
         function paint() { tr.classList.toggle('is-off', pendingChoice_[p.id] !== 'add'); }
         paint();
-        tr._stext = String(p.name || '') + ' ' + (info.code || '') + ' ' + (info.existing ? String(names[info.code] || '') : '');   // 探す欄で当てる字
+        tr._stext = String(p.name || '') + ' ' + (info.code || '') + ' ' + (info.existing ? String(info.target ? info.target.name : (names[info.code] || '')) : '');   // 探す欄で当てる字
         tbody.appendChild(tr);
       });
       table.appendChild(tbody); wrap.appendChild(table); listEl.appendChild(wrap);
@@ -4885,6 +5171,8 @@
             var res = await gsCall('autoCommitPending', it.id, { content: true });
             if (res && res.success) {
               delete pendingChoice_[it.id];
+              // 2026-11-25a: 入れたら出た知らせ（番号の重複・サイズ違い・削除漏れ）も結果に（止めない）
+              res.notes = (res.notes || []).concat((res.alerts || []).filter(function (a) { return a.count; }).map(function (a) { return String(a.title || '') + '：' + String(a.text || ''); }));
               var hasNotes = !!(res.notes && res.notes.length), facts = [];
               var row;
               if (res.action === '中身ごと差し替え') {
@@ -5037,11 +5325,24 @@
         var tv = el_('td');
         if (x.revert && x.revert.ok && x.cmp) {
           var b = el_('button', 'pgo', '↩ この差し替えを戻す'); b.type = 'button';
-          b.addEventListener('click', function () { openRevert_(x); });
+          b.addEventListener('click', function (e) { e.stopPropagation(); openRevert_(x); });
           tv.appendChild(b);
         } else if (x.revert && x.revert.already) { tv.appendChild(el_('span', 'hdone', '↩ ' + x.revert.why)); }
         else if (x.revert) { tv.appendChild(el_('span', 'psub', x.revert.why)); }
+        // 2026-11-25a: 外した・削除した1件は「本棚に戻す」（管理者だけ・窓口も確かめる・2回押しても1回）
+        if (x.restore && x.restore.ok) {
+          var rb = el_('button', 'pgo', '↩ 本棚に戻す'); rb.type = 'button';
+          rb.addEventListener('click', function (e) { e.stopPropagation(); restoreRemoved_(x, rb); });
+          tv.appendChild(rb);
+        } else if (x.restore) tv.appendChild(el_('span', x.restore.already ? 'hdone' : 'psub', x.restore.why));
         tr.appendChild(tv);
+        if (x.note) ta.appendChild(el_('div', 'psub', String(x.note)));
+        // 2026-11-25a: 行を押すと中身（変わった項目の前と後・前の PDF・ガルーンから取り直す）
+        if (x.detail) {
+          tr.className = (tr.className ? tr.className + ' ' : '') + 'h-click';
+          tr.title = '押すと、変わった項目と前の PDF が開きます';
+          tr.addEventListener('click', function (e) { if (e.target.closest('button')) return; openHistoryDetail_(x); });
+        }
         tbody.appendChild(tr);
       });
       table.appendChild(tbody); wrap.appendChild(table); box.appendChild(wrap);
@@ -5104,6 +5405,9 @@
         queued = true;
         requestAnimationFrame(function () { queued = false; historyMaybeLoad_(); });
       }, { passive: true });
+      // 2026-11-25a: 管理者の帯の「そろえを見る」「外した物・戻す」
+      document.getElementById('garoon-notice-sync').addEventListener('click', function () { rbOpenSettings_({ from: 'list', focus: 'mirror-card' }); });
+      document.getElementById('garoon-notice-removed').addEventListener('click', function () { historyState_.stale = true; rbOpenSettings_({ from: 'list', focus: 'history-card' }); });
     })();
     /** 更新の記録の節が、開いているデータ管理の本文に見えていて（下に 200px の余裕）、まだ読んでいないか古ければ読む */
     function historyMaybeLoad_() {
@@ -5112,6 +5416,253 @@
       if (historyState_.loading || (historyState_.loaded && !historyState_.stale)) return;
       var m = main.getBoundingClientRect(), c = card.getBoundingClientRect();
       if (c.top < m.bottom + 200 && c.bottom > m.top) loadHistory_();
+    }
+
+    /* ── 2026-11-25a ガルーンとそろえる（管理者だけ）──
+       ① 毎日のそろえ: ガルーンから消えて確かめ待ちの1件（一覧の知らせ gone から）→「外す」「残す」（decideSyncRemoval・窓口が毎回管理者かを確かめる）
+          ガルーンで片付けると直る物（一覧の知らせ dup・size・old から・すること つき）・きのう／今日 外した物（窓口の daily.sync）
+       ② 一度だけのミラーリング: getMirrorPlan（数と一覧）→ 選んで「この内容で実行」→ runMirror を残りが 0 になるまで（続きから・2回押しても1回分）
+       字はすべて textContent。ガルーンのファイルの番号は、実行で選んだ物を窓口へ返すためだけに持つ（画面に出さない） */
+    function syncEl_(tag, cls, text) { return el_(tag, cls, text); }
+    function renderSyncBox_() {
+      var box = document.getElementById('sync-box');
+      if (!box || !canRestoreNow_) return;
+      box.textContent = '';
+      var sync = dailyNow_ && dailyNow_.sync, gone = [], fix = [];
+      (allRecipes || []).forEach(function (r) {
+        (r.Alerts || []).forEach(function (a) { if (a.t === 'gone') gone.push(r); else if (a.count) fix.push({ r: r, a: a }); });
+      });
+      var side = document.getElementById('side-mirror-count');
+      if (side) side.textContent = (gone.length + fix.length) ? String(gone.length + fix.length) : '';
+      // 確かめ待ち
+      var h1 = syncEl_('div', 'rb-h', '⚠ ガルーンから消えた物（確かめ待ち ' + gone.length + '件）');
+      box.appendChild(h1);
+      if (!gone.length) box.appendChild(syncEl_('p', 'mnote', 'いま、確かめ待ちはありません。' + (sync && sync.last ? '最後に最後まで読めた一覧: ' + String(sync.last.at || '').slice(0, 16) + '（ガルーン ' + Number(sync.last.total || 0) + '件）' : '新しいお気に入りで取り込むと、ここに最後まで読めた一覧の日時が出ます。')));
+      else {
+        box.appendChild(syncEl_('p', 'mnote', '一度にたくさん消えたので、自動では外していません（一覧を読み損ねた恐れ）。ガルーンで本当に消したファイルなら「外す」、残すなら「残す」を押してください（外した物は「_削除済み」へ・更新の記録から戻せます）。'));
+        var wrap = syncEl_('div', 'ptable-wrap'), tb = syncEl_('table', 'ptable pfit'), th = syncEl_('thead'), hr = syncEl_('tr');
+        ['選ぶ', '番号', '商品名', '消えた日時'].forEach(function (t) { hr.appendChild(syncEl_('th', '', t)); });
+        th.appendChild(hr); tb.appendChild(th);
+        var body = syncEl_('tbody');
+        gone.forEach(function (r) {
+          var tr = syncEl_('tr'), td = syncEl_('td'), cb = document.createElement('input');
+          cb.type = 'checkbox'; cb.checked = true; cb.dataset.rk = rkOf_(r); cb.setAttribute('aria-label', '「' + String(r.Name || '') + '」を選ぶ');
+          td.appendChild(cb); tr.appendChild(td);
+          tr.appendChild(syncEl_('td', '', String(r.Code))); tr.appendChild(syncEl_('td', '', String(r.Name || '')));
+          var a = (r.Alerts || []).find(function (x) { return x.t === 'gone'; });
+          tr.appendChild(syncEl_('td', '', a ? String(a.text || '').replace(/^.*（|）.*$/g, '') : ''));
+          body.appendChild(tr);
+        });
+        tb.appendChild(body); wrap.appendChild(tb); box.appendChild(wrap);
+        var bar = syncEl_('div', 'mbar'), msg = syncEl_('span', 'mnote');
+        [['remove', '選んだ物を本棚から外す', 'mgo'], ['keep', '選んだ物を残す（自動で外さない）', 'rb-btn']].forEach(function (b) {
+          var btn = syncEl_('button', b[2], b[1]); btn.type = 'button';
+          btn.addEventListener('click', function () {
+            var rids = [].slice.call(box.querySelectorAll('input[type=checkbox][data-rk]:checked')).map(function (x) { return x.dataset.rk; });
+            if (!rids.length) { msg.textContent = '選んでください。'; return; }
+            btn.disabled = true; msg.textContent = '⏳ 書いています…';
+            gsCall('decideSyncRemoval', rids, b[0]).then(function (res) {
+              msg.textContent = b[0] === 'remove' ? '外しました: ' + res.removed + '件（「_削除済み」へ・更新の記録から戻せます）' : '残しました: ' + res.kept + '件';
+              return loadRecipes().then(function () { return gsCall('getSavedSettings').then(applySettings_); });
+            }).catch(function (e) { msg.textContent = 'できませんでした: ' + String(e && e.message || e); btn.disabled = false; });
+          });
+          bar.appendChild(btn);
+        });
+        bar.appendChild(msg); box.appendChild(bar);
+      }
+      // ガルーンで片付けると直る物
+      var c = fixCounts_();
+      box.appendChild(syncEl_('div', 'rb-h', '🧩 ガルーンで片付けると直る物 ' + c.fix + '件（削除漏れ ' + c.old + '・番号の重複 ' + c.dup + '・サイズ違い ' + c.size + '）'));
+      if (!fix.length) box.appendChild(syncEl_('p', 'mnote', '片付ける物はありません。'));
+      else {
+        box.appendChild(syncEl_('p', 'mnote', 'どれも本棚に同じ形で残しています（登録は止めていません）。ガルーンで直すと（片方を消す・番号を直す）、次の取り込みで知らせが消えます。サイズ違いの商品・寿司の原材料省略の版とフル版（9/7 の決まり）なら、このままで正しい形です。'));
+        var w2 = syncEl_('div', 'ptable-wrap'), t2 = syncEl_('table', 'ptable pfit'), h2 = syncEl_('thead'), r2 = syncEl_('tr');
+        ['番号', '商品名', '知らせ', 'すること（なぜ）'].forEach(function (t) { r2.appendChild(syncEl_('th', '', t)); });
+        h2.appendChild(r2); t2.appendChild(h2);
+        var b2 = syncEl_('tbody');
+        fix.sort(function (x, y) { return String(x.a.t).localeCompare(String(y.a.t)) || String(x.r.Code).localeCompare(String(y.r.Code)); }).forEach(function (f) {
+          var tr = syncEl_('tr');
+          tr.appendChild(syncEl_('td', '', String(f.r.Code)));
+          var tn = syncEl_('td'); var nb = syncEl_('button', 'rt-open', String(f.r.Name || '')); nb.type = 'button'; nb.style.cssText = 'all:unset;cursor:pointer;text-decoration:underline;';
+          nb.addEventListener('click', function () { openModal(f.r); }); tn.appendChild(nb); tr.appendChild(tn);
+          var ta = syncEl_('td'); alertChips_({ Alerts: [f.a] }, false).forEach(function (s) { ta.appendChild(s); }); ta.appendChild(syncEl_('div', 'psub', String(f.a.text || ''))); tr.appendChild(ta);
+          var td = syncEl_('td', '', String(f.a.act || '')); td.appendChild(syncEl_('div', 'psub', String(f.a.why || ''))); tr.appendChild(td);
+          b2.appendChild(tr);
+        });
+        t2.appendChild(b2); w2.appendChild(t2); box.appendChild(w2);
+      }
+      // きのう・今日 外した物（戻す口は更新の記録）
+      var outs = (sync && sync.today || []).concat(sync && sync.yesterday || []);
+      box.appendChild(syncEl_('div', 'rb-h', '📤 きのう・今日 外した物 ' + outs.length + '件'));
+      if (outs.length) {
+        var ul = syncEl_('ul', 'mnote');
+        outs.forEach(function (x) { ul.appendChild(syncEl_('li', '', String(x.at || '').slice(5, 16) + ' ' + String(x.code || '') + ' ' + String(x.name || '') + '（' + String(x.how || '') + '）')); });
+        box.appendChild(ul);
+        var go = syncEl_('button', 'rb-btn', '📜 更新の記録で見る・本棚に戻す ▸'); go.type = 'button';
+        go.addEventListener('click', function () { historyState_.stale = true; rbFocus_('settings-main', 'history-card'); loadHistory_(); });
+        box.appendChild(go);
+      }
+    }
+
+    var mirrorState_ = { loaded: false, loading: false, plan: null, running: false };
+    var MIRROR_HOW_ = { over: '別のファイルの中身で上書きされている', stale: '古い版のまま', name: '名前で結んだ・中身が違う', noread: '本棚の PDF を読めない' };
+    function mirrorMaybeLoad_() {
+      var modal = document.getElementById('settings-modal'), card = document.getElementById('mirror-card'), main = document.getElementById('settings-main');
+      // 確定待ちの表が描けるまでは読まない（開いた直後は確定待ちが空で、この節が上に見えてしまう＝確定待ちと同時に窓口を呼ばない）
+      if (!modal || !modal.classList.contains('active') || !historyState_.gate || !card || card.hidden || !main || mirrorState_.loaded || mirrorState_.loading) return;
+      var m = main.getBoundingClientRect(), c = card.getBoundingClientRect();
+      if (c.top < m.bottom + 200 && c.bottom > m.top) loadMirror_();
+    }
+    function loadMirror_() {
+      if (mirrorState_.loading || !canRestoreNow_) return;
+      mirrorState_.loading = true;
+      document.getElementById('mirror-meta').textContent = '⏳ 読み込んでいます…';
+      gsCall('getMirrorPlan').then(function (p) { mirrorState_.loaded = true; mirrorState_.plan = p; renderMirror_(p); })
+        .catch(function (e) { document.getElementById('mirror-meta').textContent = '読めませんでした: ' + String(e && e.message || e); })
+        .then(function () { mirrorState_.loading = false; });
+    }
+    function renderMirror_(p) {
+      var box = document.getElementById('mirror-box'), meta = document.getElementById('mirror-meta');
+      box.textContent = '';
+      if (!p || p.state === 'none' || !p.counts) {
+        meta.textContent = 'まだ突き合わせていません';
+        box.appendChild(el_('p', 'mnote', 'ガルーンのファイル管理で「📋 レシピ取り込み」を押し、小窓のいちばん下の「🪞 ガルーンと本棚を突き合わせる」を押してください。終わったら、ここに数が出ます。'));
+        return;
+      }
+      var c = p.counts;
+      meta.textContent = p.state === 'done' ? (String(p.finishedAt || '').slice(0, 16) + ' に突き合わせた（ガルーン ' + c.garoon + '件・本棚 ' + c.shelf + '件）') : ('途中（' + p.checked + ' / ' + p.total + '件）');
+      var grid = el_('div', 'mcounts');
+      [['m-add', c.add, '① ガルーンにあって本棚に無い → 登録する'], ['m-res', c.restore, '② 本棚の1件の中身がガルーンと違う → そのファイルを取り直して戻す（うち別のファイルで上書き ' + c.over + '件）'],
+       ['m-rem', c.remove, '③ 本棚にあってガルーンに無い → 「_削除済み」へ（消さない・戻せる。結べない前からの1件 ' + c.unlinked + '件を含む）'], ['m-same', c.same, '④ 同じ（結ぶだけ）'], ['', c.pending, '確定待ちにある（確定待ちで登録）']].forEach(function (x) {
+        var d = el_('div', 'mcount ' + x[0]); d.appendChild(el_('b', '', String(x[1]) + '件')); d.appendChild(el_('span', '', x[2])); grid.appendChild(d);
+      });
+      box.appendChild(grid);
+      var ai = c.ai, lo = Math.ceil(ai * 10 / 60), hi = Math.ceil(ai * 20 / 60);
+      box.appendChild(el_('p', 'mnote', '🤖 AI が読む件数: ' + ai + '件（①＋②＋確定待ち）・見込み 約' + lo + '〜' + hi + '分（1件 10〜20秒）。読むのは、次の「📋 レシピ取り込み」で送ったあとの「まとめて実行」のときです。' + (c.waiting ? '（うち ' + c.waiting + '件はもう送る待ち）' : '')));
+      if (p.state !== 'done') { box.appendChild(el_('p', 'mnote', 'ガルーンで「続きから」を押して、最後まで突き合わせてから実行できます。')); return; }
+      var sel = { add: {}, restore: {}, remove: {} };
+      var sec = function (key, title, items, line) {
+        if (!items.length) return;
+        var det = el_('details', 'mlist'); det.appendChild(el_('summary', '', title + '（' + items.length + '件・押すと一覧）'));
+        var wrap = el_('div', 'ptable-wrap'), tb = el_('table', 'ptable pfit'), th = el_('thead'), hr = el_('tr');
+        ['選ぶ', '番号', '名前', 'わけ'].forEach(function (t) { hr.appendChild(el_('th', '', t)); });
+        th.appendChild(hr); tb.appendChild(th);
+        var body = el_('tbody');
+        items.forEach(function (x) {
+          var id = key === 'add' ? x.fid : x.rid;
+          var tr = el_('tr'), td = el_('td'), cb = document.createElement('input');
+          cb.type = 'checkbox'; cb.checked = !x.waiting; cb.disabled = !!x.waiting; sel[key][id] = !x.waiting;
+          cb.addEventListener('change', function () { sel[key][id] = cb.checked; refresh(); });
+          td.appendChild(cb); tr.appendChild(td);
+          var l = line(x);
+          tr.appendChild(el_('td', '', String(x.code || ''))); tr.appendChild(el_('td', '', l[0])); tr.appendChild(el_('td', '', l[1] + (x.waiting ? '（もう送る待ち）' : '')));
+          body.appendChild(tr);
+        });
+        tb.appendChild(body); wrap.appendChild(tb); det.appendChild(wrap); box.appendChild(det);
+      };
+      sec('add', '① 登録する', p.items.add, function (x) { return [String(x.name || ''), String(x.folder || '') + '・ガルーンの更新 ' + String(x.stamp || '') + (x.status === 'discarded' ? '・前に見送った' : '')]; });
+      sec('restore', '② 取り直して戻す', p.items.restore, function (x) { return [String(x.name || ''), (MIRROR_HOW_[x.how] || x.how) + '・戻すファイル「' + String(x.file || '') + '」' + (x.from ? '・上書きしたファイル「' + x.from + '」は ① で別の1件に' : '')]; });
+      sec('remove', '③ 「_削除済み」へ', p.items.remove, function (x) { return [String(x.name || ''), String(x.why || '')]; });
+      var bar = el_('div', 'mbar'), go = el_('button', 'mgo'), msg = el_('span', 'mnote');
+      go.type = 'button';
+      var count = function (k) { return Object.keys(sel[k]).filter(function (x) { return sel[k][x]; }); };
+      function refresh() {
+        var a = count('add').length, r = count('restore').length, m = count('remove').length;
+        // 実行する物が無い（全部もう送る待ち・結ぶ物も無い）ときは、釦を薄くして残し、次にすることを釦のすぐ横に出す
+        var none = !a && !r && !m && !c.bind;
+        go.disabled = none;
+        // 釦は字の幅だけ（横に伸ばさない）。何をするかの数は、釦のすぐ横の字で
+        go.textContent = none ? '実行する物はありません' : 'この内容で実行';
+        what.textContent = none ? '' : '①送る待ち ' + a + '件・②送る待ち ' + r + '件・③外す ' + m + '件・④結ぶ ' + (c.bind || 0) + '件';
+        if (!mirrorState_.running) msg.textContent = none && c.waiting ? '送る待ちの ' + c.waiting + '件は、次にガルーンで「📋 レシピ取り込み」を押すと届きます。届いたら、確定待ちの「まとめて実行」を押してください。' : '';
+      }
+      var what = el_('span', 'mwhat');
+      refresh();
+      go.addEventListener('click', function () { runMirror_(p.runId, { add: count('add'), restore: count('restore'), remove: count('remove') }, go, msg); });
+      bar.appendChild(go); bar.appendChild(what); bar.appendChild(msg); box.appendChild(bar);
+      if (p.exec) box.appendChild(el_('p', 'mnote', '前に実行した数: 結んだ ' + p.exec.bound + '件・送る待ち ' + p.exec.marked + '件・外した ' + p.exec.removed + '件（' + String(p.exec.at || '').slice(0, 16) + '）'));
+    }
+    /** 実行（残りが 0 になるまで続ける・押した釦は止めて進み具合を出す）。2回押しても窓口が1回分だけ行う */
+    function runMirror_(runId, pick, btn, msg) {
+      if (mirrorState_.running) return;
+      mirrorState_.running = true; btn.disabled = true;
+      var total = { bound: 0, marked: 0, removed: 0 }, rounds = 0;
+      (function step() {
+        msg.textContent = '⏳ 実行しています…（' + (++rounds) + '回め）';
+        gsCall('runMirror', Object.assign({ runId: runId }, pick)).then(function (r) {
+          if (!r || !r.success) throw new Error((r && r.reason) || '実行できませんでした');
+          total.bound += r.bound; total.marked += r.marked; total.removed += r.removed;
+          if (!r.done && rounds < 30) return step();
+          mirrorState_.running = false;
+          msg.textContent = (r.already && !total.bound && !total.marked && !total.removed ? 'もう実行してあります（何もしていません）。' : '済みました: 結んだ ' + total.bound + '件・送る待ち ' + total.marked + '件・外した ' + total.removed + '件。') +
+            'ガルーンで「📋 レシピ取り込み」を押すと、送る待ちの物が届きます。届いたら、確定待ちの「まとめて実行」を押してください。';
+          mirrorState_.loaded = false; loadRecipes(); loadMirror_(); historyState_.stale = true;
+        }).catch(function (e) { mirrorState_.running = false; btn.disabled = false; msg.textContent = '止まりました: ' + String(e && e.message || e) + '（もう一度押すと続きから）'; });
+      })();
+    }
+
+    /* ── 2026-11-25a 更新の記録の1行の中身（変わった項目の前と後・前の PDF・ガルーンから取り直す・管理者だけ）── */
+    var hdetailSeq_ = 0;
+    function openHistoryDetail_(x) {
+      var seq = ++hdetailSeq_, modal = document.getElementById('hdetail-modal');
+      document.getElementById('hdetail-sub').textContent = historyDay_(x.at) + ' ' + historyTime_(x.at) + ' ' + String(x.action || '') + '：' + String(x.code || '') + ' ' + String(x.name || '') + '（⏳ 読み込んでいます…）';
+      ['hdetail-rows', 'hdetail-prev', 'hdetail-refetch', 'hdetail-msg', 'hdetail-prev-why'].forEach(function (id) { document.getElementById(id).textContent = ''; });
+      modal.classList.add('active');
+      document.getElementById('hdetail-close').focus();
+      gsCall('getHistoryDetail', x.id).then(function (d) {
+        if (seq !== hdetailSeq_) return;
+        document.getElementById('hdetail-sub').textContent = historyDay_(d.at) + ' ' + historyTime_(d.at) + ' ' + String(d.action || '') + '：' + String(d.code || '') + ' ' + String(d.name || '') + (d.known ? '' : '（この記録には前と後の形がありません）');
+        var tb = document.getElementById('hdetail-rows');
+        (d.fields || []).forEach(function (f) {
+          var tr = el_('tr', f.changed ? 'rv-diff' : ''); tr.appendChild(el_('th', '', (f.changed ? '★ ' : '') + f.label));
+          tr.appendChild(el_('td', '', f.b == null ? '―' : (String(f.b) || '―'))); tr.appendChild(el_('td', '', f.a == null ? '―' : (String(f.a) || '―')));
+          tb.appendChild(tr);
+        });
+        document.getElementById('hdetail-prev-why').textContent = d.prevPdf ? ('「' + String(d.prevPdf.name || '') + '」（' + String(d.prevPdf.where || '') + ' フォルダ）') : String(d.prevWhy || '');
+        if (d.prevPdf && d.prevPdf.base64) {
+          var cv = document.createElement('canvas'); document.getElementById('hdetail-prev').appendChild(cv);
+          pdfjs_().then(function () { return openPdf_(b64ToBytes_(d.prevPdf.base64)); }).then(function (doc) { return doc.getPage(1); }).then(function (pg) {
+            if (seq !== hdetailSeq_) return;
+            var vp = pg.getViewport({ scale: Math.min(1.4, 900 / pg.getViewport({ scale: 1 }).width) });
+            cv.width = vp.width; cv.height = vp.height;
+            return pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+          }).catch(function () { document.getElementById('hdetail-prev-why').textContent += '（画像にできませんでした）'; });
+        }
+        var rf = document.getElementById('hdetail-refetch');
+        if (!(d.refetch || []).length) rf.appendChild(el_('p', 'mnote', 'この1件のガルーンのファイルが、取り込みの台帳に見つかりません。'));
+        (d.refetch || []).forEach(function (c) {
+          var row = el_('div', 'mbar'); row.appendChild(el_('span', '', '「' + String(c.fileName || '') + '」（' + String(c.statusLabel || '') + '・ガルーンの更新 ' + String(c.stamp || '') + '）'));
+          if (c.can) {
+            var b = el_('button', 'rb-btn', '🔁 このファイルを取り直す'); b.type = 'button';
+            b.addEventListener('click', function () {
+              b.disabled = true; b.textContent = '⏳ 書いています…';
+              gsCall('requestRefetch', c.fid).then(function (r) {
+                b.textContent = r && r.success ? '✓ 送る待ちにしました（次の「📋 レシピ取り込み」で届きます）' : String((r && r.reason) || 'できませんでした');
+                historyState_.stale = true;
+              }).catch(function (e) { b.disabled = false; b.textContent = '🔁 このファイルを取り直す'; document.getElementById('hdetail-msg').textContent = String(e && e.message || e); });
+            });
+            row.appendChild(b);
+          } else row.appendChild(el_('span', 'psub', String(c.why || '')));
+          rf.appendChild(row);
+        });
+      }).catch(function (e) { if (seq === hdetailSeq_) document.getElementById('hdetail-msg').textContent = '読めませんでした: ' + String(e && e.message || e); });
+    }
+    (function () {
+      var close = function () { hdetailSeq_++; document.getElementById('hdetail-modal').classList.remove('active'); };
+      document.getElementById('hdetail-close').addEventListener('click', close);
+      document.getElementById('hdetail-modal').addEventListener('click', function (e) { if (e.target === this) close(); });
+      document.getElementById('hdetail-modal').addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+      document.getElementById('mirror-reload').addEventListener('click', function () { mirrorState_.loaded = false; loadMirror_(); });
+      var main = document.getElementById('settings-main'), q = false;
+      if (main) main.addEventListener('scroll', function () { if (q) return; q = true; requestAnimationFrame(function () { q = false; mirrorMaybeLoad_(); }); }, { passive: true });
+    })();
+    /** 外した・削除した1件を本棚に戻す（管理者だけ・2回押しても1回） */
+    function restoreRemoved_(x, btn) {
+      btn.disabled = true; btn.textContent = '⏳ 戻しています…';
+      gsCall('restoreRemoved', x.id).then(function (r) {
+        if (r && r.success) { showToast('「' + String(r.name || x.name || '') + '」を本棚に戻しました' + (r.kept ? '（ガルーンに無いので「残す」にしました）' : '') + '。'); loadRecipes(); loadHistory_(); return; }
+        btn.textContent = String((r && r.reason) || '戻せませんでした'); if (r && r.already) loadHistory_();
+      }).catch(function (e) { btn.disabled = false; btn.textContent = '↩ 本棚に戻す'; showToast('戻せませんでした: ' + String(e && e.message || e), true); });
     }
 
     var pendingBusy_ = false;
